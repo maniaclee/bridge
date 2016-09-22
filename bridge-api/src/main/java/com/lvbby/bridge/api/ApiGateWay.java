@@ -5,5 +5,5 @@ package com.lvbby.bridge.api;
  */
 public interface ApiGateWay {
 
-    Object proxy(Context context);
+    Object proxy(Context context) throws BridgeException;
 }
