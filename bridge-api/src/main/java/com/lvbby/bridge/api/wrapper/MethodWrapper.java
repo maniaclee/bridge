@@ -1,7 +1,7 @@
 package com.lvbby.bridge.api.wrapper;
 
 import com.google.common.base.Objects;
-import com.lvbby.bridge.api.config.ParameterNameExtrator;
+import com.lvbby.bridge.api.config.ParameterNameExtractor;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class MethodWrapper {
     private MethodParameter[] methodParameters;
     private Map<String, MethodParameter> parameterMap = new HashMap<String, MethodParameter>();
 
-    private ParameterNameExtrator parameterNameExtrator;
+    private ParameterNameExtractor parameterNameExtractor;
 
     public MethodWrapper(Method method) {
         this.method = method;
@@ -26,7 +26,7 @@ public class MethodWrapper {
 
     public void init() {
         /** parameter names */
-        String[] parameterNames = parameterNameExtrator.getParameterName(method);
+        String[] parameterNames = parameterNameExtractor.getParameterName(method);
         if (parameterNames == null || parameterNames.length != methodParameters.length)
             throw new IllegalArgumentException("invalid method parameter length : " + method);
 
@@ -97,12 +97,12 @@ public class MethodWrapper {
         this.methodParameters = methodParameters;
     }
 
-    public ParameterNameExtrator getParameterNameExtrator() {
-        return parameterNameExtrator;
+    public ParameterNameExtractor getParameterNameExtractor() {
+        return parameterNameExtractor;
     }
 
-    public void setParameterNameExtrator(ParameterNameExtrator parameterNameExtrator) {
-        this.parameterNameExtrator = parameterNameExtrator;
+    public void setParameterNameExtractor(ParameterNameExtractor parameterNameExtractor) {
+        this.parameterNameExtractor = parameterNameExtractor;
     }
 
     public static class MethodParameter {

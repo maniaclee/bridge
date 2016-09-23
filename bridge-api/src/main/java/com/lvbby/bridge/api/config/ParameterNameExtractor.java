@@ -5,6 +5,6 @@ import java.lang.reflect.Method;
 /**
  * Created by lipeng on 16/9/23.
  */
-public interface ParameterNameExtrator {
+public interface ParameterNameExtractor {
     String[] getParameterName(Method method);
 }
