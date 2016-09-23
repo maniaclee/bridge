@@ -30,13 +30,14 @@ public class DefaultServiceRouter implements ServiceRouter {
             //services
             serviceMap.put(serviceName, service);
             //methods
-            Multimap<String, MethodWrapper> serviceHolder = methodMap.put(serviceName, ArrayListMultimap.<String, MethodWrapper>create());
-            Method[] ms = service.getClass().getDeclaredMethods();
+            ArrayListMultimap<String, MethodWrapper> serviceHolder = ArrayListMultimap.create();
+            methodMap.put(serviceName, serviceHolder);
+            Method[] ms = service.getService().getClass().getDeclaredMethods();
             if (ms != null && ms.length > 0)
                 for (Method m : ms) {
                     m.setAccessible(true);
                     if (Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers()))
-                        serviceHolder.put(m.getName(), new MethodWrapper(m));
+                        serviceHolder.put(m.getName(), new MethodWrapper(m).init());
                 }
         }
     }

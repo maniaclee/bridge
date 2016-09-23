@@ -24,23 +24,26 @@ public class MethodWrapper {
         this.name = method.getName();
     }
 
-    public void init() {
-        /** parameter names */
-        String[] parameterNames = parameterNameExtractor.getParameterName(method);
-        if (parameterNames == null || parameterNames.length != methodParameters.length)
-            throw new IllegalArgumentException("invalid method parameter length : " + method);
-
+    public MethodWrapper init() {
         Class<?>[] parameterTypes = method.getParameterTypes();
         methodParameters = new MethodParameter[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
             MethodParameter methodParameter = new MethodParameter();
             methodParameter.setIndex(i);
             methodParameter.setType(parameterTypes[i]);
-            methodParameter.setName(parameterNames[i]);
             methodParameters[i] = methodParameter;
             //map for parameter name
             parameterMap.put(methodParameter.getName(), methodParameter);
         }
+        /** parameter names */
+        if (parameterNameExtractor != null) {
+            String[] parameterNames = parameterNameExtractor.getParameterName(method);
+            if (parameterNames == null || parameterNames.length != methodParameters.length)
+                throw new IllegalArgumentException("invalid method parameter length : " + method);
+            for (int i = 0; i < methodParameters.length; i++)
+                methodParameters[i].setName(parameterNames[i]);
+        }
+        return this;
     }
 
 
@@ -57,7 +60,7 @@ public class MethodWrapper {
         //match by index
         if (Objects.equal(params.getType(), Params.byIndex)) {
             for (int i = 0; i < methodParameters.length; i++)
-                if (!methodParameters[i].equals(methodParameters[i].getType()))
+                if (!Objects.equal(methodParameters[i].getType(), ps[i].getParam().getClass()))
                     return false;
             return true;
         }

@@ -13,6 +13,18 @@ public class Params {
      */
     private String type = byIndex;
 
+    public Params() {
+    }
+
+    public Params(Param[] params) {
+        this.params = params;
+    }
+
+    public Params(Param[] params, String type) {
+        this.params = params;
+        this.type = type;
+    }
+
     public Param[] getParams() {
         return params;
     }
