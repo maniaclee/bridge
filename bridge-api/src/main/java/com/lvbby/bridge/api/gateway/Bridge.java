@@ -1,6 +1,8 @@
 package com.lvbby.bridge.api.gateway;
 
 import com.google.common.collect.Lists;
+import com.lvbby.bridge.api.config.DefaultResultHandler;
+import com.lvbby.bridge.api.config.ResultHandler;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.route.DefaultServiceRouter;
 import com.lvbby.bridge.api.route.ServiceRouter;
@@ -15,8 +17,9 @@ import java.util.List;
  * Created by peng on 16/9/22.
  */
 public class Bridge implements ApiGateWay {
-    List<ApiService> services;
-    ServiceRouter serviceRouter;
+    private List<ApiService> services;
+    private ServiceRouter serviceRouter;
+    private ResultHandler resultHandler = new DefaultResultHandler();
 
     public Bridge init() {
         if (services == null || services.isEmpty())
@@ -42,9 +45,17 @@ public class Bridge implements ApiGateWay {
         try {
             method.setAccessible(true);
             Object re = method.invoke(service.getService(), realParameters);
-            return re;
+            return resultHandler.success(re);
         } catch (Exception e) {
-            throw new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e);
+            return resultHandler.error(new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e));
+        }
+    }
+
+    private Object instance(Class clz) {
+        try {
+            return clz.newInstance();
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -57,6 +68,14 @@ public class Bridge implements ApiGateWay {
 
     public Bridge addService(Object apiService) {
         return addService(ApiService.of(apiService));
+    }
+
+    public ResultHandler getResultHandler() {
+        return resultHandler;
+    }
+
+    public void setResultHandler(ResultHandler resultHandler) {
+        this.resultHandler = resultHandler;
     }
 
     public List<ApiService> getServices() {
