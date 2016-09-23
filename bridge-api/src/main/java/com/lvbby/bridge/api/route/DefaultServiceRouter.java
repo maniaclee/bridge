@@ -1,7 +1,10 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.route;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.lvbby.bridge.api.wrapper.ApiService;
+import com.lvbby.bridge.api.wrapper.MethodWrapper;
+import com.lvbby.bridge.api.wrapper.Params;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;

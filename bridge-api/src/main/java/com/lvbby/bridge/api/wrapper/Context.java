@@ -1,7 +1,8 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.wrapper;
 
 /**
  * Created by peng on 16/9/22.
+ * the entrance parameter to api gateway
  */
 public class Context {
     private String serviceName;

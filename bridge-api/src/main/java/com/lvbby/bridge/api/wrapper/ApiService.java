@@ -1,7 +1,8 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.wrapper;
 
 /**
  * Created by peng on 16/9/22.
+ * wrapper for service
  */
 public class ApiService {
     private Object service;

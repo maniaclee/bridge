@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.wrapper;
 
 /**
  * Created by lipeng on 16/9/23.

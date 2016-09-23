@@ -1,6 +1,7 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.wrapper;
 
 import com.google.common.base.Objects;
+import com.lvbby.bridge.api.config.ParameterNameExtrator;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 /**
  * Created by lipeng on 16/9/23.
+ * wrapper for method
  */
 public class MethodWrapper {
     private Method method;

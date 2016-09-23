@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.exception;
 
 /**
  * Created by peng on 16/9/22.

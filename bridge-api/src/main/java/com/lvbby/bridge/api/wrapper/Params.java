@@ -1,12 +1,16 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.wrapper;
 
 /**
  * Created by lipeng on 16/9/23.
+ * wrapper for parameters
  */
 public class Params {
     public static final String byIndex = "index";
     public static final String byName = "name";
     private Param[] params;
+    /***
+     * route type for finding the parameter
+     */
     private String type = byIndex;
 
     public Param[] getParams() {

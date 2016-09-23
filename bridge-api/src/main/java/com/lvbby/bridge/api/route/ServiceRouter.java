@@ -1,4 +1,8 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.route;
+
+import com.lvbby.bridge.api.wrapper.ApiService;
+import com.lvbby.bridge.api.wrapper.MethodWrapper;
+import com.lvbby.bridge.api.wrapper.Params;
 
 import java.util.List;
 
