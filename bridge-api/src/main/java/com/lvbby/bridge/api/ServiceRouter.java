@@ -1,6 +1,5 @@
 package com.lvbby.bridge.api;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -11,5 +10,5 @@ public interface ServiceRouter {
 
     ApiService findService(String serviceName);
 
-    Method findMethod(ApiService service, String method, Object[] param);
+    MethodWrapper findMethod(ApiService service, String method, Params params);
 }

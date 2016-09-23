@@ -18,14 +18,16 @@ public class Bridge implements ApiGateWay {
         serviceRouter.init(services);
     }
 
+
     @Override
     public Object proxy(Context context) throws BridgeException {
         ApiService service = serviceRouter.findService(context.getServiceName());
         if (service == null)
             throw new BridgeException(String.format("service not found:%s", context.getServiceName()));
-        Method method = serviceRouter.findMethod(service, context.getMethod(), context.getParam());
-        if (method == null)
+        MethodWrapper methodWrapper = serviceRouter.findMethod(service, context.getMethod(), context.getParam());
+        if (methodWrapper == null || methodWrapper.getMethod() == null)
             throw new BridgeException(String.format("method not found:%s", context.getMethod()));
+        Method method = methodWrapper.getMethod();
         try {
             method.setAccessible(true);
             Object re = method.invoke(service, context.getParam());
@@ -35,4 +37,19 @@ public class Bridge implements ApiGateWay {
         }
     }
 
+    public List<ApiService> getServices() {
+        return services;
+    }
+
+    public void setServices(List<ApiService> services) {
+        this.services = services;
+    }
+
+    public ServiceRouter getServiceRouter() {
+        return serviceRouter;
+    }
+
+    public void setServiceRouter(ServiceRouter serviceRouter) {
+        this.serviceRouter = serviceRouter;
+    }
 }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class DefaultServiceRouter implements ServiceRouter {
     Map<String, ApiService> serviceMap = new HashMap<String, ApiService>();
-    Map<String, Multimap<String, Method>> methodMap = new HashMap();
+    Map<String, Multimap<String, MethodWrapper>> methodMap = new HashMap();
 
     @Override
     public void init(List<ApiService> services) {
@@ -27,13 +27,13 @@ public class DefaultServiceRouter implements ServiceRouter {
             //services
             serviceMap.put(serviceName, service);
             //methods
-            Multimap<String, Method> serviceHolder = methodMap.put(serviceName, ArrayListMultimap.<String, Method>create());
+            Multimap<String, MethodWrapper> serviceHolder = methodMap.put(serviceName, ArrayListMultimap.<String, MethodWrapper>create());
             Method[] ms = service.getClass().getDeclaredMethods();
             if (ms != null && ms.length > 0)
                 for (Method m : ms) {
                     m.setAccessible(true);
                     if (Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers()))
-                        serviceHolder.put(m.getName(), m);
+                        serviceHolder.put(m.getName(), new MethodWrapper(m));
                 }
         }
     }
@@ -44,33 +44,19 @@ public class DefaultServiceRouter implements ServiceRouter {
     }
 
     @Override
-    public Method findMethod(ApiService service, String method, Object[] param) {
+    public MethodWrapper findMethod(ApiService service, String method, Params param) {
         method = StringUtils.trimToNull(method);
         if (service == null || StringUtils.isBlank(method))
             return null;
-        Multimap<String, Method> methodMultimap = methodMap.get(service.getServiceName());
+        Multimap<String, MethodWrapper> methodMultimap = methodMap.get(service.getServiceName());
         if (methodMultimap == null)
             return null;
-        Collection<Method> methods = methodMultimap.get(method);
+        Collection<MethodWrapper> methods = methodMultimap.get(method);
         if (methods != null && methods.size() > 0) {
             if (methods.size() == 1)
                 return methods.iterator().next();
-            for (Method m : methods) {
-                Class<?>[] parameterTypes = m.getParameterTypes();
-                //void
-                if ((param == null || param.length == 0) && parameterTypes.length == 0)
-                    return m;
-                if (parameterTypes.length != param.length)
-                    continue;
-                //match the method signature
-                boolean match = true;
-                for (int i = 0; i < parameterTypes.length; i++) {
-                    if (!parameterTypes[i].equals(param.getClass())) {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match)
+            for (MethodWrapper m : methods) {
+                if (m.match(param))
                     return m;
             }
         }

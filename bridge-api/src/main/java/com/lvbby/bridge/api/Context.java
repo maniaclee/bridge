@@ -6,7 +6,7 @@ package com.lvbby.bridge.api;
 public class Context {
     private String serviceName;
     private String method;
-    private Object[] param;
+    private Params param;
 
     public String getServiceName() {
         return serviceName;
@@ -24,11 +24,11 @@ public class Context {
         this.method = method;
     }
 
-    public Object[] getParam() {
+    public Params getParam() {
         return param;
     }
 
-    public void setParam(Object[] param) {
+    public void setParam(Params param) {
         this.param = param;
     }
 }
