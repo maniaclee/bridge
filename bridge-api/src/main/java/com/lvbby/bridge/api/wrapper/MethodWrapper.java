@@ -15,8 +15,9 @@ public class MethodWrapper {
     private Method method;
     private String name;
     private MethodParameter[] methodParameters;
-    private ParameterNameExtrator parameterNameExtrator;
     private Map<String, MethodParameter> parameterMap = new HashMap<String, MethodParameter>();
+
+    private ParameterNameExtrator parameterNameExtrator;
 
     public MethodWrapper(Method method) {
         this.method = method;
