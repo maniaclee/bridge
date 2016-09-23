@@ -9,6 +9,15 @@ public class Context {
     private String method;
     private Params param;
 
+    public Context() {
+    }
+
+    public Context(String serviceName, String method, Params param) {
+        this.serviceName = serviceName;
+        this.method = method;
+        this.param = param;
+    }
+
     public String getServiceName() {
         return serviceName;
     }

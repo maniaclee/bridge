@@ -1,5 +1,7 @@
 package com.lvbby.bridge.api.wrapper;
 
+import java.util.Arrays;
+
 /**
  * Created by lipeng on 16/9/23.
  * wrapper for parameters
@@ -12,6 +14,15 @@ public class Params {
      * route type for finding the parameter
      */
     private String type = byIndex;
+
+    public static Params of(Object[] objects) {
+        if (objects == null)
+            return new Params(null);
+        Param[] params = new Param[objects.length];
+        for (int i = 0; i < objects.length; i++)
+            params[i] = new Param(objects[i]);
+        return new Params(params);
+    }
 
     public Params() {
     }
@@ -39,5 +50,13 @@ public class Params {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Params{" +
+                "params=" + Arrays.toString(params) +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

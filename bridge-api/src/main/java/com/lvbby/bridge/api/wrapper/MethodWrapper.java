@@ -47,6 +47,36 @@ public class MethodWrapper {
     }
 
 
+    /***
+     * get real parameters for method to invoke
+     *
+     * @param params
+     * @return
+     */
+    public Object[] getRealParameters(Params params) {
+        Param[] ps = params.getParams();
+        //void
+        if ((ps == null || ps.length == 0))
+            return null;
+
+        Object[] re = new Object[ps.length];
+        //match by index
+        if (Objects.equal(params.getType(), Params.byIndex)) {
+            for (int i = 0; i < ps.length; i++) re[i] = ps[i].getParam();
+            return re;
+        }
+        //match by name
+        if (Objects.equal(params.getType(), Params.byName)) {
+            for (Param p : ps) {
+                MethodParameter methodParameter = parameterMap.get(p.getName());
+                re[methodParameter.getIndex()] = p.getParam();
+
+            }
+            return re;
+        }
+        throw new IllegalArgumentException("unknown parameter type : " + params.getType());
+    }
+
     public boolean match(Params params) {
         Param[] ps = params.getParams();
         //void
@@ -75,6 +105,7 @@ public class MethodWrapper {
         }
         throw new IllegalArgumentException("unknown parameter type : " + params.getType());
     }
+
 
     public Method getMethod() {
         return method;
