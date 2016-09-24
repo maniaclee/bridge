@@ -1,8 +1,12 @@
 package com.lvbby.bridge.api.gateway;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+import com.lvbby.bridge.api.config.ClassNameServiceNameExtractor;
 import com.lvbby.bridge.api.config.DefaultResultHandler;
 import com.lvbby.bridge.api.config.ResultHandler;
+import com.lvbby.bridge.api.config.ServiceNameExtractor;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.route.DefaultServiceRouter;
 import com.lvbby.bridge.api.route.ServiceRouter;
@@ -17,9 +21,10 @@ import java.util.List;
  * Created by peng on 16/9/22.
  */
 public class Bridge implements ApiGateWay {
-    private List<ApiService> services;
+    private List<ApiService> services = Lists.newLinkedList();
     private ServiceRouter serviceRouter;
     private ResultHandler resultHandler = new DefaultResultHandler();
+    private ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
     public Bridge init() {
         if (services == null || services.isEmpty())
@@ -60,14 +65,32 @@ public class Bridge implements ApiGateWay {
     }
 
     public Bridge addService(ApiService apiService) {
-        if (services == null)
-            services = Lists.newLinkedList();
         services.add(apiService);
         return this;
     }
 
     public Bridge addService(Object apiService) {
-        return addService(ApiService.of(apiService));
+        return addService(ApiService.of(apiService, serviceNameExtractor.getServiceName(apiService)));
+    }
+
+    public Bridge addService(final List<Object> apiService) {
+        if (apiService != null) {
+            services.addAll(Collections2.transform(apiService, new Function<Object, ApiService>() {
+                @Override
+                public ApiService apply(Object o) {
+                    return ApiService.of(o, serviceNameExtractor.getServiceName(apiService));
+                }
+            }));
+        }
+        return this;
+    }
+
+    public ServiceNameExtractor getServiceNameExtractor() {
+        return serviceNameExtractor;
+    }
+
+    public void setServiceNameExtractor(ServiceNameExtractor serviceNameExtractor) {
+        this.serviceNameExtractor = serviceNameExtractor;
     }
 
     public ResultHandler getResultHandler() {

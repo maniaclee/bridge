@@ -22,4 +22,12 @@ public class BridgeTest {
         Object proxy = bridge.proxy(new Context("TestService", "echo", Params.of(new Object[]{"shit", "hello"})));
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }
+
+    @Test
+    public void dfsdf() {
+        System.out.println(Bridge.class.getSimpleName());
+        System.out.println(Bridge.class.getName());
+        System.out.println(Bridge.class.getCanonicalName());
+    }
+
 }

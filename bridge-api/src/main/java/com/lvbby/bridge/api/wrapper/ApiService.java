@@ -1,16 +1,12 @@
 package com.lvbby.bridge.api.wrapper;
 
 /**
- * Created by peng on 16/9/22.
  * wrapper for service
+ * Created by peng on 16/9/22.
  */
 public class ApiService {
     private Object service;
     private String serviceName;
-
-    public static ApiService of(Object service) {
-        return of(service, service.getClass().getSimpleName());
-    }
 
     public static ApiService of(Object service, String serviceName) {
         ApiService apiService = new ApiService();
