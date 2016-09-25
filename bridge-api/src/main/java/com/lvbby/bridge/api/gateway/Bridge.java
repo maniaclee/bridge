@@ -38,10 +38,10 @@ public class Bridge implements ApiGateWay {
 
     @Override
     public Object proxy(Context context) throws BridgeException {
-        ApiService service = serviceRouter.findService(context.getServiceName());
+        ApiService service = serviceRouter.getService(context.getServiceName());
         if (service == null)
             throw new BridgeException(String.format("service not found:%s", context.getServiceName()));
-        MethodWrapper methodWrapper = serviceRouter.findMethod(service, context.getMethod(), context.getParam());
+        MethodWrapper methodWrapper = serviceRouter.findMethod(context);
         if (methodWrapper == null || methodWrapper.getMethod() == null)
             throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), context.getMethod(), context.getParam()));
         /** invoke */

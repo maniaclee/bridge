@@ -1,8 +1,8 @@
 package com.lvbby.bridge.api.route;
 
 import com.lvbby.bridge.api.wrapper.ApiService;
+import com.lvbby.bridge.api.wrapper.Context;
 import com.lvbby.bridge.api.wrapper.MethodWrapper;
-import com.lvbby.bridge.api.wrapper.Params;
 
 import java.util.List;
 
@@ -12,7 +12,9 @@ import java.util.List;
 public interface ServiceRouter {
     void init(List<ApiService> services);
 
-    ApiService findService(String serviceName);
+    ApiService getService(String serviceName);
 
-    MethodWrapper findMethod(ApiService service, String method, Params params);
+    List<MethodWrapper> getMethods(String serviceName, String methodName);
+
+    MethodWrapper findMethod(Context context);
 }
