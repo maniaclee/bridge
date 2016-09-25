@@ -11,7 +11,6 @@ import com.lvbby.bridge.api.wrapper.Params;
 import javax.servlet.ServletRequest;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by peng on 16/9/24.
@@ -26,7 +25,6 @@ public class HttpProxy {
     }
 
     public Object process(String service, String method, ServletRequest request) throws BridgeException {
-        Map<String, String> parameterMap = request.getParameterMap();
         String param = getParameter(request, paramName);
         String paramType = getParameter(request, HttpProxy.paramType);
         List<MethodWrapper> methods = bridge.getServiceRouter().getMethods(service, method);
