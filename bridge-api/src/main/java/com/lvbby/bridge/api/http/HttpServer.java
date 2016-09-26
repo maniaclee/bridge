@@ -1,5 +1,6 @@
 package com.lvbby.bridge.api.http;
 
+import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.exception.BridgeRunTimeException;
 import com.lvbby.bridge.api.gateway.ApiGateWay;
 import com.lvbby.bridge.api.gateway.Bridge;
@@ -7,6 +8,11 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,6 +20,9 @@ import java.util.List;
  */
 public class HttpServer {
 
+    /**
+     * root url
+     */
     private String rootPath = "/api";
     private int port = 8080;
     private Server server;
@@ -64,4 +73,35 @@ public class HttpServer {
         this.port = port;
     }
 
+    /**
+     * Created by peng on 2016/9/26.
+     */
+    public static class HttpProxyServlet extends HttpServlet {
+        private HttpProxy httpProxy;
+
+
+        public HttpProxyServlet(HttpProxy httpProxy) {
+            this.httpProxy = httpProxy;
+        }
+
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            /**  super.doGet done shit */
+            // super.doGet(req, resp);
+            handle(req, resp);
+        }
+
+        @Override
+        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            handle(req, resp);
+        }
+
+        public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
+            try {
+                httpProxy.process(req, response);
+            } catch (BridgeException e) {
+                throw new BridgeRunTimeException(e);
+            }
+        }
+    }
 }

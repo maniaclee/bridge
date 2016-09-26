@@ -1,5 +1,7 @@
 package com.lvbby.bridge.api.gateway;
 
+import com.lvbby.bridge.api.config.ApiGateWayPreHandler;
+import com.lvbby.bridge.api.config.ApiGateWayPostHandler;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.route.ServiceRouter;
 import com.lvbby.bridge.api.wrapper.Context;
@@ -14,4 +16,9 @@ public interface ApiGateWay {
     Object proxy(Context context) throws BridgeException;
 
     ServiceRouter getServiceRouter();
+
+    void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler);
+
+    void addPostHandler(ApiGateWayPostHandler apiGateWayPostHandler);
+
 }

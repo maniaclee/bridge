@@ -3,10 +3,7 @@ package com.lvbby.bridge.api.gateway;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.api.config.ClassNameServiceNameExtractor;
-import com.lvbby.bridge.api.config.DefaultResultHandler;
-import com.lvbby.bridge.api.config.ResultHandler;
-import com.lvbby.bridge.api.config.ServiceNameExtractor;
+import com.lvbby.bridge.api.config.*;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.route.DefaultServiceRouter;
 import com.lvbby.bridge.api.route.ServiceRouter;
@@ -23,10 +20,13 @@ import java.util.List;
 public class Bridge implements ApiGateWay {
     private List<ApiService> services = Lists.newLinkedList();
     private ServiceRouter serviceRouter;
-    private ResultHandler resultHandler = new DefaultResultHandler();
     private ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
+    private List<ApiGateWayPreHandler> preHandlers = Lists.newLinkedList();
+    private List<ApiGateWayPostHandler> postHandlers = Lists.newArrayList();
 
     public Bridge() {
+        /** add the default post handler */
+        addPostHandler(new DefaultApiGateWayPostHandler());
     }
 
 
@@ -42,6 +42,10 @@ public class Bridge implements ApiGateWay {
 
     @Override
     public Object proxy(Context context) throws BridgeException {
+        /** pre handlers */
+        for (ApiGateWayPreHandler preHandler : preHandlers)
+            preHandler.preProcess(context);
+
         ApiService service = serviceRouter.getService(context.getServiceName());
         if (service == null)
             throw new BridgeException(String.format("service not found:%s", context.getServiceName()));
@@ -51,12 +55,20 @@ public class Bridge implements ApiGateWay {
         /** invoke */
         Method method = methodWrapper.getMethod();
         Object[] realParameters = methodWrapper.getRealParameters(context.getParam());
+        Object re = null;
         try {
             method.setAccessible(true);
-            Object re = method.invoke(service.getService(), realParameters);
-            return resultHandler.success(re);
+            re = method.invoke(service.getService(), realParameters);
+            /** post handlers for success*/
+            for (ApiGateWayPostHandler postHandler : postHandlers)
+                re = postHandler.success(context, re);
+            return re;
         } catch (Exception e) {
-            return resultHandler.error(new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e));
+            BridgeException bridgeException = new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e);
+            /** post handlers for error */
+            for (ApiGateWayPostHandler postHandler : postHandlers)
+                re = postHandler.error(context, re, bridgeException);
+            return re;
         }
     }
 
@@ -89,14 +101,6 @@ public class Bridge implements ApiGateWay {
         this.serviceNameExtractor = serviceNameExtractor;
     }
 
-    public ResultHandler getResultHandler() {
-        return resultHandler;
-    }
-
-    public void setResultHandler(ResultHandler resultHandler) {
-        this.resultHandler = resultHandler;
-    }
-
     public List<ApiService> getServices() {
         return services;
     }
@@ -108,6 +112,18 @@ public class Bridge implements ApiGateWay {
     public ServiceRouter getServiceRouter() {
         return serviceRouter;
     }
+
+    @Override
+    public void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler) {
+        if (apiGateWayPreHandler != null)
+            preHandlers.add(apiGateWayPreHandler);
+    }
+
+    @Override
+    public void addPostHandler(ApiGateWayPostHandler apiGateWayPostHandler) {
+        postHandlers.add(apiGateWayPostHandler);
+    }
+
 
     public void setServiceRouter(ServiceRouter serviceRouter) {
         this.serviceRouter = serviceRouter;

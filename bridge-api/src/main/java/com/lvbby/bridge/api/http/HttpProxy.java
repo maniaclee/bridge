@@ -23,7 +23,7 @@ import java.util.List;
 public class HttpProxy {
     private ApiGateWay apiGateWay;
     private String paramTypeLabel = "_param_type";
-    private String serviceLabel = "service";
+    private String serviceLabel = "api";
     private String paramName = "param";
 
     public HttpProxy(ApiGateWay apiGateWay) {
@@ -40,7 +40,7 @@ public class HttpProxy {
             response.getWriter().write(JSON.toJSONString(re));
         } catch (Exception e) {
             throw new BridgeRunTimeException(e);
-        }finally {
+        } finally {
             try {
                 response.getWriter().close();
             } catch (IOException e) {

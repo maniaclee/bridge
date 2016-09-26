@@ -25,17 +25,21 @@ public class BridgeFactoryBean implements FactoryBean<Bridge>, ApplicationListen
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
-            ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
-            for (Class annotation : annotations) {
-                Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(annotation);
-                for (Object bean : beansWithAnnotation.values()) {
-                    // register service
-                    bridge.addService(bean);
-                }
-            }
+            process(((ContextRefreshedEvent) event).getApplicationContext());
             bridge.init();
         }
     }
+
+    public void process(ApplicationContext applicationContext) {
+        for (Class annotation : annotations) {
+            Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(annotation);
+            for (Object bean : beansWithAnnotation.values()) {
+                // register service
+                bridge.addService(bean);
+            }
+        }
+    }
+
 
     public Bridge getObject() throws Exception {
         return bridge;
