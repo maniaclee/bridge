@@ -13,27 +13,28 @@ import java.io.IOException;
  * Created by peng on 2016/9/26.
  */
 public class HttpProxyServlet extends HttpServlet {
-    private HttpServer httpServer;
+    private HttpProxy httpProxy;
 
-    public HttpProxyServlet(HttpServer httpServer) {
-        this.httpServer = httpServer;
+
+    public HttpProxyServlet(HttpProxy httpProxy) {
+        this.httpProxy = httpProxy;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        /**  super.doGet done shit */
+        // super.doGet(req, resp);
         handle(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
         handle(req, resp);
     }
 
     public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
         try {
-            httpServer.httpProxy.process(req, response);
+            httpProxy.process(req, response);
         } catch (BridgeException e) {
             throw new BridgeRunTimeException(e);
         }

@@ -53,7 +53,8 @@ public class DefaultServiceRouter implements ServiceRouter {
 
     @Override
     public List<MethodWrapper> getMethods(String serviceName, String methodName) {
-        return Lists.newArrayList(methodMap.get(serviceName).get(methodName));
+        Collection<MethodWrapper> re = methodMap.get(serviceName).get(methodName);
+        return re == null ? Lists.<MethodWrapper>newArrayList() : Lists.newArrayList(re);
     }
 
     @Override

@@ -9,6 +9,8 @@ import com.lvbby.bridge.api.wrapper.Context;
  */
 public interface ApiGateWay {
 
+    void init();
+
     Object proxy(Context context) throws BridgeException;
 
     ServiceRouter getServiceRouter();

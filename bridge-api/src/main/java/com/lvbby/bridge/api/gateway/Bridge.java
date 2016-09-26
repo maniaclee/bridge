@@ -29,13 +29,14 @@ public class Bridge implements ApiGateWay {
     public Bridge() {
     }
 
-    public Bridge init() {
+
+    @Override
+    public void init() {
         if (services == null || services.isEmpty())
             throw new IllegalArgumentException("services can't be empty");
         if (serviceRouter == null)
             serviceRouter = new DefaultServiceRouter();
         serviceRouter.init(services);
-        return this;
     }
 
 
@@ -59,21 +60,21 @@ public class Bridge implements ApiGateWay {
         }
     }
 
-    public Bridge addService(ApiService apiService) {
+    public Bridge addApiService(ApiService apiService) {
         services.add(apiService);
         return this;
     }
 
     public Bridge addService(Object apiService) {
-        return addService(ApiService.of(apiService, serviceNameExtractor.getServiceName(apiService)));
+        return addApiService(ApiService.of(apiService, serviceNameExtractor.getServiceName(apiService)));
     }
 
-    public Bridge addService(final List<Object> apiService) {
+    public Bridge addServices(final List apiService) {
         if (apiService != null) {
             services.addAll(Collections2.transform(apiService, new Function<Object, ApiService>() {
                 @Override
                 public ApiService apply(Object o) {
-                    return ApiService.of(o, serviceNameExtractor.getServiceName(apiService));
+                    return ApiService.of(o, serviceNameExtractor.getServiceName(o));
                 }
             }));
         }

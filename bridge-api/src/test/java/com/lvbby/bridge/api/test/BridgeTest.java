@@ -17,8 +17,8 @@ public class BridgeTest {
     @Test
     public void sdf() throws BridgeException {
         Bridge bridge = new Bridge()
-                .addService(testService)
-                .init();
+                .addService(testService);
+        bridge.init();
         Object proxy = bridge.proxy(new Context("TestService", "echo", Params.of(new Object[]{"shit", "hello"})));
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }

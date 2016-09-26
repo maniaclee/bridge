@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -27,16 +28,24 @@ public class HttpProxy {
 
     public HttpProxy(ApiGateWay apiGateWay) {
         this.apiGateWay = apiGateWay;
+        this.apiGateWay.init();
     }
 
     public void process(HttpServletRequest request, HttpServletResponse response) throws BridgeException {
         try {
             Object re = process(request);
+            System.out.println(JSON.toJSONString(re));
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(JSON.toJSONString(re));
         } catch (Exception e) {
             throw new BridgeRunTimeException(e);
+        }finally {
+            try {
+                response.getWriter().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
