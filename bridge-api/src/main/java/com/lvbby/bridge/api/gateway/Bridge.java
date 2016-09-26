@@ -26,6 +26,9 @@ public class Bridge implements ApiGateWay {
     private ResultHandler resultHandler = new DefaultResultHandler();
     private ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
+    public Bridge() {
+    }
+
     public Bridge init() {
         if (services == null || services.isEmpty())
             throw new IllegalArgumentException("services can't be empty");
@@ -53,14 +56,6 @@ public class Bridge implements ApiGateWay {
             return resultHandler.success(re);
         } catch (Exception e) {
             return resultHandler.error(new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e));
-        }
-    }
-
-    private Object instance(Class clz) {
-        try {
-            return clz.newInstance();
-        } catch (Exception e) {
-            return null;
         }
     }
 
