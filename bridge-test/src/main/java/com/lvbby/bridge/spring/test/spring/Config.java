@@ -1,4 +1,4 @@
-package com.lvbby.bridge.spring.test.service;
+package com.lvbby.bridge.spring.test.spring;
 
 import com.lvbby.bridge.spring.BridgeFactoryBean;
 import org.springframework.context.annotation.Bean;

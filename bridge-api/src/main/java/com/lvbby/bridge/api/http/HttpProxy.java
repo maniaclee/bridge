@@ -3,12 +3,16 @@ package com.lvbby.bridge.api.http;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.exception.BridgeException;
-import com.lvbby.bridge.api.gateway.Bridge;
+import com.lvbby.bridge.api.exception.BridgeRunTimeException;
+import com.lvbby.bridge.api.gateway.ApiGateWay;
 import com.lvbby.bridge.api.wrapper.Context;
 import com.lvbby.bridge.api.wrapper.MethodWrapper;
 import com.lvbby.bridge.api.wrapper.Params;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -16,18 +20,38 @@ import java.util.List;
  * Created by peng on 16/9/24.
  */
 public class HttpProxy {
-    private Bridge bridge;
-    private static String paramType = "_param_type";
-    private static String paramName = "param";
+    private ApiGateWay apiGateWay;
+    private String paramTypeLabel = "_param_type";
+    private String serviceLabel = "service";
+    private String paramName = "param";
 
-    public HttpProxy(Bridge bridge) {
-        this.bridge = bridge;
+    public HttpProxy(ApiGateWay apiGateWay) {
+        this.apiGateWay = apiGateWay;
     }
 
-    public Object process(String service, String method, ServletRequest request) throws BridgeException {
+    public void process(HttpServletRequest request, HttpServletResponse response) throws BridgeException {
+        try {
+            Object re = process(request);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(JSON.toJSONString(re));
+        } catch (Exception e) {
+            throw new BridgeRunTimeException(e);
+        }
+    }
+
+    public Object process(HttpServletRequest request) throws BridgeException {
+        String serviceParam = getParameter(request, serviceLabel);
+        if (StringUtils.isBlank(serviceParam))
+            throw new BridgeException(String.format("service not given for param %s", serviceLabel));
+        String[] split = serviceParam.trim().split("\\.");
+        if (split.length != 2)
+            throw new BridgeException(String.format("service format should be url?service=service.method&param=[json,json ... json]", serviceLabel));
+        String service = split[0];
+        String method = split[1];
         String param = getParameter(request, paramName);
-        String paramType = getParameter(request, HttpProxy.paramType, "json");
-        List<MethodWrapper> methods = bridge.getServiceRouter().getMethods(service, method);
+        String paramType = getParameter(request, this.paramTypeLabel, "json");
+        List<MethodWrapper> methods = apiGateWay.getServiceRouter().getMethods(service, method);
         if (methods == null || methods.isEmpty())
             throw new BridgeException(String.format("can't find service for %s.%s", service, method));
         if (methods.size() > 1)
@@ -45,7 +69,7 @@ public class HttpProxy {
         }
         if (context == null)
             throw new BridgeException(String.format("failed to create context for %s.%s", service, method));
-        return bridge.proxy(context);
+        return apiGateWay.proxy(context);
     }
 
     private String getParameter(ServletRequest request, String param) {
