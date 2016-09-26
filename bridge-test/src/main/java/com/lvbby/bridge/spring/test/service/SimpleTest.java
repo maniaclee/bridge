@@ -16,6 +16,7 @@ public class SimpleTest {
         System.out.println(JSON.toJSONString(objects));
         // http://localhost:8080/data/TestService/echo?param=["123"];
         //  http://localhost:8080/data/TestService/handle?param=["123","fuck"]
+        System.out.println(JSON.toJSONString("sdf"));
     }
 
 }
