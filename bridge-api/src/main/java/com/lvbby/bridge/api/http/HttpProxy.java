@@ -7,6 +7,7 @@ import com.lvbby.bridge.api.gateway.Bridge;
 import com.lvbby.bridge.api.wrapper.Context;
 import com.lvbby.bridge.api.wrapper.MethodWrapper;
 import com.lvbby.bridge.api.wrapper.Params;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
 import java.lang.reflect.Type;
@@ -29,6 +30,8 @@ public class HttpProxy {
         Map<String, String> parameterMap = request.getParameterMap();
         String param = getParameter(request, paramName);
         String paramType = getParameter(request, HttpProxy.paramType);
+        if(StringUtils.isBlank(paramType))
+            paramType = "json";
         List<MethodWrapper> methods = bridge.getServiceRouter().getMethods(service, method);
         MethodWrapper methodWrapper = methods.get(0);
         Context context = null;
@@ -36,13 +39,13 @@ public class HttpProxy {
         if (Objects.equal(paramType, "name")) {
             Object p = JSON.parseObject(param, methodWrapper.getMethodParameters()[0].getType());
             context = new Context(service, method, Params.of(new Object[]{p}));
-        } else if (Objects.equal(paramType, "array")) {
+        } else if (Objects.equal(paramType, "json")) {
             Type[] types = new Type[methodWrapper.getMethodParameters().length];
             for (int i = 0; i < methodWrapper.getMethodParameters().length; i++) {
                 types[i] = methodWrapper.getMethodParameters()[i].getType();
             }
             Object[] objects = JSON.parseArray(param, types).toArray();
-            context = new Context(service, method, Params.of(new Object[]{objects}));
+            context = new Context(service, method, Params.of(objects));
         }
         return bridge.proxy(context);
     }
