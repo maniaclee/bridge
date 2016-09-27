@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by lipeng on 16/9/26.
  */
-public class HttpServer {
+public class HttpBridgeServer {
 
     /**
      * root url
@@ -28,14 +28,14 @@ public class HttpServer {
     private Server server;
 
 
-    public HttpServer(List services) {
+    public HttpBridgeServer(List services) {
         this(new Bridge().addServices(services));
     }
 
-    public HttpServer(ApiGateWay apiGateWay) {
+    public HttpBridgeServer(ApiGateWay apiGateWay) {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
-        this.server = createServer(port, rootPath, new HttpProxy(apiGateWay));
+        this.server = createServer(port, rootPath, new HttpBridge(apiGateWay));
     }
 
     public void start() throws Exception {
@@ -50,10 +50,10 @@ public class HttpServer {
         }
     }
 
-    public Server createServer(int port, String rootPath, HttpProxy httpProxy) {
+    public Server createServer(int port, String rootPath, HttpBridge httpBridge) {
         Server server = new Server(port);
         ServletContextHandler handler = new ServletContextHandler(server, "/");
-        handler.addServlet(new ServletHolder(new HttpProxyServlet(httpProxy)), rootPath);
+        handler.addServlet(new ServletHolder(new HttpProxyServlet(httpBridge)), rootPath);
         return server;
     }
 
@@ -77,11 +77,11 @@ public class HttpServer {
      * Created by peng on 2016/9/26.
      */
     public static class HttpProxyServlet extends HttpServlet {
-        private HttpProxy httpProxy;
+        private HttpBridge httpBridge;
 
 
-        public HttpProxyServlet(HttpProxy httpProxy) {
-            this.httpProxy = httpProxy;
+        public HttpProxyServlet(HttpBridge httpBridge) {
+            this.httpBridge = httpBridge;
         }
 
         @Override
@@ -98,7 +98,7 @@ public class HttpServer {
 
         public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
             try {
-                httpProxy.process(req, response);
+                httpBridge.process(req, response);
             } catch (BridgeException e) {
                 throw new BridgeRunTimeException(e);
             }

@@ -53,7 +53,10 @@ public class DefaultServiceRouter implements ServiceRouter {
 
     @Override
     public List<MethodWrapper> getMethods(String serviceName, String methodName) {
-        Collection<MethodWrapper> re = methodMap.get(serviceName).get(methodName);
+        Multimap<String, MethodWrapper> methodWrapperMultimap = methodMap.get(serviceName);
+        if (methodWrapperMultimap == null)
+            throw new BridgeRunTimeException("service not found:" + String.valueOf(serviceName));
+        Collection<MethodWrapper> re = methodWrapperMultimap.get(methodName);
         return re == null ? Lists.<MethodWrapper>newArrayList() : Lists.newArrayList(re);
     }
 

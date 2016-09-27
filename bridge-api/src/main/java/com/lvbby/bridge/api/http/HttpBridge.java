@@ -20,21 +20,19 @@ import java.util.List;
 /**
  * Created by peng on 16/9/24.
  */
-public class HttpProxy {
+public class HttpBridge {
     private ApiGateWay apiGateWay;
     private String paramTypeLabel = "_param_type";
     private String serviceLabel = "api";
     private String paramName = "param";
 
-    public HttpProxy(ApiGateWay apiGateWay) {
+    public HttpBridge(ApiGateWay apiGateWay) {
         this.apiGateWay = apiGateWay;
-        this.apiGateWay.init();
     }
 
     public void process(HttpServletRequest request, HttpServletResponse response) throws BridgeException {
         try {
             Object re = process(request);
-            System.out.println(JSON.toJSONString(re));
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(JSON.toJSONString(re));
