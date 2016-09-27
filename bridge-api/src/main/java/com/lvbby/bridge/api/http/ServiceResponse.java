@@ -25,6 +25,14 @@ public class ServiceResponse implements Serializable {
         return create(tClass, null, false, errorMsg);
     }
 
+    public static ServiceResponse success(Object data) {
+        return success(ServiceResponse.class, data);
+    }
+
+    public static ServiceResponse error(String errorMsg) {
+        return error(ServiceResponse.class, errorMsg);
+    }
+
     public static <T extends ServiceResponse> T create(Class<T> tClass, Object data, boolean isSuccess, String errorMsg) {
         try {
             T t = tClass.newInstance();

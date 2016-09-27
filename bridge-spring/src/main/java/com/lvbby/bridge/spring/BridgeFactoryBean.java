@@ -1,13 +1,13 @@
 package com.lvbby.bridge.spring;
 
 import com.google.common.collect.Lists;
+import com.lvbby.bridge.api.gateway.ApiGateWay;
 import com.lvbby.bridge.api.gateway.Bridge;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -15,18 +15,12 @@ import java.util.Map;
 /**
  * Created by peng on 16/9/22.
  */
-public class BridgeFactoryBean implements FactoryBean<Bridge>, ApplicationListener {
-    Bridge bridge = new Bridge();
+public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>, ApplicationListener {
     List<Class> annotations = Lists.newArrayList();
-
-    {
-        annotations.add(Service.class);
-    }
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
             process(((ContextRefreshedEvent) event).getApplicationContext());
-            bridge.init();
         }
     }
 
@@ -35,18 +29,19 @@ public class BridgeFactoryBean implements FactoryBean<Bridge>, ApplicationListen
             Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(annotation);
             for (Object bean : beansWithAnnotation.values()) {
                 // register service
-                bridge.addService(bean);
+                addService(bean);
             }
         }
+        init();
     }
 
 
     public Bridge getObject() throws Exception {
-        return bridge;
+        return this;
     }
 
     public Class<?> getObjectType() {
-        return Bridge.class;
+        return ApiGateWay.class;
     }
 
     public boolean isSingleton() {

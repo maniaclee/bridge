@@ -64,10 +64,13 @@ public class Bridge implements ApiGateWay {
                 re = postHandler.success(context, re);
             return re;
         } catch (Exception e) {
-            BridgeException bridgeException = new BridgeException(String.format("failed to execute %s.%s", service.getClass().getSimpleName(), method.getName()), e);
             /** post handlers for error */
             for (ApiGateWayPostHandler postHandler : postHandlers)
-                re = postHandler.error(context, re, bridgeException);
+                try {
+                    re = postHandler.error(context, re, e);
+                } catch (Exception e1) {
+                    throw new BridgeException(e1);
+                }
             return re;
         }
     }
