@@ -6,6 +6,11 @@ package com.lvbby.bridge.api.config;
 public class ClassNameServiceNameExtractor implements ServiceNameExtractor {
     @Override
     public String getServiceName(Object service) {
-        return service.getClass().getInterfaces()[0].getSimpleName();
+        Class<?> clz = service instanceof Class ? (Class<?>) service : service.getClass();
+        Class<?>[] interfaces = clz.getInterfaces();
+        if (interfaces.length < 1) {
+            return clz.getSimpleName();
+        }
+        return interfaces[0].getSimpleName();
     }
 }

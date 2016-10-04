@@ -3,6 +3,7 @@ package com.lvbby.bridge.spring;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.gateway.ApiGateWay;
 import com.lvbby.bridge.api.gateway.Bridge;
+import com.lvbby.bridge.api.wrapper.ApiService;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -17,11 +18,17 @@ import java.util.Map;
  */
 public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>, ApplicationListener {
     List<Class> annotations = Lists.newArrayList();
+    List<Class> beanClasses = Lists.newLinkedList();
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
             process(((ContextRefreshedEvent) event).getApplicationContext());
         }
+    }
+
+    public BridgeFactoryBean addBean(Class beanClz) {
+        beanClasses.add(beanClz);
+        return this;
     }
 
     public void process(ApplicationContext applicationContext) {
@@ -31,6 +38,10 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
                 // register service
                 addService(bean);
             }
+        }
+        for (Class beanClass : beanClasses) {
+            /** spring bean's interface will be disturbed by spring's aop & proxy */
+            addApiService(ApiService.of(applicationContext.getBean(beanClass), getServiceNameExtractor().getServiceName(beanClass)));
         }
         init();
     }

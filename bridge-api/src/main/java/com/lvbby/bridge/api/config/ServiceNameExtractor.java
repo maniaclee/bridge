@@ -5,5 +5,10 @@ package com.lvbby.bridge.api.config;
  */
 public interface ServiceNameExtractor {
 
+    /***
+     *
+     * @param service  object or class
+     * @return
+     */
     String getServiceName(Object service);
 }
