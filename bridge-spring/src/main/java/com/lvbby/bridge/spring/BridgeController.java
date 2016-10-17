@@ -32,7 +32,6 @@ public class BridgeController {
     @ResponseBody
     public Object proxy(HttpServletRequest request) {
         try {
-            System.out.println(request);
             return httpBridge.process(request);
         } catch (BridgeException e) {
             throw new BridgeRunTimeException(e);

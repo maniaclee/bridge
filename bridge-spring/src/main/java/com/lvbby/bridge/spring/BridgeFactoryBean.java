@@ -19,6 +19,7 @@ import java.util.Map;
 public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>, ApplicationListener {
     List<Class> annotations = Lists.newArrayList();
     List<Class> beanClasses = Lists.newLinkedList();
+    List beanObjects = Lists.newLinkedList();
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
@@ -28,6 +29,11 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
 
     public BridgeFactoryBean addBean(Class beanClz) {
         beanClasses.add(beanClz);
+        return this;
+    }
+
+    public BridgeFactoryBean addBeanObject(Object beanClz) {
+        beanObjects.add(beanClz);
         return this;
     }
 
@@ -42,6 +48,9 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
         for (Class beanClass : beanClasses) {
             /** spring bean's interface will be disturbed by spring's aop & proxy */
             addApiService(ApiService.of(applicationContext.getBean(beanClass), getServiceNameExtractor().getServiceName(beanClass)));
+        }
+        for (Object beanObject : beanObjects) {
+            addService(beanObject);
         }
         init();
     }
