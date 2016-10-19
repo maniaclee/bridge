@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by peng on 16/9/24.
@@ -21,7 +22,7 @@ public class TestController {
 
     @RequestMapping("api")
     @ResponseBody
-    public Object sdff(HttpServletRequest request) throws BridgeException {
-        return new HttpBridge(bridge).process(request);
+    public Object sdff(HttpServletRequest request,HttpServletResponse response) throws BridgeException {
+        return new HttpBridge(bridge).process(request,response);
     }
 }

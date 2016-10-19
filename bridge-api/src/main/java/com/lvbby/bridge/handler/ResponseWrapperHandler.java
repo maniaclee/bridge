@@ -8,7 +8,7 @@ import com.lvbby.bridge.http.ServiceResponse;
 /**
  * Created by peng on 2016/9/27.
  */
-public class ResponseWrapper implements ApiGateWayPostHandler {
+public class ResponseWrapperHandler implements ApiGateWayPostHandler {
     @Override
     public Object success(Context context, Object result) {
         return ServiceResponse.success(result);

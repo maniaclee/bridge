@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by peng on 2016/9/27.
@@ -30,9 +31,9 @@ public class BridgeController {
 
     @RequestMapping
     @ResponseBody
-    public Object proxy(HttpServletRequest request) {
+    public Object proxy(HttpServletRequest request,HttpServletResponse response) {
         try {
-            return httpBridge.process(request);
+            return httpBridge.process(request,response);
         } catch (BridgeException e) {
             throw new BridgeRunTimeException(e);
         }

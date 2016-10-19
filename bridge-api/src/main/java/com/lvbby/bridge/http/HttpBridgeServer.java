@@ -98,7 +98,7 @@ public class HttpBridgeServer {
 
         public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
             try {
-                httpBridge.process(req, response);
+                httpBridge.processBack(req, response);
             } catch (BridgeException e) {
                 throw new BridgeRunTimeException(e);
             }
