@@ -10,7 +10,7 @@ public interface ApiGateWay {
 
     void init();
 
-    Object proxy(Context context) throws BridgeException;
+    Object proxy(Request request) throws BridgeException;
 
     ApiService getApiService(String serviceName);
 

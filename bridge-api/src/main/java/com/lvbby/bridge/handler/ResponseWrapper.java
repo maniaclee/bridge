@@ -2,8 +2,8 @@ package com.lvbby.bridge.handler;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
-import com.lvbby.bridge.http.ServiceResponse;
 import com.lvbby.bridge.gateway.Context;
+import com.lvbby.bridge.http.ServiceResponse;
 
 /**
  * Created by peng on 2016/9/27.

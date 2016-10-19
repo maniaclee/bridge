@@ -68,7 +68,7 @@ public class HttpBridge {
             throw new BridgeException(String.format("can't find service for %s.%s", service, method));
 
 
-        Context context = null;
+        Request context = null;
         if (Objects.equal(paramType, "json")) {
             int size = JSON.parseArray(param).size();
             for (ApiMethod apiMethod : apiMethods) {
@@ -79,7 +79,7 @@ public class HttpBridge {
                         types[i] = paramTypes[i].getType();
                     }
                     Object[] objects = JSON.parseArray(param, types).toArray();
-                    context = new Context(service, method, Params.of(objects));
+                    context = new Request(service, method, Params.of(objects));
                     break;//TODO how to deal with same length methods
                 }
             }

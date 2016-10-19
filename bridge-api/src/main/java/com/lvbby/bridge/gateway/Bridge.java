@@ -31,26 +31,32 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
 
     @Override
-    public Object proxy(Context context) throws BridgeException {
+    public Object proxy(Request request) throws BridgeException {
+
+        ApiService service = serviceMap.get(request.getServiceName());
+        if (service == null)
+            throw new BridgeException(String.format("service not found:%s", request.getServiceName()));
+        ApiMethod methodWrapper = service.getApiMethod(request.getMethod(), request.getParam());
+        if (methodWrapper == null)
+            throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), request.getParam()));
+
+        Context context = Context.of(request, service);
+        context.setApiMethod(methodWrapper);
+
+        /** filter */
         for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
             if (!apiGateWayFilter.canVisit(context))
-                throw new BridgeException(String.format("%s.%s can't be visit!", context.getServiceName(), context.getMethod()));
+                throw new BridgeException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()));
         }
 
         /** pre handlers */
         for (ApiGateWayPreHandler preHandler : preHandlers)
             preHandler.preProcess(context);
 
-        ApiService service = serviceMap.get(context.getServiceName());
-        if (service == null)
-            throw new BridgeException(String.format("service not found:%s", context.getServiceName()));
-        ApiMethod methodWrapper = service.getApiMethod(context.getMethod(), context.getParam());
-        if (methodWrapper == null)
-            throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), context.getMethod(), context.getParam()));
         /** invoke */
         Object re = null;
         try {
-            re = methodWrapper.invoke(service, context.getParam());
+            re = methodWrapper.invoke(service, request.getParam());
             /** post handlers for success*/
             for (ApiGateWayPostHandler postHandler : postHandlers)
                 re = postHandler.success(context, re);

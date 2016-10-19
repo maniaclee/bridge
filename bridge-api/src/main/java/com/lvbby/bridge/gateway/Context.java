@@ -1,47 +1,44 @@
 package com.lvbby.bridge.gateway;
 
-import com.lvbby.bridge.api.Params;
+import com.lvbby.bridge.api.ApiMethod;
+import com.lvbby.bridge.api.ApiService;
 
 /**
- * Created by peng on 16/9/22.
- * the entrance parameter to api gateway
+ * Created by lipeng on 16/10/19.
  */
 public class Context {
-    private String serviceName;
-    private String method;
-    private Params param;
+    private Request request;
+    private ApiService apiService;
+    private ApiMethod apiMethod;
 
-    public Context() {
+    public static Context of(Request request, ApiService apiService) {
+        Context context = new Context();
+        context.setRequest(request);
+        context.setApiService(apiService);
+        return context;
     }
 
-    public Context(String serviceName, String method, Params param) {
-        this.serviceName = serviceName;
-        this.method = method;
-        this.param = param;
+    public Request getRequest() {
+        return request;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public void setRequest(Request request) {
+        this.request = request;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public ApiService getApiService() {
+        return apiService;
     }
 
-    public String getMethod() {
-        return method;
+    public void setApiService(ApiService apiService) {
+        this.apiService = apiService;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public ApiMethod getApiMethod() {
+        return apiMethod;
     }
 
-    public Params getParam() {
-        return param;
+    public void setApiMethod(ApiMethod apiMethod) {
+        this.apiMethod = apiMethod;
     }
-
-    public void setParam(Params param) {
-        this.param = param;
-    }
-
 }

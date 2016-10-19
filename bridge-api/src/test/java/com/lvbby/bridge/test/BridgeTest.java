@@ -2,7 +2,7 @@ package com.lvbby.bridge.test;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.Bridge;
-import com.lvbby.bridge.gateway.Context;
+import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.api.Params;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class BridgeTest {
         Bridge bridge = new Bridge()
                 .addService(testService);
         bridge.init();
-        Object proxy = bridge.proxy(new Context("TestService", "echo", Params.of(new Object[]{"shit", "hello"})));
+        Object proxy = bridge.proxy(new Request("TestService", "echo", Params.of(new Object[]{"shit", "hello"})));
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }
 

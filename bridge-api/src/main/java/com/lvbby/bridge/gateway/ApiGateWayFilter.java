@@ -5,5 +5,5 @@ package com.lvbby.bridge.gateway;
  */
 public interface ApiGateWayFilter {
 
-    boolean canVisit(Context context);
+    boolean canVisit(Context request);
 }
