@@ -1,7 +1,7 @@
 package com.lvbby.bridge.spring.test;
 
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.api.http.HttpBridgeServer;
+import com.lvbby.bridge.http.HttpBridgeServer;
 import com.lvbby.bridge.spring.test.service.TestServiceImpl;
 
 /**

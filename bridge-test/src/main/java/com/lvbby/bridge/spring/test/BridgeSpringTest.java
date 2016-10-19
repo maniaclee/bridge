@@ -1,9 +1,9 @@
 package com.lvbby.bridge.spring.test;
 
-import com.lvbby.bridge.api.exception.BridgeException;
-import com.lvbby.bridge.api.gateway.Bridge;
-import com.lvbby.bridge.api.gateway.Context;
-import com.lvbby.bridge.api.gateway.Params;
+import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.gateway.Bridge;
+import com.lvbby.bridge.gateway.Context;
+import com.lvbby.bridge.gateway.Params;
 import com.lvbby.bridge.spring.test.spring.Config;
 import org.junit.Test;
 import org.junit.runner.RunWith;

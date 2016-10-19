@@ -1,9 +1,9 @@
 package com.lvbby.bridge.spring;
 
-import com.lvbby.bridge.api.exception.BridgeException;
-import com.lvbby.bridge.api.exception.BridgeRunTimeException;
-import com.lvbby.bridge.api.gateway.Bridge;
-import com.lvbby.bridge.api.http.HttpBridge;
+import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.exception.BridgeRunTimeException;
+import com.lvbby.bridge.gateway.Bridge;
+import com.lvbby.bridge.http.HttpBridge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

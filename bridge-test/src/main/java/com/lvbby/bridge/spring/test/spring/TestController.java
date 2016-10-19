@@ -1,8 +1,8 @@
 package com.lvbby.bridge.spring.test.spring;
 
-import com.lvbby.bridge.api.exception.BridgeException;
-import com.lvbby.bridge.api.gateway.Bridge;
-import com.lvbby.bridge.api.http.HttpBridge;
+import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.gateway.Bridge;
+import com.lvbby.bridge.http.HttpBridge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
