@@ -39,6 +39,10 @@ public class Request {
         return this;
     }
 
+    public Object getAttribute(String key) {
+        return extArgs.get(key);
+    }
+
     public String getServiceName() {
         return serviceName;
     }

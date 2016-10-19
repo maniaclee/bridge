@@ -14,7 +14,7 @@ public class BlacklistApiGateWayFilter implements ApiGateWayFilter {
     private static final String INNER_VALUE = "-1";
     private Multimap<String, String> map = LinkedListMultimap.create();
 
-    public void blockApi(String service, String method) {
+    public void addApi(String service, String method) {
         if (StringUtils.isBlank(service))
             return;
         if (StringUtils.isBlank(method))

@@ -16,6 +16,6 @@ public class DefaultApiGateWayPostHandler implements ApiGateWayPostHandler {
 
     @Override
     public Object error(Context context, Object result, Exception e) throws Exception {
-        return result;
+        throw e;
     }
 }
