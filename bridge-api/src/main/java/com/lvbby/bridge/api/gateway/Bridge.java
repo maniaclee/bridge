@@ -69,6 +69,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiGateWay
     }
 
     @Override
+    public ApiService getApiService(String serviceName) {
+        return serviceMap.get(serviceName);
+    }
+
+    @Override
     public Bridge addApiService(ApiService apiService) {
         serviceMap.put(apiService.getServiceName(), apiService);
         return this;

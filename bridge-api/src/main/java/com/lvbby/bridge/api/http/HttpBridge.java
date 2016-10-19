@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.exception.BridgeRunTimeException;
-import com.lvbby.bridge.api.gateway.ApiGateWay;
-import com.lvbby.bridge.api.gateway.Context;
-import com.lvbby.bridge.api.gateway.MethodWrapper;
-import com.lvbby.bridge.api.gateway.Params;
+import com.lvbby.bridge.api.gateway.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
@@ -59,21 +56,29 @@ public class HttpBridge {
         String method = split[1];
         String param = getParameter(request, paramName);
         String paramType = getParameter(request, this.paramTypeLabel, "json");
-        List<MethodWrapper> methods = apiGateWay.getServiceRouter().getMethods(service, method);
-        if (methods == null || methods.isEmpty())
+        ApiService apiService = apiGateWay.getApiService(service);
+        if (apiService == null)
+            throw new BridgeException(String.format("can't find service for %s", service));
+        List<ApiMethod> apiMethods = apiService.getApiMethods(method);
+        if (apiMethods == null || apiMethods.isEmpty())
             throw new BridgeException(String.format("can't find service for %s.%s", service, method));
-        if (methods.size() > 1)
-            throw new BridgeException(String.format("method overload is supported in http api gateway , multi methods found for service for %s.%s", service, method));
 
-        MethodWrapper methodWrapper = methods.get(0);
+
         Context context = null;
         if (Objects.equal(paramType, "json")) {
-            Type[] types = new Type[methodWrapper.getMethodParameters().length];
-            for (int i = 0; i < methodWrapper.getMethodParameters().length; i++) {
-                types[i] = methodWrapper.getMethodParameters()[i].getType();
+            int size = JSON.parseArray(param).size();
+            for (ApiMethod apiMethod : apiMethods) {
+                MethodParameter[] paramTypes = apiMethod.getParamTypes();
+                if (size == paramTypes.length) {
+                    Type[] types = new Type[paramTypes.length];
+                    for (int i = 0; i < paramTypes.length; i++) {
+                        types[i] = paramTypes[i].getType();
+                    }
+                    Object[] objects = JSON.parseArray(param, types).toArray();
+                    context = new Context(service, method, Params.of(objects));
+                    break;//TODO how to deal with same length methods
+                }
             }
-            Object[] objects = JSON.parseArray(param, types).toArray();
-            context = new Context(service, method, Params.of(objects));
         }
         if (context == null)
             throw new BridgeException(String.format("failed to create context for %s.%s", service, method));

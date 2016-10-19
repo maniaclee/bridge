@@ -1,11 +1,13 @@
 package com.lvbby.bridge.api.gateway;
 
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.lvbby.bridge.api.builder.ApiMethodBuilder;
 import com.lvbby.bridge.api.builder.ApiMethodReflectionBuilder;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * wrapper for service
@@ -36,6 +38,12 @@ public class ApiService {
         if (apiMethod != null)
             methods.put(apiMethod.getName(), apiMethod);
         return this;
+    }
+
+
+    public List<ApiMethod> getApiMethods(String methodName) {
+        Collection<ApiMethod> elements = methods.get(methodName);
+        return elements != null && !elements.isEmpty() ? Lists.newArrayList(elements) : Lists.<ApiMethod>newLinkedList();
     }
 
     public ApiMethod getApiMethod(String methodName, Params params) {

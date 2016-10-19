@@ -15,6 +15,8 @@ public interface ApiGateWay {
 
     ServiceRouter getServiceRouter();
 
+    ApiService getApiService(String serviceName);
+
     void addApiFilter(ApiFilter apiFilter);
 
     void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler);
