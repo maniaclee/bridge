@@ -15,12 +15,8 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     protected List<ApiGateWayPreHandler> preHandlers = Lists.newLinkedList();
     protected List<ApiGateWayPostHandler> postHandlers = Lists.newArrayList();
     protected List<ApiFilter> apiFilters = Lists.newLinkedList();
-    protected ServiceRouter serviceRouter;
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
-    public ServiceRouter getServiceRouter() {
-        return serviceRouter;
-    }
 
     @Override
     public void addApiFilter(ApiFilter apiFilter) {

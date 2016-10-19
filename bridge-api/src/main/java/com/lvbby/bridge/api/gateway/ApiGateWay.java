@@ -13,8 +13,6 @@ public interface ApiGateWay {
 
     Object proxy(Context context) throws BridgeException;
 
-    ServiceRouter getServiceRouter();
-
     ApiService getApiService(String serviceName);
 
     void addApiFilter(ApiFilter apiFilter);

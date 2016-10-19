@@ -5,7 +5,6 @@ import com.lvbby.bridge.api.config.ApiGateWayPostHandler;
 import com.lvbby.bridge.api.config.ApiGateWayPreHandler;
 import com.lvbby.bridge.api.config.DefaultApiGateWayPostHandler;
 import com.lvbby.bridge.api.exception.BridgeException;
-import com.lvbby.bridge.api.route.DefaultServiceRouter;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +25,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiGateWay
     public void init() {
         if (serviceMap.isEmpty())
             throw new IllegalArgumentException("services can't be empty");
-        if (serviceRouter == null)
-            serviceRouter = new DefaultServiceRouter();
     }
 
 
