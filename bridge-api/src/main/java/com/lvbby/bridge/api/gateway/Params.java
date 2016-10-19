@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api.wrapper;
+package com.lvbby.bridge.api.gateway;
 
 import java.util.Arrays;
 

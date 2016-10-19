@@ -5,9 +5,9 @@ import com.google.common.base.Objects;
 import com.lvbby.bridge.api.exception.BridgeException;
 import com.lvbby.bridge.api.exception.BridgeRunTimeException;
 import com.lvbby.bridge.api.gateway.ApiGateWay;
-import com.lvbby.bridge.api.wrapper.Context;
-import com.lvbby.bridge.api.wrapper.MethodWrapper;
-import com.lvbby.bridge.api.wrapper.Params;
+import com.lvbby.bridge.api.gateway.Context;
+import com.lvbby.bridge.api.gateway.MethodWrapper;
+import com.lvbby.bridge.api.gateway.Params;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by peng on 16/9/24.
+ * usage above the ApiGateWay
  */
 public class HttpBridge {
     private ApiGateWay apiGateWay;

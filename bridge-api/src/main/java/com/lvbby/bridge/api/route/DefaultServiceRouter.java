@@ -6,9 +6,10 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.lvbby.bridge.api.exception.BridgeRunTimeException;
-import com.lvbby.bridge.api.wrapper.ApiService;
-import com.lvbby.bridge.api.wrapper.Context;
-import com.lvbby.bridge.api.wrapper.MethodWrapper;
+import com.lvbby.bridge.api.gateway.ApiService;
+import com.lvbby.bridge.api.gateway.Context;
+import com.lvbby.bridge.api.gateway.MethodWrapper;
+import com.lvbby.bridge.api.gateway.ServiceRouter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;

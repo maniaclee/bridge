@@ -1,27 +1,28 @@
-package com.lvbby.bridge.api.wrapper;
+package com.lvbby.bridge.api.gateway;
 
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.config.ParameterNameExtractor;
+import com.lvbby.bridge.api.exception.BridgeException;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Created by lipeng on 16/9/23.
  * wrapper for method
  */
-public class MethodWrapper {
+public class MethodWrapper implements ApiMethod {
     private Method method;
     private String name;
     private MethodParameter[] methodParameters;
-    private Map<String, MethodParameter> parameterMap = new HashMap<String, MethodParameter>();
-
+    private Map<String, MethodParameter> parameterMap = new LinkedHashMap<String, MethodParameter>();
     private ParameterNameExtractor parameterNameExtractor;
 
     public MethodWrapper(Method method) {
         this.method = method;
         this.name = method.getName();
+        method.setAccessible(true);
     }
 
     public MethodWrapper init() {
@@ -106,6 +107,21 @@ public class MethodWrapper {
         throw new IllegalArgumentException("unknown parameter type : " + params.getType());
     }
 
+    @Override
+    public Object invoke(ApiService apiService, Params params) throws Exception {
+        Object[] realParameters = getRealParameters(params);
+        try {
+            return method.invoke(apiService.getService(), realParameters);
+        } catch (Exception e) {
+            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()));
+        }
+    }
+
+    @Override
+    public MethodParameter[] getParamTypes() {
+        return methodParameters;
+    }
+
 
     public Method getMethod() {
         return method;
@@ -139,34 +155,5 @@ public class MethodWrapper {
         this.parameterNameExtractor = parameterNameExtractor;
     }
 
-    public static class MethodParameter {
-        private int index;
-        private String name;
-        private Class type;
-
-        public int getIndex() {
-            return index;
-        }
-
-        public void setIndex(int index) {
-            this.index = index;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Class getType() {
-            return type;
-        }
-
-        public void setType(Class type) {
-            this.type = type;
-        }
-    }
 
 }

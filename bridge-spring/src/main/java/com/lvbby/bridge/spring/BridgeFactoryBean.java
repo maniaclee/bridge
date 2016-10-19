@@ -3,7 +3,7 @@ package com.lvbby.bridge.spring;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.gateway.ApiGateWay;
 import com.lvbby.bridge.api.gateway.Bridge;
-import com.lvbby.bridge.api.wrapper.ApiService;
+import com.lvbby.bridge.api.gateway.ApiService;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
