@@ -1,4 +1,8 @@
-package com.lvbby.bridge.gateway;
+package com.lvbby.bridge.api;
+
+import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.api.MethodParameter;
+import com.lvbby.bridge.api.Params;
 
 /**
  * Created by lipeng on 16/10/19.

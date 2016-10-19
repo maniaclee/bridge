@@ -1,6 +1,6 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.api.impl;
 
-import com.lvbby.bridge.gateway.ServiceNameExtractor;
+import com.lvbby.bridge.api.ServiceNameExtractor;
 
 /**
  * Created by peng on 16/9/24.

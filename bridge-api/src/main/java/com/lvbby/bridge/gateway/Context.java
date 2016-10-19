@@ -1,5 +1,7 @@
 package com.lvbby.bridge.gateway;
 
+import com.lvbby.bridge.api.Params;
+
 /**
  * Created by peng on 16/9/22.
  * the entrance parameter to api gateway

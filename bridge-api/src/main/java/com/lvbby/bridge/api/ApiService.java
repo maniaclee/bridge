@@ -1,9 +1,9 @@
-package com.lvbby.bridge.gateway;
+package com.lvbby.bridge.api;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.lvbby.bridge.gateway.impl.ApiMethodReflectionBuilder;
+import com.lvbby.bridge.api.impl.ApiMethodReflectionBuilder;
 
 import java.util.Collection;
 import java.util.List;

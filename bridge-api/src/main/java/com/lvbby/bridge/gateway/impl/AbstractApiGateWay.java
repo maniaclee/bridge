@@ -1,6 +1,8 @@
 package com.lvbby.bridge.gateway.impl;
 
 import com.google.common.collect.Lists;
+import com.lvbby.bridge.api.ServiceNameExtractor;
+import com.lvbby.bridge.api.impl.ClassNameServiceNameExtractor;
 import com.lvbby.bridge.gateway.*;
 
 import java.util.List;

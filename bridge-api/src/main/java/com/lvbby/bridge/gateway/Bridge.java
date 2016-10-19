@@ -1,6 +1,9 @@
 package com.lvbby.bridge.gateway;
 
 import com.google.common.collect.Maps;
+import com.lvbby.bridge.api.ApiMethod;
+import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.api.ApiServiceBuilder;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
 import com.lvbby.bridge.exception.BridgeException;
@@ -11,7 +14,7 @@ import java.util.Map;
 /**
  * Created by peng on 16/9/22.
  */
-public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiGateWayBuilder {
+public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiServiceBuilder {
     private Map<String, ApiService> serviceMap = Maps.newHashMap();
 
     public Bridge() {

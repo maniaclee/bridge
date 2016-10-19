@@ -1,4 +1,4 @@
-package com.lvbby.bridge.gateway;
+package com.lvbby.bridge.api;
 
 /**
  * Created by lipeng on 16/9/23.

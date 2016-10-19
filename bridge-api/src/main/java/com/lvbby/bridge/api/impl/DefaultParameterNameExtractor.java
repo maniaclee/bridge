@@ -1,6 +1,6 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.api.impl;
 
-import com.lvbby.bridge.gateway.ParameterNameExtractor;
+import com.lvbby.bridge.api.ParameterNameExtractor;
 
 import java.lang.reflect.Method;
 

@@ -1,4 +1,7 @@
-package com.lvbby.bridge.gateway;
+package com.lvbby.bridge.api;
+
+import com.lvbby.bridge.api.ApiMethod;
+import com.lvbby.bridge.api.ApiService;
 
 import java.util.List;
 

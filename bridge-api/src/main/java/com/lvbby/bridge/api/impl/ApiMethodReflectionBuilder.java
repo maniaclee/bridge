@@ -1,9 +1,9 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.api.impl;
 
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.gateway.ApiMethod;
-import com.lvbby.bridge.gateway.ApiMethodBuilder;
-import com.lvbby.bridge.gateway.ApiService;
+import com.lvbby.bridge.api.ApiMethod;
+import com.lvbby.bridge.api.ApiMethodBuilder;
+import com.lvbby.bridge.api.ApiService;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

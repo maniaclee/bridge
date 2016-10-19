@@ -1,4 +1,4 @@
-package com.lvbby.bridge.gateway;
+package com.lvbby.bridge.api;
 
 public class MethodParameter {
     private int index;

@@ -1,5 +1,6 @@
 package com.lvbby.bridge.gateway;
 
+import com.lvbby.bridge.api.ApiService;
 import com.lvbby.bridge.exception.BridgeException;
 
 /**
