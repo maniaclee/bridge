@@ -13,14 +13,14 @@ import java.util.List;
 public abstract class AbstractApiGateWay implements ApiGateWay {
     protected List<ApiGateWayPreHandler> preHandlers = Lists.newLinkedList();
     protected List<ApiGateWayPostHandler> postHandlers = Lists.newArrayList();
-    protected List<ApiFilter> apiFilters = Lists.newLinkedList();
+    protected List<ApiGateWayFilter> apiGateWayFilters = Lists.newLinkedList();
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
 
     @Override
-    public void addApiFilter(ApiFilter apiFilter) {
-        if (apiFilter != null)
-            apiFilters.add(apiFilter);
+    public void addApiFilter(ApiGateWayFilter apiGateWayFilter) {
+        if (apiGateWayFilter != null)
+            apiGateWayFilters.add(apiGateWayFilter);
     }
 
     @Override

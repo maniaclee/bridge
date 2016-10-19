@@ -32,8 +32,8 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
     @Override
     public Object proxy(Context context) throws BridgeException {
-        for (ApiFilter apiFilter : apiFilters) {
-            if (!apiFilter.canVisit(context))
+        for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
+            if (!apiGateWayFilter.canVisit(context))
                 throw new BridgeException(String.format("%s.%s can't be visit!", context.getServiceName(), context.getMethod()));
         }
 

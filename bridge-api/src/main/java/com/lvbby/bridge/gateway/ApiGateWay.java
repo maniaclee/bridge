@@ -14,7 +14,7 @@ public interface ApiGateWay {
 
     ApiService getApiService(String serviceName);
 
-    void addApiFilter(ApiFilter apiFilter);
+    void addApiFilter(ApiGateWayFilter apiGateWayFilter);
 
     void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler);
 
