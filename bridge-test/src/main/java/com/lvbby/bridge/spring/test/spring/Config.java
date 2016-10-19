@@ -1,6 +1,7 @@
 package com.lvbby.bridge.spring.test.spring;
 
 import com.lvbby.bridge.spring.BridgeFactoryBean;
+import com.lvbby.bridge.spring.test.service.TestService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ public class Config {
     @Bean
     public BridgeFactoryBean bridgeFactoryBean() {
         BridgeFactoryBean bridgeFactoryBean = new BridgeFactoryBean();
+        bridgeFactoryBean.addBean(TestService.class);
         return bridgeFactoryBean;
     }
 }
