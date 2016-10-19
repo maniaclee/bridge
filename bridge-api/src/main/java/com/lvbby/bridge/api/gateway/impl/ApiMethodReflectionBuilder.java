@@ -1,9 +1,10 @@
-package com.lvbby.bridge.api.builder;
+package com.lvbby.bridge.api.gateway.impl;
 
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.gateway.ApiMethod;
+import com.lvbby.bridge.api.gateway.ApiMethodBuilder;
 import com.lvbby.bridge.api.gateway.ApiService;
-import com.lvbby.bridge.api.gateway.MethodWrapper;
+import com.lvbby.bridge.api.gateway.impl.DefaultApiMethod;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -24,7 +25,7 @@ public class ApiMethodReflectionBuilder implements ApiMethodBuilder {
             for (Method m : ms) {
                 m.setAccessible(true);
                 if (Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers()))
-                    re.add(new MethodWrapper(m).init());
+                    re.add(new DefaultApiMethod(m).init());
             }
         return re;
     }

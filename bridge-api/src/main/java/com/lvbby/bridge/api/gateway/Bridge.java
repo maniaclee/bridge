@@ -1,9 +1,8 @@
 package com.lvbby.bridge.api.gateway;
 
 import com.google.common.collect.Maps;
-import com.lvbby.bridge.api.config.ApiGateWayPostHandler;
-import com.lvbby.bridge.api.config.ApiGateWayPreHandler;
-import com.lvbby.bridge.api.config.DefaultApiGateWayPostHandler;
+import com.lvbby.bridge.api.gateway.impl.AbstractApiGateWay;
+import com.lvbby.bridge.api.handler.DefaultApiGateWayPostHandler;
 import com.lvbby.bridge.api.exception.BridgeException;
 
 import java.util.List;

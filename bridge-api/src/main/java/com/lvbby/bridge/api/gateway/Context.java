@@ -1,7 +1,5 @@
 package com.lvbby.bridge.api.gateway;
 
-import com.lvbby.bridge.api.route.MethodRouter;
-
 /**
  * Created by peng on 16/9/22.
  * the entrance parameter to api gateway
@@ -10,7 +8,6 @@ public class Context {
     private String serviceName;
     private String method;
     private Params param;
-    private int methodRouter = MethodRouter.name_paramterNum;
 
     public Context() {
     }
@@ -45,11 +42,4 @@ public class Context {
         this.param = param;
     }
 
-    public int getMethodRouter() {
-        return methodRouter;
-    }
-
-    public void setMethodRouter(int methodRouter) {
-        this.methodRouter = methodRouter;
-    }
 }

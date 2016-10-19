@@ -1,10 +1,7 @@
-package com.lvbby.bridge.api.gateway;
+package com.lvbby.bridge.api.gateway.impl;
 
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.api.config.ApiGateWayPostHandler;
-import com.lvbby.bridge.api.config.ApiGateWayPreHandler;
-import com.lvbby.bridge.api.config.ClassNameServiceNameExtractor;
-import com.lvbby.bridge.api.config.ServiceNameExtractor;
+import com.lvbby.bridge.api.gateway.*;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
-package com.lvbby.bridge.api.config;
+package com.lvbby.bridge.api.handler;
 
 import com.lvbby.bridge.api.exception.BridgeException;
+import com.lvbby.bridge.api.gateway.ApiGateWayPostHandler;
 import com.lvbby.bridge.api.http.ServiceResponse;
 import com.lvbby.bridge.api.gateway.Context;
 

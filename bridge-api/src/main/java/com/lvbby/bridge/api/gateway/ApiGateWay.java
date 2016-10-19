@@ -1,7 +1,5 @@
 package com.lvbby.bridge.api.gateway;
 
-import com.lvbby.bridge.api.config.ApiGateWayPreHandler;
-import com.lvbby.bridge.api.config.ApiGateWayPostHandler;
 import com.lvbby.bridge.api.exception.BridgeException;
 
 /**

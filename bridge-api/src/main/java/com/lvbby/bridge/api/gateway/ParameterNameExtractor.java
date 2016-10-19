@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api.config;
+package com.lvbby.bridge.api.gateway;
 
 import java.lang.reflect.Method;
 

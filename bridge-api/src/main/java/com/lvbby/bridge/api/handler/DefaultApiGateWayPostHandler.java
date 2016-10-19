@@ -1,5 +1,6 @@
-package com.lvbby.bridge.api.config;
+package com.lvbby.bridge.api.handler;
 
+import com.lvbby.bridge.api.gateway.ApiGateWayPostHandler;
 import com.lvbby.bridge.api.gateway.Context;
 
 /**
