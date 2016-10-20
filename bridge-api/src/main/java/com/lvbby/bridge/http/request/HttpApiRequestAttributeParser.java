@@ -7,14 +7,14 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HttpApiRequestAttributeParser implements HttpApiRequestParser {
 
-    private String serviceParam = "s";
-    private String methodParam = "m";
+    private String serviceParam = "service";
+    private String methodParam = "method";
 
     @Override
     public HttpApiRequest parse(HttpServletRequest request) {
         HttpApiRequest re = new HttpApiRequest();
         re.setService(request.getParameter(serviceParam));
         re.setMethod(request.getParameter(methodParam));
-        return null;
+        return re;
     }
 }

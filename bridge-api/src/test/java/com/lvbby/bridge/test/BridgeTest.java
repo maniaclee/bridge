@@ -1,9 +1,8 @@
 package com.lvbby.bridge.test;
 
-import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.api.Params;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.gateway.Request;
-import com.lvbby.bridge.api.Params;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ public class BridgeTest {
     private TestService testService = new TestService();
 
     @Test
-    public void sdf() throws BridgeException {
+    public void sdf() throws Exception {
         Bridge bridge = new Bridge()
                 .addService(testService);
         bridge.init();

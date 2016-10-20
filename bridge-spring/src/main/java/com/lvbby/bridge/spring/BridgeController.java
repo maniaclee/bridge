@@ -1,7 +1,5 @@
 package com.lvbby.bridge.spring;
 
-import com.lvbby.bridge.exception.BridgeException;
-import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.http.HttpBridge;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +29,8 @@ public class BridgeController {
 
     @RequestMapping
     @ResponseBody
-    public Object proxy(HttpServletRequest request,HttpServletResponse response) {
-        try {
-            return httpBridge.process(request,response);
-        } catch (BridgeException e) {
-            throw new BridgeRunTimeException(e);
-        }
+    public Object proxy(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return httpBridge.process(request, response);
     }
 
 }
