@@ -9,6 +9,15 @@ public class HttpApiRequest implements Serializable {
     private static final long serialVersionUID = -4598257872637612151L;
     private String service;
     private String method;
+    private String paramType;
+
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
+    }
 
     public String getService() {
         return service;

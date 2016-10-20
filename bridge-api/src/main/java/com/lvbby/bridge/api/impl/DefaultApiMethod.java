@@ -13,11 +13,15 @@ import java.util.Map;
  * wrapper for value
  */
 public class DefaultApiMethod implements ApiMethod {
+    /**
+     * default parameterName finder
+     */
+    private static final ParameterNameExtractor defaultParameterNameExtractor = new DefaultParameterNameExtractor();
     private Method method;
     private String name;
     private MethodParameter[] methodParameters;
     private Map<String, MethodParameter> parameterMap = new LinkedHashMap<String, MethodParameter>();
-    private ParameterNameExtractor parameterNameExtractor;
+    private ParameterNameExtractor parameterNameExtractor = defaultParameterNameExtractor;
 
     public DefaultApiMethod(Method method) {
         this.method = method;

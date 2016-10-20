@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class DefaultHttpParamParser implements HttpParamParser {
 
-    
+
     private String paramAttributeName;
 
     public DefaultHttpParamParser(String paramAttributeName) {

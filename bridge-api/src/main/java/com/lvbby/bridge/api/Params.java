@@ -7,6 +7,16 @@ import java.util.Arrays;
  * wrapper for parameters
  */
 public class Params {
+    /***
+     * json Array: like [json,json,json,json]
+     * because method parameters are array
+     */
+    //    JSON,
+    /***
+     * key value pairs: like  key1:value1
+     * if method parameters each have a name
+     */
+    //    MAP
     public static final String byIndex = "index";
     public static final String byName = "name";
     private Param[] params;
