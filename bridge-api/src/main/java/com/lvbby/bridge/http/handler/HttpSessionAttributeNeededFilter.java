@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
  * Created by lipeng on 16/10/19.
  * http request must have the give session key and the value must not be null
  */
-public class SessionAttributeNeededFilter implements ApiGateWayFilter {
+public class HttpSessionAttributeNeededFilter implements ApiGateWayFilter {
 
     private String sessionKey;
 
-    public SessionAttributeNeededFilter(String sessionKey) {
+    public HttpSessionAttributeNeededFilter(String sessionKey) {
         this.sessionKey = sessionKey;
     }
 

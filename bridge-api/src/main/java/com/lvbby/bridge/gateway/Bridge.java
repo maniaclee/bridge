@@ -4,9 +4,10 @@ import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ApiMethod;
 import com.lvbby.bridge.api.ApiService;
 import com.lvbby.bridge.api.ApiServiceBuilder;
+import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
-import com.lvbby.bridge.exception.BridgeException;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     private Map<String, ApiService> serviceMap = Maps.newHashMap();
 
     public Bridge() {
+        addApiFilter(new BlockingApiGateWayFilter());
+
         /** add the default post handler */
         addPostHandler(new DefaultApiGateWayPostHandler());
     }
@@ -31,7 +34,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
 
     @Override
-    public Object proxy(Request request) throws BridgeException {
+    public Object proxy(Request request) throws Exception {
 
         ApiService service = serviceMap.get(request.getServiceName());
         if (service == null)
@@ -43,19 +46,18 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         Context context = Context.of(request, service);
         context.setApiMethod(methodWrapper);
 
-        /** filter */
-        for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
-            if (!apiGateWayFilter.canVisit(context))
-                throw new BridgeException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()));
-        }
-
-        /** pre handlers */
-        for (ApiGateWayPreHandler preHandler : preHandlers)
-            preHandler.preProcess(context);
-
         /** invoke */
         Object re = null;
         try {
+
+            /** filter */
+            for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
+                if (!apiGateWayFilter.canVisit(context))
+                    throw new BridgeException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()));
+            }
+            /** pre handlers */
+            for (ApiGateWayPreHandler preHandler : preHandlers)
+                preHandler.preProcess(context);
             re = methodWrapper.invoke(service, request.getParam());
             /** post handlers for success*/
             for (ApiGateWayPostHandler postHandler : postHandlers)
@@ -64,11 +66,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         } catch (Exception e) {
             /** post handlers for error */
             for (ApiGateWayPostHandler postHandler : postHandlers)
-                try {
-                    re = postHandler.error(context, re, e);
-                } catch (Exception e1) {
-                    throw new BridgeException(e1);
-                }
+                re = postHandler.error(context, re, e);
             return re;
         }
     }

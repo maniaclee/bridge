@@ -10,21 +10,20 @@ import javax.servlet.http.HttpServletRequest;
  * Created by lipeng on 16/10/19.
  * http request must have equal value of request.requestKey && session.sessionKey
  */
-public class RequestAttributeValidateFilter implements ApiGateWayFilter {
+public abstract class AbstractHttpAttributeValidateFilter implements ApiGateWayFilter {
 
-    private String sessionKey;
-    private String requestKey;
-
-    public RequestAttributeValidateFilter(String sessionKey, String requestKey) {
-        this.sessionKey = sessionKey;
-        this.requestKey = requestKey;
-    }
 
     @Override
     public boolean canVisit(Context context) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) context.getRequest().getAttribute(HttpBridge.EXT_HTTP_REQUEST);
+        String sessionKey = getSessionKey(context);
         return httpServletRequest != null && httpServletRequest.getSession() != null
                 && httpServletRequest.getSession().getAttribute(sessionKey) != null
-                && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getAttribute(requestKey));
+                && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getAttribute(getRequestKey(context)));
     }
+
+    public abstract String getRequestKey(Context context);
+
+    public abstract String getSessionKey(Context context);
+
 }

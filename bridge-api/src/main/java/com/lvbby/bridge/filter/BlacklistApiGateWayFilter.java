@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by lipeng on 16/10/19.
- * a black list filter for blocking api service by service name & method name
+ * a black list filter for blocking api service by service name & value name
  */
 public class BlacklistApiGateWayFilter implements ApiGateWayFilter {
     private static final String INNER_VALUE = "-1";

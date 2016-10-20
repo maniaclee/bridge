@@ -10,15 +10,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Filter {
 
-    /**
-     * black list method
-     */
-    String BlackList = "BlackList";
-    /***
-     * white list method
-     */
-    String WhiteList = "WhiteList";
 
-    String value() default BlackList;
+    boolean pass() default true;
 
 }

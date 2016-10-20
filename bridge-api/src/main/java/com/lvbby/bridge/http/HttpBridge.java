@@ -9,6 +9,7 @@ import com.lvbby.bridge.api.Params;
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.*;
+import com.lvbby.bridge.http.handler.HttpMethodFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletRequest;
@@ -33,6 +34,8 @@ public class HttpBridge {
 
     public HttpBridge(ApiGateWay apiGateWay) {
         this.apiGateWay = apiGateWay;
+
+        this.apiGateWay.addApiFilter(new HttpMethodFilter());
     }
 
     /***
@@ -59,46 +62,54 @@ public class HttpBridge {
         }
     }
 
-    public Object process(HttpServletRequest request, HttpServletResponse response) throws BridgeException {
+    public Object process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String serviceParam = getParameter(request, serviceLabel);
         if (StringUtils.isBlank(serviceParam))
             throw new BridgeException(String.format("service not given for param %s", serviceLabel));
         String[] split = serviceParam.trim().split("\\.");
         if (split.length != 2)
-            throw new BridgeException(String.format("service format should be url?service=service.method&param=[json,json ... json]", serviceLabel));
+            throw new BridgeException(String.format("service format should be url?service=service.value&param=[json,json ... json]", serviceLabel));
         String service = split[0];
         String method = split[1];
         String param = getParameter(request, paramName);
         String paramType = getParameter(request, this.paramTypeLabel, "json");
 
-        ApiService apiService = apiGateWay.getApiService(service);
-        if (apiService == null)
-            throw new BridgeException(String.format("can't find service for %s", service));
-        List<ApiMethod> apiMethods = apiService.getApiMethods(method);
-        if (apiMethods == null || apiMethods.isEmpty())
-            throw new BridgeException(String.format("can't find method for %s.%s", service, method));
+        /** set context */
+        HttpContextHolder.setServlet(request, response);
+
+        try {
+            ApiService apiService = apiGateWay.getApiService(service);
+            if (apiService == null)
+                throw new BridgeException(String.format("can't find service for %s", service));
+            List<ApiMethod> apiMethods = apiService.getApiMethods(method);
+            if (apiMethods == null || apiMethods.isEmpty())
+                throw new BridgeException(String.format("can't find value for %s.%s", service, method));
 
 
-        Request req = null;
-        if (Objects.equal(paramType, "json")) {
-            int size = JSON.parseArray(param).size();
-            for (ApiMethod apiMethod : apiMethods) {
-                MethodParameter[] paramTypes = apiMethod.getParamTypes();
-                if (size == paramTypes.length) {
-                    Type[] types = new Type[paramTypes.length];
-                    for (int i = 0; i < paramTypes.length; i++) {
-                        types[i] = paramTypes[i].getType();
+            Request req = null;
+            if (Objects.equal(paramType, "json")) {
+                int size = JSON.parseArray(param).size();
+                for (ApiMethod apiMethod : apiMethods) {
+                    MethodParameter[] paramTypes = apiMethod.getParamTypes();
+                    if (size == paramTypes.length) {
+                        Type[] types = new Type[paramTypes.length];
+                        for (int i = 0; i < paramTypes.length; i++) {
+                            types[i] = paramTypes[i].getType();
+                        }
+                        Object[] objects = JSON.parseArray(param, types).toArray();
+                        req = new Request(service, method, Params.of(objects));
+                        req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
+                        break;
                     }
-                    Object[] objects = JSON.parseArray(param, types).toArray();
-                    req = new Request(service, method, Params.of(objects));
-                    req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
-                    break;
                 }
             }
+            if (req == null)
+                throw new BridgeException(String.format("failed to create req for %s.%s", service, method));
+            return apiGateWay.proxy(req);
+        } finally {
+            /** clear context */
+            HttpContextHolder.clear();
         }
-        if (req == null)
-            throw new BridgeException(String.format("failed to create req for %s.%s", service, method));
-        return apiGateWay.proxy(req);
     }
 
     private String getParameter(ServletRequest request, String param) {

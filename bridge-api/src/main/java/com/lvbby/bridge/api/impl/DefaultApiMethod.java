@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Created by lipeng on 16/9/23.
- * wrapper for method
+ * wrapper for value
  */
 public class DefaultApiMethod implements ApiMethod {
     private Method method;
@@ -40,7 +40,7 @@ public class DefaultApiMethod implements ApiMethod {
         if (parameterNameExtractor != null) {
             String[] parameterNames = parameterNameExtractor.getParameterName(method);
             if (parameterNames == null || parameterNames.length != methodParameters.length)
-                throw new IllegalArgumentException("invalid method parameter length : " + method);
+                throw new IllegalArgumentException("invalid value parameter length : " + method);
             for (int i = 0; i < methodParameters.length; i++)
                 methodParameters[i].setName(parameterNames[i]);
         }
@@ -49,7 +49,7 @@ public class DefaultApiMethod implements ApiMethod {
 
 
     /***
-     * get real parameters for method to invoke
+     * get real parameters for value to invoke
      *
      * @param params
      * @return

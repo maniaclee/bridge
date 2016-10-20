@@ -12,6 +12,7 @@
         <module>bridge-api</module>
         <module>bridge-spring</module>
         <module>bridge-test</module>
+        <module>bridge-admin</module>
     </modules>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>api gateway</description>
