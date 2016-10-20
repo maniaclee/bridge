@@ -72,7 +72,7 @@ public class HttpBridge {
         String service = split[0];
         String method = split[1];
         String param = getParameter(request, paramName);
-        String paramType = getParameter(request, this.paramTypeLabel, "json");
+        String paramType = getParameter(request, this.paramTypeLabel, "json_array");
 
         /** set context */
         HttpContextHolder.setServlet(request, response);
@@ -87,7 +87,7 @@ public class HttpBridge {
 
 
             Request req = null;
-            if (Objects.equal(paramType, "json")) {
+            if (Objects.equal(paramType, "json_array")) {
                 int size = JSON.parseArray(param).size();
                 for (ApiMethod apiMethod : apiMethods) {
                     MethodParameter[] paramTypes = apiMethod.getParamTypes();
