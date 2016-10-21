@@ -5,4 +5,5 @@ package com.lvbby.bridge.api;
  */
 public interface ParamsBuilder {
     Params of(Object arg);
+    String getType();
 }

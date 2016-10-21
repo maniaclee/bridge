@@ -1,6 +1,7 @@
 package com.lvbby.bridge.api.builder;
 
 import com.lvbby.bridge.api.Param;
+import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.api.Params;
 import com.lvbby.bridge.api.ParamsBuilder;
 
@@ -8,6 +9,8 @@ import com.lvbby.bridge.api.ParamsBuilder;
  * Created by lipeng on 16/10/20.
  */
 public class NormalParamsBuilder implements ParamsBuilder {
+    private static final String type = ParamFormat.NORMAL.getValue();
+
     @Override
     public Params of(Object arg) {
         if (arg == null)
@@ -20,5 +23,10 @@ public class NormalParamsBuilder implements ParamsBuilder {
             return new Params(params);
         }
         return null;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 }
