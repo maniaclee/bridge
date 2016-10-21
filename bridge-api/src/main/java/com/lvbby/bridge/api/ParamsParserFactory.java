@@ -1,7 +1,10 @@
 package com.lvbby.bridge.api;
 
 import com.google.common.collect.Maps;
+import com.lvbby.bridge.api.parser.JsonArrayParamsParser;
+import com.lvbby.bridge.api.parser.JsonParamsParser;
 import com.lvbby.bridge.api.parser.MapParamsParser;
+import com.lvbby.bridge.api.parser.NormalParamsParser;
 
 import java.util.Map;
 
@@ -13,6 +16,9 @@ public class ParamsParserFactory {
 
     {
         addParamsParser(new MapParamsParser());
+        addParamsParser(new JsonArrayParamsParser());
+        addParamsParser(new JsonParamsParser());
+        addParamsParser(new NormalParamsParser());
     }
 
     public ParamsParser getParamsParser(String type) {

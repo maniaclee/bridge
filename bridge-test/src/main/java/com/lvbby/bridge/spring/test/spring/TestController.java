@@ -1,6 +1,5 @@
 package com.lvbby.bridge.spring.test.spring;
 
-import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.http.HttpBridge;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class TestController {
 
     @RequestMapping("api")
     @ResponseBody
-    public Object sdff(HttpServletRequest request,HttpServletResponse response) throws BridgeException {
-        return new HttpBridge(bridge).process(request,response);
+    public Object sdff(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return new HttpBridge(bridge).process(request, response);
     }
 }

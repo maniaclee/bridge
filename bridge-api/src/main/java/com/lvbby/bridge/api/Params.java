@@ -11,7 +11,7 @@ public class Params {
      * json Array: like [json,json,json,json]
      * because method parameters are array
      */
-    //    JSON,
+    //    JSON_ARRAY,
     /***
      * key value pairs: like  key1:value1
      * if method parameters each have a name

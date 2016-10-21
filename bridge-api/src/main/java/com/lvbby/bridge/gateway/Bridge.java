@@ -41,6 +41,8 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             throw new BridgeException(String.format("service not found:%s", request.getServiceName()));
 
         ParamsParser paramsParser = paramsParserFactory.getParamsParser(request.getParamType());
+        if (paramsParser == null)
+            throw new BridgeException(String.format("unknown param type %s", request.getParamType()));
 
         /** find method */
         ApiMethod methodWrapper = findApiMethod(request, service, paramsParser);

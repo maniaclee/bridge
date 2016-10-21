@@ -2,6 +2,7 @@ package com.lvbby.bridge.api.impl;
 
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.*;
+import com.lvbby.bridge.api.param.DefaultParameterNameExtractor;
 import com.lvbby.bridge.exception.BridgeException;
 
 import java.lang.reflect.Method;

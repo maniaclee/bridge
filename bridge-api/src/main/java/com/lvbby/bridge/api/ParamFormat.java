@@ -8,6 +8,10 @@ public enum ParamFormat {
      * json Array: like [json,json,json,json]
      * because method parameters are array
      */
+    JSON_ARRAY("json_array"),
+    /***
+     * pure json
+     */
     JSON("json"),
     /***
      * key value pairs: like  key1:value1

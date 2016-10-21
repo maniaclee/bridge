@@ -6,10 +6,8 @@ import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.handler.HttpMethodFilter;
-import com.lvbby.bridge.http.request.DefaultHttpParamParser;
 import com.lvbby.bridge.http.request.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.request.HttpApiRequestParser;
-import com.lvbby.bridge.http.request.HttpParamParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +20,6 @@ import java.io.IOException;
 public class HttpBridge {
     private ApiGateWay apiGateWay;
     private HttpApiRequestParser httpApiRequestParser = new HttpApiRequestAttributeParser();
-    private HttpParamParser httpParamParser = new DefaultHttpParamParser("param");
-
     public static final String EXT_HTTP_REQUEST = "EXT_HTTP_REQUEST";
     public static final String EXT_HTTP_RESPONSE = "EXT_HTTP_RESPONSE";
 
