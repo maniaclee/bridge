@@ -12,7 +12,7 @@ public abstract class AbstractParamValidateHandler implements ApiGateWayPreHandl
 
     @Override
     public void preProcess(Context request) {
-        Params param = request.getRequest().getParam();
+        Params param = request.getParams();
         if (param == null || param.getParams() == null || param.getParams().length == 0)
             return;
         for (Param p : param.getParams()) {

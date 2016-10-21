@@ -2,6 +2,7 @@ package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ApiMethod;
 import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.api.Params;
 
 /**
  * Created by lipeng on 16/10/19.
@@ -10,12 +11,21 @@ public class Context {
     private Request request;
     private ApiService apiService;
     private ApiMethod apiMethod;
+    private Params params;
 
     public static Context of(Request request, ApiService apiService) {
         Context context = new Context();
         context.setRequest(request);
         context.setApiService(apiService);
         return context;
+    }
+
+    public Params getParams() {
+        return params;
+    }
+
+    public void setParams(Params params) {
+        this.params = params;
     }
 
     public Request getRequest() {

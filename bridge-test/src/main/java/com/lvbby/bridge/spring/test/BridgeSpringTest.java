@@ -2,8 +2,6 @@ package com.lvbby.bridge.spring.test;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.Bridge;
-import com.lvbby.bridge.gateway.Request;
-import com.lvbby.bridge.api.Params;
 import com.lvbby.bridge.spring.test.spring.Config;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +23,6 @@ public class BridgeSpringTest {
 
     @Test
     public void sdfsdf() throws BridgeException {
-        bridge.proxy(new Request("TestService", "echo", Params.of(new Object[]{"shit"})));
+        //        bridge.proxy(new Request("TestService", "echo", Params.of(new Object[]{"shit"})));
     }
 }

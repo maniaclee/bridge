@@ -1,9 +1,8 @@
 package com.lvbby.bridge.gateway;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.lvbby.bridge.api.ApiMethod;
-import com.lvbby.bridge.api.ApiService;
-import com.lvbby.bridge.api.ApiServiceBuilder;
+import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
@@ -17,6 +16,7 @@ import java.util.Map;
  */
 public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiServiceBuilder {
     private Map<String, ApiService> serviceMap = Maps.newHashMap();
+    private ParamsParserFactory paramsParserFactory = new ParamsParserFactory();
 
     public Bridge() {
         addApiFilter(new BlockingApiGateWayFilter());
@@ -39,12 +39,20 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         ApiService service = serviceMap.get(request.getServiceName());
         if (service == null)
             throw new BridgeException(String.format("service not found:%s", request.getServiceName()));
-        ApiMethod methodWrapper = service.getApiMethod(request.getMethod(), request.getParam());
+
+        ParamsParser paramsParser = paramsParserFactory.getParamsParser(request.getParamType());
+
+        /** find method */
+        ApiMethod methodWrapper = findApiMethod(request, service, paramsParser);
         if (methodWrapper == null)
-            throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), request.getParam()));
+            throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
+
+        /** parse params */
+        Params params = request.getArg() == null ? null : paramsParser.parse(request, methodWrapper);
 
         Context context = Context.of(request, service);
         context.setApiMethod(methodWrapper);
+        context.setParams(params);
 
         /** invoke */
         Object re = null;
@@ -58,7 +66,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             /** pre handlers */
             for (ApiGateWayPreHandler preHandler : preHandlers)
                 preHandler.preProcess(context);
-            re = methodWrapper.invoke(service, request.getParam());
+            re = methodWrapper.invoke(service, params);
             /** post handlers for success*/
             for (ApiGateWayPostHandler postHandler : postHandlers)
                 re = postHandler.success(context, re);
@@ -69,6 +77,22 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
                 re = postHandler.error(context, re, e);
             return re;
         }
+    }
+
+    private ApiMethod findApiMethod(Request request, ApiService service, ParamsParser paramsParser) {
+        ApiMethod methodWrapper = null;
+        List<ApiMethod> apiMethods = service.getApiMethods(request.getMethod());
+        if (apiMethods.isEmpty())
+            methodWrapper = apiMethods.iterator().next();
+        else {
+            for (ApiMethod apiMethod : apiMethods) {
+                if (paramsParser.matchMethod(request, apiMethod)) {
+                    methodWrapper = apiMethod;
+                }
+                break;
+            }
+        }
+        return methodWrapper;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.lvbby.bridge.gateway;
 
-import com.lvbby.bridge.api.Params;
+import com.lvbby.bridge.api.ParamFormat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,8 @@ import java.util.Map;
 public class Request {
     private String serviceName;
     private String method;
-    private Params param;
+    private Object arg;
+    private String paramType = ParamFormat.MAP.getValue();
     /***
      * extended or user custom param
      */
@@ -21,10 +22,9 @@ public class Request {
     public Request() {
     }
 
-    public Request(String serviceName, String method, Params param) {
+    public Request(String serviceName, String method) {
         this.serviceName = serviceName;
         this.method = method;
-        this.param = param;
     }
 
     /***
@@ -43,6 +43,22 @@ public class Request {
         return extArgs.get(key);
     }
 
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
+    }
+
+    public Object getArg() {
+        return arg;
+    }
+
+    public void setArg(Object arg) {
+        this.arg = arg;
+    }
+
     public String getServiceName() {
         return serviceName;
     }
@@ -57,14 +73,6 @@ public class Request {
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-    public Params getParam() {
-        return param;
-    }
-
-    public void setParam(Params param) {
-        this.param = param;
     }
 
     public Map<String, Object> getExtArgs() {

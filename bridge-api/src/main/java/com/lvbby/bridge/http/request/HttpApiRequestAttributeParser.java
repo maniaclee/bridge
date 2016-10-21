@@ -1,5 +1,7 @@
 package com.lvbby.bridge.http.request;
 
+import com.lvbby.bridge.gateway.Request;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -10,13 +12,15 @@ public class HttpApiRequestAttributeParser implements HttpApiRequestParser {
     private String serviceAttribute = "service";
     private String methodAttribute = "method";
     private String paramTypeAttribute = "paramType";
+    private String paramAttribute = "param";
 
     @Override
-    public HttpApiRequest parse(HttpServletRequest request) {
-        HttpApiRequest re = new HttpApiRequest();
-        re.setService(request.getParameter(serviceAttribute));
+    public Request parse(HttpServletRequest request) {
+        Request re = new Request();
+        re.setServiceName(request.getParameter(serviceAttribute));
         re.setMethod(request.getParameter(methodAttribute));
         re.setParamType(request.getParameter(paramTypeAttribute));
+        re.setArg(request.getParameter(paramAttribute));
         return re;
     }
 
