@@ -1,10 +1,6 @@
 package com.lvbby.bridge.api.parser;
 
-import com.lvbby.bridge.api.ApiMethod;
-import com.lvbby.bridge.api.ParamFormat;
-import com.lvbby.bridge.api.Params;
-import com.lvbby.bridge.api.ParamsParser;
-import com.lvbby.bridge.gateway.Request;
+import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.util.BridgeUtil;
 
 /**
@@ -20,16 +16,16 @@ public class NormalParamsParser implements ParamsParser {
     }
 
     @Override
-    public boolean matchMethod(Request request, ApiMethod apiMethod) {
-        Object arg = request.getArg();
+    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+        Object arg = context.getRequest().getArg();
         if (arg instanceof Object[]) {
-            return BridgeUtil.equalCollection(BridgeUtil.getParameterTypes(apiMethod), BridgeUtil.getTypes((Object[]) arg));
+            return BridgeUtil.equalCollection(BridgeUtil.getParameterTypes(methodParameters), BridgeUtil.getTypes((Object[]) arg));
         }
         return false;
     }
 
     @Override
-    public Params parse(Request request, ApiMethod apiMethod) {
-        return Params.of((Object[]) request.getArg());
+    public Params parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+        return Params.of((Object[]) context.getRequest().getArg());
     }
 }

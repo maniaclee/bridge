@@ -1,10 +1,7 @@
-package com.lvbby.bridge.api;
+package com.lvbby.bridge.api.parser;
 
 import com.google.common.collect.Maps;
-import com.lvbby.bridge.api.parser.JsonArrayParamsParser;
-import com.lvbby.bridge.api.parser.JsonParamsParser;
-import com.lvbby.bridge.api.parser.MapParamsParser;
-import com.lvbby.bridge.api.parser.NormalParamsParser;
+import com.lvbby.bridge.api.ParamsParser;
 
 import java.util.Map;
 

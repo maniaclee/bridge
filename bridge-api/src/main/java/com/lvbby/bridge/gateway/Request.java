@@ -13,7 +13,7 @@ public class Request {
     private String serviceName;
     private String method;
     private Object arg;
-    private String paramType = ParamFormat.MAP.getValue();
+    private String paramType = ParamFormat.JSON.getValue();
     /***
      * extended or user custom param
      */

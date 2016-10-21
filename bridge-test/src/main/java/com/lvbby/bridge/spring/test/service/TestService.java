@@ -1,5 +1,6 @@
 package com.lvbby.bridge.spring.test.service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -11,4 +12,5 @@ public interface TestService {
 
     Map<String, String> handle(String s, String shit);
 
+    Map<String, String> inject(String s, String shit, HttpServletRequest httpServletRequest);
 }

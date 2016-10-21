@@ -8,12 +8,13 @@ import java.lang.reflect.Method;
  * Created by lipeng on 16/9/23.
  */
 public class DefaultParameterNameExtractor implements ParameterNameExtractor {
-    private AsmParameterNameExtractor asmParameterNameExtractor = new AsmParameterNameExtractor();
-    private JdkParameterNameExtractor jdkParameterNameExtractor = new JdkParameterNameExtractor();
+    private ParameterNameExtractor asmParameterNameExtractor = new AsmParameterNameExtractor();
+    private ParameterNameExtractor jdkParameterNameExtractor = new JdkParameterNameExtractor();
+    private ParameterNameExtractor  javassistParameterNameExtractor= new JavassistParameterNameExtractor();
 
     @Override
     public String[] getParameterName(Method method) {
-        return jdkParameterNameExtractor.getParameterName(method);
+        return javassistParameterNameExtractor.getParameterName(method);
     }
 
 }

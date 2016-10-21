@@ -83,35 +83,6 @@ public class DefaultApiMethod implements ApiMethod {
         throw new IllegalArgumentException("unknown parameter type : " + params.getType());
     }
 
-    public boolean match(Params params) {
-        Param[] ps = params.getParams();
-        //void
-        if ((ps == null || ps.length == 0))
-            return methodParameters.length == 0;
-
-        //length must be the same at least
-        if (ps.length != methodParameters.length)
-            return false;
-
-        //match by index
-        if (Objects.equal(params.getType(), Params.byIndex)) {
-            for (int i = 0; i < methodParameters.length; i++)
-                if (!Objects.equal(methodParameters[i].getType(), ps[i].getParam().getClass()))
-                    return false;
-            return true;
-        }
-        //match by name
-        if (Objects.equal(params.getType(), Params.byName)) {
-            for (Param p : ps) {
-                MethodParameter methodParameter = parameterMap.get(p.getName());
-                if (methodParameter == null || Objects.equal(methodParameter.getType(), p.getParam().getClass()))
-                    return false;
-            }
-            return true;
-        }
-        throw new IllegalArgumentException("unknown parameter type : " + params.getType());
-    }
-
     @Override
     public Object invoke(ApiService apiService, Params params) throws Exception {
         Object[] realParameters = getRealParameters(params);
@@ -124,7 +95,9 @@ public class DefaultApiMethod implements ApiMethod {
 
     @Override
     public MethodParameter[] getParamTypes() {
-        return methodParameters;
+        MethodParameter[] re = new MethodParameter[this.methodParameters.length];
+        System.arraycopy(this.methodParameters, 0, re, 0, methodParameters.length);
+        return re;
     }
 
 

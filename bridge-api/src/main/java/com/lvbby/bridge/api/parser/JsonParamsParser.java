@@ -3,7 +3,6 @@ package com.lvbby.bridge.api.parser;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lvbby.bridge.api.*;
-import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.util.BridgeUtil;
 
 /**
@@ -19,22 +18,22 @@ public class JsonParamsParser implements ParamsParser {
     }
 
     @Override
-    public boolean matchMethod(Request request, ApiMethod apiMethod) {
-        Object arg = request.getArg();
+    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+        Object arg = context.getRequest().getArg();
         if (arg instanceof String) {
             JSONObject jsonObject = JSON.parseObject(arg.toString());
-            return BridgeUtil.equalCollection(jsonObject.keySet(), BridgeUtil.getParameterNames(apiMethod));
+            return BridgeUtil.equalCollection(jsonObject.keySet(), BridgeUtil.getParameterNames(methodParameters));
         }
         return false;
     }
 
 
     @Override
-    public Params parse(Request request, ApiMethod apiMethod) {
-        Object arg = request.getArg();
-        Param[] ps = new Param[apiMethod.getParamTypes().length];
+    public Params parse(ParamParsingContext context, MethodParameter[] parameters) {
+        Object arg = context.getRequest().getArg();
+        Param[] ps = new Param[parameters.length];
         JSONObject jsonObject = JSON.parseObject(arg.toString());
-        for (MethodParameter methodParameter : apiMethod.getParamTypes()) {
+        for (MethodParameter methodParameter : parameters) {
             Object o = jsonObject.getObject(methodParameter.getName(), methodParameter.getType());
             ps[methodParameter.getIndex()] = new Param(o, methodParameter.getName());
         }

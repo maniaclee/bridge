@@ -45,19 +45,6 @@ public class ApiService {
         return elements != null && !elements.isEmpty() ? Lists.newArrayList(elements) : Lists.<ApiMethod>newLinkedList();
     }
 
-    public ApiMethod getApiMethod(String methodName, Params params) {
-        Collection<ApiMethod> apiMethods = methods.get(methodName);
-        if (apiMethods == null)
-            return null;
-        if (apiMethods.size() == 1)
-            return apiMethods.iterator().next();
-        for (ApiMethod apiMethod : apiMethods) {
-            if (apiMethod.match(params))
-                return apiMethod;
-        }
-        return null;
-    }
-
     public Object getService() {
         return service;
     }
