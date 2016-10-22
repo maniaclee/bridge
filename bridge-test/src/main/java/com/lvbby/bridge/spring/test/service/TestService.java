@@ -12,5 +12,5 @@ public interface TestService {
 
     Map<String, String> handle(String s, String shit);
 
-    Map<String, String> inject(String s, String shit, HttpServletRequest httpServletRequest);
+    Map<String, String> inject(String fuck, String shit, HttpServletRequest httpServletRequest);
 }

@@ -89,7 +89,7 @@ public class DefaultApiMethod implements ApiMethod {
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {
-            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()));
+            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()),e);
         }
     }
 

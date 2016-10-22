@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lipeng on 16/10/21.
@@ -34,6 +33,21 @@ public class BridgeUtil {
         return false;
     }
 
+    public static boolean isInstance(Type test, Type dest) {
+        if (test instanceof Class && dest instanceof Class) {
+            return ((Class) dest).isAssignableFrom((Class<?>) test);
+        }
+        return false;
+    }
+
+    public static boolean contailsType(List<Type> types, Object test) {
+        if (types != null)
+            for (Type type : types)
+                if (isInstance(test.getClass(), type))
+                    return true;
+        return false;
+    }
+
     public static List<Class> getTypes(Object[] objects) {
         List<Class> re = Lists.newLinkedList();
         for (Object object : objects) re.add(object.getClass());
@@ -45,4 +59,5 @@ public class BridgeUtil {
         for (MethodParameter methodParameter : parameters) re.add(methodParameter.getType());
         return re;
     }
+
 }

@@ -1,6 +1,5 @@
 package com.lvbby.bridge.spring.test.service;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class TestServiceImpl implements TestService {
     public Map<String, String> inject(String s, String shit, HttpServletRequest httpServletRequest) {
         HashMap<String, String> re = Maps.newHashMap();
         re.put(s, shit);
-        re.put("inject", JSON.toJSONString(httpServletRequest));
+        re.put("inject", httpServletRequest.toString());
         return re;
     }
 }

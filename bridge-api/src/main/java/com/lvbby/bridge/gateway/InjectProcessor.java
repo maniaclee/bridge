@@ -8,7 +8,6 @@ import com.lvbby.bridge.api.Params;
 import com.lvbby.bridge.util.BridgeUtil;
 
 import java.lang.reflect.Type;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,33 +27,44 @@ public class InjectProcessor {
 
 
     public MethodParameter[] filterValue(MethodParameter[] parameters) {
-        if (injectValue.get() == null)
+        List objects = injectValue.get();
+        if (objects == null)
             return parameters;
-        LinkedList<MethodParameter> re = Lists.newLinkedList();
-        List<Type> parameterTypes = BridgeUtil.getTypes(injectValue.get());
+        List<MethodParameter> re = Lists.newLinkedList();
         for (MethodParameter parameter : parameters) {
-            //TODO subclass issue !!!!
-            if (!parameterTypes.contains(parameter.getType()))
+            if (!isInjectType(parameter.getType()))
                 re.add(parameter);
         }
         return re.toArray(new MethodParameter[0]);
     }
 
+    private boolean isInjectType(Type type) {
+        List list = injectValue.get();
+        if (list != null)
+            for (Object o : list) {
+                if (BridgeUtil.isInstance(o.getClass(), type))
+                    return true;
+            }
+        return false;
+    }
+
     public void injectValue(Params params, ApiMethod apiMethod) {
         if (params == null)
             return;
-        List values = injectValue.get();
-        if (values == null)
+        List injects = injectValue.get();
+        if (injects == null)
             return;
         Param[] ps = new Param[apiMethod.getParamTypes().length];
         //inject the value first
         for (MethodParameter methodParameter : apiMethod.getParamTypes())
-            for (Object value : values)
-                if (value.getClass().equals(methodParameter.getType()))
+            for (Object value : injects)
+                if (BridgeUtil.isInstance(value.getClass(), methodParameter.getType()))
                     ps[methodParameter.getIndex()] = new Param(value, methodParameter.getName());
         for (int i = 0, resultIndex = 0; i < params.getParams().length; i++, resultIndex++) {
-            while (ps[i] != null)//skip the injected value
+            while (resultIndex < ps.length && ps[resultIndex] != null)//skip the injected value
                 ++resultIndex;
+            if (resultIndex == ps.length)
+                break;
             ps[resultIndex] = params.getParams()[i];
         }
         params.setParams(ps);
