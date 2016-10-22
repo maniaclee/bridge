@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * Created by peng on 2016/9/27.
+ * the common response for returning the result through http
  */
 public class ServiceResponse implements Serializable {
 
