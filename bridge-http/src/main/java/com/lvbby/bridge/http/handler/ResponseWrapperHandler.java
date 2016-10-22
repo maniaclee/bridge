@@ -1,4 +1,4 @@
-package com.lvbby.bridge.handler;
+package com.lvbby.bridge.http.handler;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
