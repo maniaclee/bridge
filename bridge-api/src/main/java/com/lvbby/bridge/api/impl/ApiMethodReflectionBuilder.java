@@ -29,6 +29,7 @@ public class ApiMethodReflectionBuilder implements ApiMethodBuilder {
 
     public List<Method> extractMethods(Class clz) {
         List<Method> re = Lists.newLinkedList();
+        /** TODO javassist can't get method parameter from interface !!! */
         if (fromInterface(clz))
             re.addAll(extractMethodsFromInterface(clz));
         else

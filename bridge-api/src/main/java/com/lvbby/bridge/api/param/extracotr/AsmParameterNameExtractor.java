@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api.param;
+package com.lvbby.bridge.api.param.extracotr;
 
 import com.lvbby.bridge.api.ParameterNameExtractor;
 import org.objectweb.asm.*;

@@ -23,9 +23,9 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Map<String, String> inject(String s, String shit, HttpServletRequest httpServletRequest) {
+    public Map<String, String> inject(String s, String b, HttpServletRequest httpServletRequest) {
         HashMap<String, String> re = Maps.newHashMap();
-        re.put(s, shit);
+        re.put(s, b);
         re.put("inject", httpServletRequest.toString());
         return re;
     }

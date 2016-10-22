@@ -3,7 +3,7 @@ package com.lvbby.bridge.gateway;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
-import com.lvbby.bridge.api.parser.ParamsParserFactory;
+import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;

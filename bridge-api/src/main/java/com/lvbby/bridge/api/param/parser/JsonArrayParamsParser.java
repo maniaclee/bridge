@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api.parser;
+package com.lvbby.bridge.api.param.parser;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

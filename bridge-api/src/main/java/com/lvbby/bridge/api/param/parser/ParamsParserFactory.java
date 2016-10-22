@@ -1,4 +1,4 @@
-package com.lvbby.bridge.api.parser;
+package com.lvbby.bridge.api.param.parser;
 
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ParamsParser;
