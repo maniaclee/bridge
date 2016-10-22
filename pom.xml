@@ -12,7 +12,6 @@
         <module>bridge-api</module>
         <module>bridge-spring</module>
         <module>bridge-test</module>
-        <module>bridge-admin</module>
         <module>bridge-http</module>
     </modules>
     <name>${project.groupId}:${project.artifactId}</name>

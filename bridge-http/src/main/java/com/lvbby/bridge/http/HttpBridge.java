@@ -74,4 +74,8 @@ public class HttpBridge {
             HttpContextHolder.clear();
         }
     }
+
+    public ApiGateWay getApiGateWay() {
+        return apiGateWay;
+    }
 }

@@ -41,8 +41,8 @@ public class DefaultApiMethod implements ApiMethod {
             //map for parameter name
             parameterMap.put(methodParameter.getName(), methodParameter);
         }
-        /** parameter names */
-        if (parameterNameExtractor != null) {
+        /** parameter names, only available when method has parameters*/
+        if (parameterNameExtractor != null && methodParameters.length > 0) {
             String[] parameterNames = parameterNameExtractor.getParameterName(method);
             if (parameterNames == null || parameterNames.length != methodParameters.length)
                 throw new IllegalArgumentException("invalid value parameter length : " + method);
@@ -89,7 +89,7 @@ public class DefaultApiMethod implements ApiMethod {
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {
-            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()),e);
+            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()), e);
         }
     }
 

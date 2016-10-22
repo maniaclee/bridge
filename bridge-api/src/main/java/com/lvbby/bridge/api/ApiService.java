@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.lvbby.bridge.api.impl.ApiMethodReflectionBuilder;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import java.util.List;
  * wrapper for service
  * Created by peng on 16/9/22.
  */
-public class ApiService {
+public class ApiService implements Serializable {
+    private static final long serialVersionUID = -2447630858154384320L;
+
     private static ApiMethodBuilder defaultApiMethodBuilder = new ApiMethodReflectionBuilder();
     private Object service;
     private String serviceName;
@@ -39,10 +42,13 @@ public class ApiService {
         return this;
     }
 
-
     public List<ApiMethod> getApiMethods(String methodName) {
         Collection<ApiMethod> elements = methods.get(methodName);
         return elements != null && !elements.isEmpty() ? Lists.newArrayList(elements) : Lists.<ApiMethod>newLinkedList();
+    }
+
+    public List<ApiMethod> getAllApiMethods() {
+        return Lists.newArrayList(methods.values());
     }
 
     public Object getService() {

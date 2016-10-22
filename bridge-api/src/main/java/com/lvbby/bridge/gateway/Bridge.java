@@ -1,6 +1,7 @@
 package com.lvbby.bridge.gateway;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
@@ -98,6 +99,8 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         ApiMethod methodWrapper = null;
         List<ApiMethod> apiMethods = service.getApiMethods(request.getRequest().getMethod());
         if (apiMethods.isEmpty())
+            return null;
+        if (apiMethods.size() == 1)
             methodWrapper = apiMethods.iterator().next();
         else {
             for (ApiMethod apiMethod : apiMethods) {
@@ -108,6 +111,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             }
         }
         return methodWrapper;
+    }
+
+    @Override
+    public List<ApiService> getAllApiServices() {
+        return Lists.newArrayList(serviceMap.values());
     }
 
     @Override
