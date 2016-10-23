@@ -3,7 +3,7 @@ package com.lvbby.bridge.api.impl;
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
-import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.exception.BridgeInvokeException;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -86,12 +86,12 @@ public class DefaultApiMethod implements ApiMethod {
     }
 
     @Override
-    public Object invoke(ApiService apiService, Params params) throws Exception {
+    public Object invoke(ApiService apiService, Params params) throws BridgeInvokeException {
         Object[] realParameters = getRealParameters(params);
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {
-            throw new BridgeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()), e);
+            throw new BridgeInvokeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()), e);
         }
     }
 

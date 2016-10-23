@@ -5,7 +5,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
-import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.exception.BridgeInvokeException;
+import com.lvbby.bridge.exception.BridgeProcessException;
+import com.lvbby.bridge.exception.BridgeRoutingException;
 import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
@@ -29,12 +31,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     }
 
 
-    @Override
-    public void init() {
-        if (serviceMap.isEmpty())
-            throw new IllegalArgumentException("services can't be empty");
-    }
-
 
     @Override
     public Object proxy(Request request) throws Exception {
@@ -42,18 +38,18 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         try {
             ApiService service = serviceMap.get(request.getServiceName());
             if (service == null)
-                throw new BridgeException(String.format("service not found:%s", request.getServiceName()));
+                throw new BridgeRoutingException(String.format("service not found:%s", request.getServiceName()));
 
             ParamsParser paramsParser = paramsParserFactory.getParamsParser(request.getParamType());
             if (paramsParser == null)
-                throw new BridgeException(String.format("unknown param type %s", request.getParamType()));
+                throw new BridgeRoutingException(String.format("unknown param type %s", request.getParamType()));
 
             ParamParsingContext paramParsingContext = new ParamParsingContext(request);
 
             /** find method */
             ApiMethod methodWrapper = findApiMethod(paramParsingContext, service, paramsParser);
             if (methodWrapper == null)
-                throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
+                throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
 
             /** parse params , filtered by inject processor */
             Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
@@ -66,29 +62,45 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             context.setApiMethod(methodWrapper);
             context.setParams(params);
 
-            /** invoke */
-            Object re = null;
-            try {
+            /** filter */
+            for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
+                if (!apiGateWayFilter.canVisit(context))
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()))
+                            .setErrorType(BridgeProcessException.Filter);
+            }
 
-                /** filter */
-                for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
-                    if (!apiGateWayFilter.canVisit(context))
-                        throw new BridgeException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()));
-                }
-                /** pre handlers */
+            /** pre handlers */
+            try {
                 for (ApiGateWayPreHandler preHandler : preHandlers)
                     preHandler.preProcess(context);
-                re = methodWrapper.invoke(service, params);
-                /** post handlers for success*/
-                for (ApiGateWayPostHandler postHandler : postHandlers)
-                    re = postHandler.success(context, re);
-                return re;
             } catch (Exception e) {
-                /** post handlers for error */
-                for (ApiGateWayPostHandler postHandler : postHandlers)
-                    re = postHandler.error(context, re, e);
-                return re;
+                throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PreProcess);
             }
+
+            /** invoke */
+            Object re = null;
+            BridgeInvokeException invokeException = null;
+            try {
+                re = methodWrapper.invoke(service, params);
+            } catch (BridgeInvokeException e) {
+                invokeException = e;
+            }
+
+            /** post handlers for success*/
+            if (invokeException == null) {
+                try {
+                    for (ApiGateWayPostHandler postHandler : postHandlers)
+                        re = postHandler.success(context, re);
+                    return re;
+                } catch (Exception e) {
+                    throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PostProcess);
+                }
+            }
+
+            /** post handlers for error */
+            for (ApiGateWayPostHandler postHandler : postHandlers)
+                re = postHandler.error(context, re, invokeException);
+            return re;
         } finally {
             /** clear the inject value */
             InjectProcessor.clear();

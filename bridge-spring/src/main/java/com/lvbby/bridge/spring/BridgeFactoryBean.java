@@ -52,7 +52,6 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
         for (Object beanObject : beanObjects) {
             addService(beanObject);
         }
-        init();
     }
 
 
