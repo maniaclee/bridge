@@ -39,15 +39,17 @@ public class DefaultApiMethod implements ApiMethod {
             methodParameter.setType(parameterTypes[i]);
             methodParameters[i] = methodParameter;
             //map for parameter name
-            parameterMap.put(methodParameter.getName(), methodParameter);
         }
         /** parameter names, only available when method has parameters*/
         if (parameterNameExtractor != null && methodParameters.length > 0) {
             String[] parameterNames = parameterNameExtractor.getParameterName(method);
-            if (parameterNames == null || parameterNames.length != methodParameters.length)
+            if (parameterNames == null || parameterNames.length == 0 || parameterNames.length != methodParameters.length)
                 throw new IllegalArgumentException("invalid value parameter length : " + method);
-            for (int i = 0; i < methodParameters.length; i++)
+            for (int i = 0; i < methodParameters.length; i++) {
                 methodParameters[i].setName(parameterNames[i]);
+                parameterMap.put(parameterNames[i], methodParameters[i]);
+
+            }
         }
         return this;
     }

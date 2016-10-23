@@ -35,7 +35,7 @@ public class HttpBridgeServer {
     public HttpBridgeServer(ApiGateWay apiGateWay) {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
-        this.server = createServer(port, rootPath, new HttpBridge(apiGateWay));
+        this.server = createServer(port, rootPath, HttpBridge.of(apiGateWay));
     }
 
     public void start() throws Exception {

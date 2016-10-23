@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.admin;
+package com.lvbby.bridge.http.servlet;
 
 import com.alibaba.fastjson.JSON;
 

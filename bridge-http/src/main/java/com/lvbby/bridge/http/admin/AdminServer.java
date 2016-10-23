@@ -4,6 +4,7 @@ import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.HttpBridge;
+import com.lvbby.bridge.http.servlet.HttpBridgeDelegateServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -46,8 +47,6 @@ public class AdminServer {
 
     public void start() throws Exception {
         setHandlers(resourceHandler(), servletContextHandler, new DefaultHandler());
-        //                setHandlers(resourceHandler());
-        //        server.setHandler(resourceHandler());
         server.start();
         //        server.join();
     }

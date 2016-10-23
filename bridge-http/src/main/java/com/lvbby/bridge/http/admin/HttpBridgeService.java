@@ -5,7 +5,6 @@ import com.lvbby.bridge.api.ApiMethod;
 import com.lvbby.bridge.api.ApiService;
 import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.gateway.ApiGateWay;
-import com.lvbby.bridge.http.admin.dto.ApiMethodDTO;
 
 import java.util.List;
 
@@ -19,6 +18,11 @@ public class HttpBridgeService {
         this.apiGateWay = apiGateWay;
     }
 
+    /***
+     * get the ApiGateWay info for admin front-end
+     *
+     * @return
+     */
     public List<ApiMethodDTO> getApiMethods() {
         List<ApiMethodDTO> re = Lists.newArrayList();
         for (ApiService apiService : apiGateWay.getAllApiServices()) {

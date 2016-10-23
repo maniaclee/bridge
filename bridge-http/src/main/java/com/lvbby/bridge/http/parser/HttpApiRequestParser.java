@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.request;
+package com.lvbby.bridge.http.parser;
 
 import com.lvbby.bridge.gateway.Request;
 

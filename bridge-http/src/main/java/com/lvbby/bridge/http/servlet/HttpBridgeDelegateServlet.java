@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.admin;
+package com.lvbby.bridge.http.servlet;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.http.HttpBridge;
@@ -9,8 +9,9 @@ import java.io.IOException;
 
 /**
  * Created by lipeng on 16/10/22.
+ * delegate servlet letting HttpBridge to do the work
  */
-class HttpBridgeDelegateServlet extends AbstractServlet {
+public class HttpBridgeDelegateServlet extends AbstractServlet {
 
     private HttpBridge httpBridge;
 

@@ -55,9 +55,9 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             if (methodWrapper == null)
                 throw new BridgeException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
 
-            /** parse params */
-            Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, methodWrapper.getParamTypes());
-
+            /** parse params , filtered by inject processor */
+            Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
+            params.setType(getParamType(request));//set param parsing type
 
             /** inject value */
             injectProcessor.injectValue(params, methodWrapper);
@@ -95,20 +95,25 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         }
     }
 
+    private String getParamType(Request request) {
+        return request.getParamType().equalsIgnoreCase(ParamFormat.JSON_ARRAY.getValue())
+                || request.getParamType().equalsIgnoreCase(ParamFormat.NORMAL.getValue()) ? Params.byIndex : Params.byName;
+    }
+
     private ApiMethod findApiMethod(ParamParsingContext request, ApiService service, ParamsParser paramsParser) {
         ApiMethod methodWrapper = null;
         List<ApiMethod> apiMethods = service.getApiMethods(request.getRequest().getMethod());
         if (apiMethods.isEmpty())
             return null;
-        if (apiMethods.size() == 1)
-            methodWrapper = apiMethods.iterator().next();
-        else {
-            for (ApiMethod apiMethod : apiMethods) {
-                if (paramsParser.matchMethod(request, injectProcessor.filterValue(apiMethod.getParamTypes()))) {
-                    methodWrapper = apiMethod;
-                }
-                break;
-            }
+
+        for (ApiMethod apiMethod : apiMethods) {
+            MethodParameter[] methodParameters = injectProcessor.filterValue(apiMethod.getParamTypes());
+            /** common case : if method's parameter is void */
+            if (request.getRequest().getArg() == null)
+                return methodParameters.length == 0 ? apiMethod : null;
+            /** check method name && param types|length */
+            if (paramsParser.matchMethod(request, methodParameters))
+                return apiMethod;
         }
         return methodWrapper;
     }

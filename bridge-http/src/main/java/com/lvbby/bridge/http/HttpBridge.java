@@ -8,8 +8,8 @@ import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.InjectProcessor;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.handler.HttpMethodFilter;
-import com.lvbby.bridge.http.request.HttpApiRequestAttributeParser;
-import com.lvbby.bridge.http.request.HttpApiRequestParser;
+import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
+import com.lvbby.bridge.http.parser.HttpApiRequestParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +30,11 @@ public class HttpBridge {
 
         this.apiGateWay.addApiFilter(new HttpMethodFilter());
     }
+
+    public static HttpBridge of(ApiGateWay apiGateWay) {
+        return new HttpBridge(apiGateWay);
+    }
+
 
     /***
      * write the response back to the response as json

@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.admin.dto;
+package com.lvbby.bridge.http.admin;
 
 import java.io.Serializable;
 import java.util.List;

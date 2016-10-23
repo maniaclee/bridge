@@ -38,18 +38,8 @@ public class InjectProcessor {
         return re.toArray(new MethodParameter[0]);
     }
 
-    private boolean isInjectType(Type type) {
-        List list = injectValue.get();
-        if (list != null)
-            for (Object o : list) {
-                if (BridgeUtil.isInstance(o.getClass(), type))
-                    return true;
-            }
-        return false;
-    }
-
     public void injectValue(Params params, ApiMethod apiMethod) {
-        if (params == null)
+        if (params == null || params.getParams().length == 0 || params.getParams().length == apiMethod.getParamTypes().length)
             return;
         List injects = injectValue.get();
         if (injects == null)
@@ -58,7 +48,7 @@ public class InjectProcessor {
         //inject the value first
         for (MethodParameter methodParameter : apiMethod.getParamTypes())
             for (Object value : injects)
-                if (BridgeUtil.isInstance(value.getClass(), methodParameter.getType()))
+                if (isInjectType(value, methodParameter.getType()))
                     ps[methodParameter.getIndex()] = new Param(value, methodParameter.getName());
         for (int i = 0, resultIndex = 0; i < params.getParams().length; i++, resultIndex++) {
             while (resultIndex < ps.length && ps[resultIndex] != null)//skip the injected value
@@ -69,6 +59,20 @@ public class InjectProcessor {
         }
         params.setParams(ps);
 
+    }
+
+    private boolean isInjectType(Object inject, Type type) {
+        return BridgeUtil.isInstance(inject.getClass(), type) && !inject.getClass().equals(Object.class);
+    }
+
+    private boolean isInjectType(Type type) {
+        List list = injectValue.get();
+        if (list != null)
+            for (Object o : list) {
+                if (BridgeUtil.isInstance(o.getClass(), type) && !type.equals(Object.class))
+                    return true;
+            }
+        return false;
     }
 
 }
