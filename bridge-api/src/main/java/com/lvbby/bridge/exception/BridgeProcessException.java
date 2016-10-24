@@ -3,7 +3,7 @@ package com.lvbby.bridge.exception;
 /**
  * Created by lipeng on 16/10/23.
  */
-public class BridgeProcessException extends Exception {
+public class BridgeProcessException extends BridgeException {
     public static final String Filter = "filter";
     public static final String PreProcess = "preProcess";
     public static final String PostProcess = "PostProcess";
@@ -27,7 +27,4 @@ public class BridgeProcessException extends Exception {
         super(cause);
     }
 
-    public BridgeProcessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

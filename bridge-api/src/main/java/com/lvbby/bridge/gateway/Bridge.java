@@ -31,36 +31,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     }
 
 
-
     @Override
     public Object proxy(Request request) throws Exception {
 
         try {
-            ApiService service = serviceMap.get(request.getServiceName());
-            if (service == null)
-                throw new BridgeRoutingException(String.format("service not found:%s", request.getServiceName()));
-
-            ParamsParser paramsParser = paramsParserFactory.getParamsParser(request.getParamType());
-            if (paramsParser == null)
-                throw new BridgeRoutingException(String.format("unknown param type %s", request.getParamType()));
-
-            ParamParsingContext paramParsingContext = new ParamParsingContext(request);
-
-            /** find method */
-            ApiMethod methodWrapper = findApiMethod(paramParsingContext, service, paramsParser);
-            if (methodWrapper == null)
-                throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
-
-            /** parse params , filtered by inject processor */
-            Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
-            params.setType(getParamType(request));//set param parsing type
-
-            /** inject value */
-            injectProcessor.injectValue(params, methodWrapper);
-
-            Context context = Context.of(request, service);
-            context.setApiMethod(methodWrapper);
-            context.setParams(params);
+            Context context = initContext(request);
 
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
@@ -81,7 +56,10 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             Object re = null;
             BridgeInvokeException invokeException = null;
             try {
-                re = methodWrapper.invoke(service, params);
+                re = context.getApiMethod().invoke(context.getApiService(), context.getParams());
+                for (ApiGateWayPostHandler postHandler : postHandlers)
+                    re = postHandler.success(context, re);
+                return re;
             } catch (BridgeInvokeException e) {
                 invokeException = e;
             }
@@ -96,15 +74,47 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
                     throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PostProcess);
                 }
             }
-
-            /** post handlers for error */
-            for (ApiGateWayPostHandler postHandler : postHandlers)
-                re = postHandler.error(context, re, invokeException);
-            return re;
+            throw invokeException;
         } finally {
             /** clear the inject value */
             InjectProcessor.clear();
         }
+    }
+
+    /***
+     * init context: find service && parsing params (including inject values)
+     *
+     * @param request
+     * @return
+     * @throws BridgeRoutingException
+     */
+    private Context initContext(Request request) throws BridgeRoutingException {
+        ApiService service = serviceMap.get(request.getServiceName());
+        if (service == null)
+            throw new BridgeRoutingException(String.format("service not found:%s", request.getServiceName()));
+
+        ParamsParser paramsParser = paramsParserFactory.getParamsParser(request.getParamType());
+        if (paramsParser == null)
+            throw new BridgeRoutingException(String.format("unknown param type %s", request.getParamType()));
+
+        ParamParsingContext paramParsingContext = new ParamParsingContext(request);
+
+        /** find method */
+        ApiMethod methodWrapper = findApiMethod(paramParsingContext, service, paramsParser);
+        if (methodWrapper == null)
+            throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
+
+        /** parse params , filtered by inject processor */
+        Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
+        params.setType(getParamType(request));//set param parsing type
+
+        /** inject value */
+        injectProcessor.injectValue(params, methodWrapper);
+
+        Context context = Context.of(request, service);
+        context.setApiMethod(methodWrapper);
+        context.setParams(params);
+        return context;
     }
 
     private String getParamType(Request request) {

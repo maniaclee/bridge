@@ -1,6 +1,5 @@
 package com.lvbby.bridge.http.handler;
 
-import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
 import com.lvbby.bridge.gateway.Context;
 import com.lvbby.bridge.http.ServiceResponse;
@@ -14,19 +13,4 @@ public class ResponseWrapperHandler implements ApiGateWayPostHandler {
         return ServiceResponse.success(result);
     }
 
-    /***
-     * exception handling should be more delicate , this is too rough
-     * you can define and error converter like http code
-     * or use an aop to convert the error to an text for front-end to display
-     *
-     * @param context
-     * @param result
-     * @param e
-     * @return
-     * @throws BridgeException
-     */
-    @Override
-    public Object error(Context context, Object result, Exception e) throws BridgeException {
-        return ServiceResponse.error(e.getMessage());
-    }
 }

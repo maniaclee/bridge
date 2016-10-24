@@ -6,5 +6,4 @@ package com.lvbby.bridge.gateway;
 public interface ApiGateWayPostHandler {
     Object success(Context context, Object result);
 
-    Object error(Context context, Object result, Exception e) throws Exception;
 }

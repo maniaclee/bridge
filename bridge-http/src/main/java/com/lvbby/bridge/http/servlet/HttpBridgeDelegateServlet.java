@@ -1,6 +1,5 @@
 package com.lvbby.bridge.http.servlet;
 
-import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.http.HttpBridge;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ public class HttpBridgeDelegateServlet extends AbstractServlet {
     public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
         try {
             httpBridge.processBack(req, response);
-        } catch (BridgeException e) {
+        } catch (Exception e) {
             response.setStatus(500);
             writeJson(response, e.getMessage());
         }

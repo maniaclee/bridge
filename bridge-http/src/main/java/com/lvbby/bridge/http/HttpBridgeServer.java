@@ -1,6 +1,5 @@
 package com.lvbby.bridge.http;
 
-import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
@@ -99,8 +98,8 @@ public class HttpBridgeServer {
         public void handle(HttpServletRequest req, HttpServletResponse response) throws IOException {
             try {
                 httpBridge.processBack(req, response);
-            } catch (BridgeException e) {
-                throw new BridgeRunTimeException(e);
+            } catch (Exception e) {
+                throw new IOException(e);//not good
             }
         }
     }

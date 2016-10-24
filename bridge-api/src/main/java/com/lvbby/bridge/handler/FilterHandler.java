@@ -35,13 +35,6 @@ public class FilterHandler implements ApiGateWayFilter, ApiGateWayPreHandler, Ap
         return result;
     }
 
-    @Override
-    public Object error(Context context, Object result, Exception e) throws Exception {
-        if (canVisit(context) && apiGateWayPostHandler != null)
-            return apiGateWayPostHandler.error(context, result, e);
-        return result;
-    }
-
     public ApiGateWayFilter getApiGateWayFilter() {
         return apiGateWayFilter;
     }

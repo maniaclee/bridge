@@ -2,8 +2,6 @@ package com.lvbby.bridge.http;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.exception.BridgeException;
-import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.InjectProcessor;
 import com.lvbby.bridge.gateway.Request;
@@ -41,9 +39,8 @@ public class HttpBridge {
      *
      * @param request
      * @param response
-     * @throws BridgeException
      */
-    public void processBack(HttpServletRequest request, HttpServletResponse response) throws BridgeException {
+    public void processBack(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             Object re = process(request, response);
             if (re == null)
@@ -51,8 +48,6 @@ public class HttpBridge {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(JSON.toJSONString(re));
-        } catch (Exception e) {
-            throw new BridgeRunTimeException(e);
         } finally {
             try {
                 response.getWriter().close();
