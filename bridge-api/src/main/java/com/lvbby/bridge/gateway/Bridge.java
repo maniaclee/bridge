@@ -32,7 +32,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
 
     @Override
-    public Object proxy(Request request) throws Exception {
+    public Object proxy(Request request) throws BridgeRoutingException, BridgeProcessException, BridgeInvokeException {
 
         try {
             Context context = initContext(request);
@@ -57,9 +57,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             BridgeInvokeException invokeException = null;
             try {
                 re = context.getApiMethod().invoke(context.getApiService(), context.getParams());
-                for (ApiGateWayPostHandler postHandler : postHandlers)
-                    re = postHandler.success(context, re);
-                return re;
             } catch (BridgeInvokeException e) {
                 invokeException = e;
             }

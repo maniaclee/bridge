@@ -1,6 +1,9 @@
 package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.exception.BridgeInvokeException;
+import com.lvbby.bridge.exception.BridgeProcessException;
+import com.lvbby.bridge.exception.BridgeRoutingException;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ public interface ApiGateWay {
      * @return
      * @throws Exception can be TODO
      */
-    Object proxy(Request request) throws Exception;
+    Object proxy(Request request) throws BridgeRoutingException, BridgeProcessException, BridgeInvokeException;
 
     List<ApiService> getAllApiServices();
 
