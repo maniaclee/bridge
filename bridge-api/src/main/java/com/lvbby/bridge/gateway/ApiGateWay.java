@@ -15,13 +15,17 @@ public interface ApiGateWay {
     /***
      * @param request
      * @return
-     * @throws Exception can be TODO
+     * @throws BridgeRoutingException
+     * @throws BridgeProcessException
+     * @throws BridgeInvokeException
      */
     Object proxy(Request request) throws BridgeRoutingException, BridgeProcessException, BridgeInvokeException;
 
     List<ApiService> getAllApiServices();
 
     ApiService getApiService(String serviceName);
+
+    ApiGateWay withErrorHandler(List<ErrorHanlder> errorHandlers);
 
     /***
      * add filter before execution, like black list / white list

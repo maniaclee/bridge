@@ -10,8 +10,10 @@ import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
 import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
+import com.lvbby.bridge.gateway.impl.ErrorInvocationHandler;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
 
@@ -145,6 +147,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     @Override
     public ApiService getApiService(String serviceName) {
         return serviceMap.get(serviceName);
+    }
+
+    @Override
+    public ApiGateWay withErrorHandler(List<ErrorHanlder> errorHandlers) {
+        return (ApiGateWay) Proxy.newProxyInstance(getClass().getClassLoader(), this.getClass().getInterfaces(), new ErrorInvocationHandler(this, errorHandlers));
     }
 
     @Override
