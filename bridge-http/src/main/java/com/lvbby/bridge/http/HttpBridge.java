@@ -80,4 +80,8 @@ public class HttpBridge {
     public ApiGateWay getApiGateWay() {
         return apiGateWay;
     }
+
+    public void setApiGateWay(ApiGateWay apiGateWay) {
+        this.apiGateWay = apiGateWay;
+    }
 }

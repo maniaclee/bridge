@@ -25,7 +25,7 @@ public interface ApiGateWay {
 
     ApiService getApiService(String serviceName);
 
-    ApiGateWay withErrorHandler(List<ErrorHanlder> errorHandlers);
+    ApiGateWay withErrorHandler(List<ErrorHandler> errorHandlers);
 
     /***
      * add filter before execution, like black list / white list

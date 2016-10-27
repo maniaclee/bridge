@@ -1,9 +1,13 @@
 package com.lvbby.bridge.http.admin;
 
-import com.lvbby.bridge.exception.BridgeRunTimeException;
+import com.google.common.collect.Lists;
+import com.lvbby.bridge.exception.*;
 import com.lvbby.bridge.gateway.Bridge;
+import com.lvbby.bridge.gateway.ErrorHandler;
 import com.lvbby.bridge.gateway.Request;
+import com.lvbby.bridge.gateway.impl.TypeErrorHandler;
 import com.lvbby.bridge.http.HttpBridge;
+import com.lvbby.bridge.http.ServiceResponse;
 import com.lvbby.bridge.http.servlet.HttpBridgeDelegateServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -39,6 +43,30 @@ public class AdminServer {
                 new HttpBridge(
                         new Bridge().addService(
                                 new HttpBridgeService(httpBridge.getApiGateWay())))), "/admin");
+        ErrorHandler errorHandler = new TypeErrorHandler() {
+            @Override
+            public Object handleInvokeError(Request request, Object result, BridgeInvokeException e) throws BridgeException {
+                return ServiceResponse.error(e.getMessage());
+            }
+
+            @Override
+            public Object handleProcessError(Request request, Object result, BridgeProcessException e) throws BridgeException {
+                return ServiceResponse.error(e.getMessage());
+
+            }
+
+            @Override
+            public Object handleRoutingError(Request request, Object result, BridgeRoutingException e) throws BridgeException {
+                return ServiceResponse.error(e.getMessage());
+
+            }
+
+            @Override
+            public Object handleCommonError(Request request, Object result, Exception e) throws BridgeException {
+                return ServiceResponse.error(e.getMessage());
+            }
+        };
+        httpBridge.setApiGateWay(httpBridge.getApiGateWay().withErrorHandler(Lists.newArrayList(errorHandler)));
     }
 
     public void addServlet(Servlet servlet, String path) {
@@ -72,14 +100,6 @@ public class AdminServer {
     }
 
     public static void main(String[] args) throws Exception {
-        //        Server server = new Server(8000);
-        //        HandlerList handlers = new HandlerList();
-        //        handlers.setHandlers(new Handler[]{resourceHandler()});
-        //        server.setHandler(handlers);
-        //        server.start();
-        //        new AdminServer(null).start();
-
-        //        AdminServer.of(null).start();
         AdminServer.of(new HttpBridge(new Bridge().addService(new Request()))).start();
     }
 

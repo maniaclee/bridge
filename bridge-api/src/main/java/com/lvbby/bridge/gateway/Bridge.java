@@ -150,7 +150,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     }
 
     @Override
-    public ApiGateWay withErrorHandler(List<ErrorHanlder> errorHandlers) {
+    public ApiGateWay withErrorHandler(List<ErrorHandler> errorHandlers) {
         return (ApiGateWay) Proxy.newProxyInstance(getClass().getClassLoader(), this.getClass().getInterfaces(), new ErrorInvocationHandler(this, errorHandlers));
     }
 

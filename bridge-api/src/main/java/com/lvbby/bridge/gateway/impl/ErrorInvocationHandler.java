@@ -1,8 +1,7 @@
 package com.lvbby.bridge.gateway.impl;
 
-import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
-import com.lvbby.bridge.gateway.ErrorHanlder;
+import com.lvbby.bridge.gateway.ErrorHandler;
 import com.lvbby.bridge.gateway.Request;
 
 import java.lang.reflect.InvocationHandler;
@@ -14,11 +13,11 @@ import java.util.List;
  */
 public class ErrorInvocationHandler implements InvocationHandler {
     private ApiGateWay apiGateWay;
-    private List<ErrorHanlder> errorHanlders;
+    private List<ErrorHandler> errorHandlers;
 
-    public ErrorInvocationHandler(ApiGateWay apiGateWay, List<ErrorHanlder> errorHanlders) {
+    public ErrorInvocationHandler(ApiGateWay apiGateWay, List<ErrorHandler> errorHandlers) {
         this.apiGateWay = apiGateWay;
-        this.errorHanlders = errorHanlders;
+        this.errorHandlers = errorHandlers;
     }
 
     @Override
@@ -31,11 +30,12 @@ public class ErrorInvocationHandler implements InvocationHandler {
             method.setAccessible(true);
             re = method.invoke(apiGateWay, args);
         } catch (Exception e) {
-            if (errorHanlders == null || errorHanlders.isEmpty() || !(e instanceof BridgeException))
+            if (errorHandlers == null || errorHandlers.isEmpty())
                 throw e;
+            e= (Exception) e.getCause();
             Request request = (Request) args[0];
-            for (ErrorHanlder errorHanlder : errorHanlders) {
-                re = errorHanlder.handleError(request, re, (BridgeException) e);
+            for (ErrorHandler errorHandler : errorHandlers) {
+                re = errorHandler.handleError(request, re, e);
             }
         }
         return re;
