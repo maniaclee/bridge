@@ -3,12 +3,7 @@ package com.lvbby.bridge.http;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.session.SessionHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,67 +15,44 @@ import java.util.List;
 /**
  * Created by lipeng on 16/9/26.
  */
-public class HttpBridgeServer {
+public class HttpBridgeServer extends BaseServer {
 
     /**
      * root url
      */
-    private String rootPath = "/api";
-    private int port = 8080;
-    private Server server;
+    private String apiPath = "/api";
+    private HttpBridge httpBridge;
 
 
-    public HttpBridgeServer(List services) {
-        this(new Bridge().addServices(services));
+    public static HttpBridgeServer of(List services) {
+        return of(new Bridge().addServices(services));
     }
 
-    public HttpBridgeServer(ApiGateWay apiGateWay) {
+    public static HttpBridgeServer of(ApiGateWay apiGateWay) {
+        return new HttpBridgeServer(apiGateWay);
+    }
+
+    private HttpBridgeServer(ApiGateWay apiGateWay) {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
-        this.server = createServer(port, rootPath, HttpBridge.of(apiGateWay));
+        this.httpBridge = HttpBridge.of(apiGateWay);
     }
 
-    public void start() throws Exception {
-        server.start();
-    }
 
-    public void stop() {
-        try {
-            server.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Server createServer(int port, String rootPath, HttpBridge httpBridge) {
-        Server server = new Server(port);
-        ServletContextHandler handler = new ServletContextHandler();
-        handler.setContextPath("/");
-        handler.addServlet(new ServletHolder(new HttpProxyServlet(httpBridge)), rootPath);
-
-        ServletContextHandler sessionServletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        handler.setSessionHandler(new SessionHandler());
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{handler, sessionServletContextHandler});
-        server.setHandler(handlers);
+    @Override
+    protected Server createServer() {
+        Server server = super.createServer();
+        /** add ApiGateWay servlet */
+        addServlet(new HttpProxyServlet(httpBridge), apiPath);
         return server;
     }
 
-    public String getRootPath() {
-        return rootPath;
+    public String getApiPath() {
+        return apiPath;
     }
 
-    public void setRootPath(String rootPath) {
-        this.rootPath = rootPath;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
+    public void setApiPath(String apiPath) {
+        this.apiPath = apiPath;
     }
 
     /**
@@ -114,4 +86,5 @@ public class HttpBridgeServer {
             }
         }
     }
+
 }
