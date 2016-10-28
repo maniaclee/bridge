@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http;
+package com.lvbby.bridge.util;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 

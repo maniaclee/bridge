@@ -3,6 +3,7 @@ package com.lvbby.bridge.util;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -58,6 +59,20 @@ public class BridgeUtil {
         List<Type> re = Lists.newArrayList();
         for (MethodParameter methodParameter : parameters) re.add(methodParameter.getType());
         return re;
+    }
+
+    public static Field getField(Class clz, String fieldName) {
+        while (clz != null) {
+            Field[] declaredFields = clz.getDeclaredFields();
+            if (declaredFields != null)
+                for (Field declaredField : declaredFields) {
+                    declaredField.setAccessible(true);
+                    if (declaredField.getName().equalsIgnoreCase(fieldName))
+                        return declaredField;
+                }
+            clz = clz.getSuperclass();
+        }
+        return null;
     }
 
 }

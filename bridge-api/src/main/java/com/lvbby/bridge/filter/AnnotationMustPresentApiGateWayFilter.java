@@ -14,10 +14,10 @@ import java.lang.reflect.Method;
  *
  * @see com.lvbby.bridge.annotation.Filter
  */
-public class AnnotationApiGateWayFilter implements ApiGateWayFilter {
+public class AnnotationMustPresentApiGateWayFilter implements ApiGateWayFilter {
     private Class<? extends Annotation> annotation;
 
-    public AnnotationApiGateWayFilter(Class annotation) {
+    public AnnotationMustPresentApiGateWayFilter(Class annotation) {
         this.annotation = annotation;
     }
 

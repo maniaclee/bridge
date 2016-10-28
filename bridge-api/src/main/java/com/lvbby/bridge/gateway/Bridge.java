@@ -42,7 +42,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
                 if (!apiGateWayFilter.canVisit(context))
-                    throw new BridgeProcessException(String.format("%s.%s can't be visit!", request.getServiceName(), request.getMethod()))
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit! blocked by %s , context[%s]", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getName(),JSON.toJSONString(context)))
                             .setErrorType(BridgeProcessException.Filter);
             }
 

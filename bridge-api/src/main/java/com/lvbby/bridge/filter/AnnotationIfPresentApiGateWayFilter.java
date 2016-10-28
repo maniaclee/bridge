@@ -15,17 +15,17 @@ import java.util.List;
  *
  * @see com.lvbby.bridge.annotation.Filter
  */
-public class AnnotationPresentedApiGateWayFilter implements ApiGateWayFilter {
+public class AnnotationIfPresentApiGateWayFilter implements ApiGateWayFilter {
     private Class<? extends Annotation> annotation;
     private List<ApiGateWayFilter> filters = Lists.newLinkedList();
 
-    public static AnnotationPresentedApiGateWayFilter of(Class<? extends Annotation> annotation) {
-        AnnotationPresentedApiGateWayFilter re = new AnnotationPresentedApiGateWayFilter();
+    public static AnnotationIfPresentApiGateWayFilter of(Class<? extends Annotation> annotation) {
+        AnnotationIfPresentApiGateWayFilter re = new AnnotationIfPresentApiGateWayFilter();
         re.annotation = annotation;
         return re;
     }
 
-    public AnnotationPresentedApiGateWayFilter addFilter(ApiGateWayFilter filter) {
+    public AnnotationIfPresentApiGateWayFilter addFilter(ApiGateWayFilter filter) {
         this.filters.add(filter);
         return this;
     }

@@ -3,7 +3,10 @@ package com.lvbby.bridge.http;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -51,8 +54,16 @@ public class HttpBridgeServer {
 
     public Server createServer(int port, String rootPath, HttpBridge httpBridge) {
         Server server = new Server(port);
-        ServletContextHandler handler = new ServletContextHandler(server, "/");
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.setContextPath("/");
         handler.addServlet(new ServletHolder(new HttpProxyServlet(httpBridge)), rootPath);
+
+        ServletContextHandler sessionServletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        handler.setSessionHandler(new SessionHandler());
+
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[]{handler, sessionServletContextHandler});
+        server.setHandler(handlers);
         return server;
     }
 

@@ -7,7 +7,7 @@ import com.lvbby.bridge.gateway.ErrorHandler;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.gateway.impl.TypeErrorHandler;
 import com.lvbby.bridge.http.HttpBridge;
-import com.lvbby.bridge.http.ServiceResponse;
+import com.lvbby.bridge.util.ServiceResponse;
 import com.lvbby.bridge.http.servlet.HttpBridgeDelegateServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
