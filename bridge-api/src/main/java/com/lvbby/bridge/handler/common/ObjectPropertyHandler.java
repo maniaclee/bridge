@@ -1,4 +1,4 @@
-package com.lvbby.bridge.handler;
+package com.lvbby.bridge.handler.common;
 
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.exception.BridgeRunTimeException;

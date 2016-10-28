@@ -1,4 +1,4 @@
-package com.lvbby.bridge.handler;
+package com.lvbby.bridge.handler.common;
 
 import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
 import com.lvbby.bridge.gateway.Context;
