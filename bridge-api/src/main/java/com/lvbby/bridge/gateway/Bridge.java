@@ -8,7 +8,7 @@ import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
-import com.lvbby.bridge.filter.BlockingApiGateWayFilter;
+import com.lvbby.bridge.filter.anno.DefaultFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.gateway.impl.ErrorInvocationHandler;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
@@ -26,7 +26,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     private InjectProcessor injectProcessor = new InjectProcessor();
 
     public Bridge() {
-        addApiFilter(new BlockingApiGateWayFilter());
+        addApiFilter(new DefaultFilter());
 
         /** add the default post handler */
         addPostHandler(new DefaultApiGateWayPostHandler());

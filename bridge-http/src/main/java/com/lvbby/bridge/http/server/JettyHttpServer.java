@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http;
+package com.lvbby.bridge.http.server;
 
 import com.google.common.collect.Lists;
 import org.eclipse.jetty.server.Handler;
@@ -14,16 +14,17 @@ import java.util.List;
 /**
  * Created by lipeng on 16/10/28.
  */
-public class BaseServer {
+public class JettyHttpServer implements HttpServer{
     private Server server;
-    private int port;
+    private int port = 8000;
     private String contextPath = "/";
     private ServletContextHandler servletContextHandler = new ServletContextHandler();
     private List<Handler> handlers = Lists.newLinkedList();
 
 
     public void start() throws Exception {
-        createServer().start();
+        createServer();
+        server.start();
     }
 
 
@@ -39,7 +40,7 @@ public class BaseServer {
         servletContextHandler.addServlet(new ServletHolder(servlet), path);
     }
 
-    protected Server createServer() {
+    protected void createServer() {
         if (server == null) {
             server = new Server(port);
             servletContextHandler.setContextPath(contextPath);
@@ -50,7 +51,6 @@ public class BaseServer {
                 handlerList.addHandler(handler);
             server.setHandler(handlerList);
         }
-        return server;
     }
 
     public void enableSession() {

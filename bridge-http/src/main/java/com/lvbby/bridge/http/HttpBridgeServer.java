@@ -3,7 +3,7 @@ package com.lvbby.bridge.http;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
-import org.eclipse.jetty.server.Server;
+import com.lvbby.bridge.http.server.BaseServer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,16 +36,9 @@ public class HttpBridgeServer extends BaseServer {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
         this.httpBridge = HttpBridge.of(apiGateWay);
-    }
-
-
-    @Override
-    protected Server createServer() {
-        Server server = super.createServer();
-        /** add ApiGateWay servlet */
         addServlet(new HttpProxyServlet(httpBridge), apiPath);
-        return server;
     }
+
 
     public String getApiPath() {
         return apiPath;

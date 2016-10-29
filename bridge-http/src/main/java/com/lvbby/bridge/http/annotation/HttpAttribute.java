@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface HttpAttributeCheck {
+public @interface HttpAttribute {
 
     /***
      * mark the request key
@@ -23,6 +23,5 @@ public @interface HttpAttributeCheck {
      * @return
      */
     String sessionAttribute() default "";
-
 
 }

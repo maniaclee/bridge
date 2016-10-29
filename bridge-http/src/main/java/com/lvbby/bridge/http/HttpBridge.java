@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.InjectProcessor;
 import com.lvbby.bridge.gateway.Request;
-import com.lvbby.bridge.http.handler.HttpMethodFilter;
+import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
 
@@ -60,21 +60,13 @@ public class HttpBridge {
     public Object process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Request req = httpApiRequestParser.parse(request);
-        /** set context */
-        HttpContextHolder.setServlet(request, response);
 
         /** inject HttpServletRequest && HttpServletResponse */
         InjectProcessor.setInjectValue(Lists.newArrayList(request, response));
 
-        try {
-            req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
-            return apiGateWay.proxy(req);
-        } finally {
-            /** clear context */
-            HttpContextHolder.clear();
-        }
+        req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
+        return apiGateWay.proxy(req);
     }
-
 
 
     public ApiGateWay getApiGateWay() {

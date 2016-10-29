@@ -6,7 +6,7 @@ import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.gateway.ErrorHandler;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.gateway.impl.TypeErrorHandler;
-import com.lvbby.bridge.http.BaseServer;
+import com.lvbby.bridge.http.server.BaseServer;
 import com.lvbby.bridge.http.HttpBridge;
 import com.lvbby.bridge.http.servlet.HttpBridgeDelegateServlet;
 import com.lvbby.bridge.util.ServiceResponse;

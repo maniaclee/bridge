@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.handler;
+package com.lvbby.bridge.http.filter;
 
 import com.lvbby.bridge.gateway.ApiGateWayFilter;
 import com.lvbby.bridge.gateway.Context;
