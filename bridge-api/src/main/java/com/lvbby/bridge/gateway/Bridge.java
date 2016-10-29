@@ -5,15 +5,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
+import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
 import com.lvbby.bridge.filter.anno.DefaultFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
-import com.lvbby.bridge.gateway.impl.ErrorInvocationHandler;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
 
@@ -34,15 +33,16 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
 
     @Override
-    public Object proxy(Request request) throws BridgeRoutingException, BridgeProcessException, BridgeInvokeException {
+    public Object proxy(Request request) throws BridgeException {
 
+        Object re = null;
         try {
             Context context = initContext(request);
 
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
                 if (!apiGateWayFilter.canVisit(context))
-                    throw new BridgeProcessException(String.format("%s.%s can't be visit! blocked by %s , context[%s]", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getName(),JSON.toJSONString(context)))
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
                             .setErrorType(BridgeProcessException.Filter);
             }
 
@@ -55,7 +55,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             }
 
             /** invoke */
-            Object re = null;
             BridgeInvokeException invokeException = null;
             try {
                 re = context.getApiMethod().invoke(context.getApiService(), context.getParams());
@@ -74,6 +73,12 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
                 }
             }
             throw invokeException;
+        } catch (Exception e) {
+            if (errorHandlers.isEmpty())
+                throw e;
+            for (ErrorHandler errorHandler : errorHandlers)
+                re = errorHandler.handleError(request, re, e);
+            return re;
         } finally {
             /** clear the inject value */
             InjectProcessor.clear();
@@ -139,6 +144,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         return methodWrapper;
     }
 
+
     @Override
     public List<ApiService> getAllApiServices() {
         return Lists.newArrayList(serviceMap.values());
@@ -147,11 +153,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
     @Override
     public ApiService getApiService(String serviceName) {
         return serviceMap.get(serviceName);
-    }
-
-    @Override
-    public ApiGateWay withErrorHandler(List<ErrorHandler> errorHandlers) {
-        return (ApiGateWay) Proxy.newProxyInstance(getClass().getClassLoader(), this.getClass().getInterfaces(), new ErrorInvocationHandler(this, errorHandlers));
     }
 
     @Override

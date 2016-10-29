@@ -24,7 +24,8 @@ public class JsonParamsParser implements ParamsParser {
             JSONObject jsonObject = JSON.parseObject(arg.toString());
             if (jsonObject == null)
                 return methodParameters.length == 0;
-            return BridgeUtil.equalCollection(jsonObject.keySet(), BridgeUtil.getParameterNames(methodParameters));
+            /** match if only all the parameter name is contained in the paramter map */
+            return BridgeUtil.getParameterNames(methodParameters).containsAll(jsonObject.keySet());
         }
         return false;
     }

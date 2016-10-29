@@ -1,6 +1,7 @@
 package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
@@ -19,13 +20,13 @@ public interface ApiGateWay {
      * @throws BridgeProcessException
      * @throws BridgeInvokeException
      */
-    Object proxy(Request request) throws BridgeRoutingException, BridgeProcessException, BridgeInvokeException;
+    Object proxy(Request request) throws BridgeException;
 
     List<ApiService> getAllApiServices();
 
     ApiService getApiService(String serviceName);
 
-    ApiGateWay withErrorHandler(List<ErrorHandler> errorHandlers);
+    void addErrorHandler(ErrorHandler errorHandler);
 
     /***
      * add filter before execution, like black list / white list

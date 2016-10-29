@@ -17,7 +17,7 @@ public class Request {
     /***
      * extended or user custom param
      */
-    private Map<String, Object> extArgs = new HashMap<String, Object>();
+    private transient Map<String, Object> extArgs = new HashMap<String, Object>();
 
     public Request() {
     }
@@ -81,5 +81,15 @@ public class Request {
 
     public void setExtArgs(Map<String, Object> extArgs) {
         this.extArgs = extArgs;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "paramType='" + paramType + '\'' +
+                ", arg=" + arg +
+                ", method='" + method + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                '}';
     }
 }

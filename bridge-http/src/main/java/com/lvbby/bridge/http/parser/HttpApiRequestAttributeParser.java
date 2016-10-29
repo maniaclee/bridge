@@ -1,5 +1,6 @@
 package com.lvbby.bridge.http.parser;
 
+import com.lvbby.bridge.exception.BridgeRoutingException;
 import com.lvbby.bridge.gateway.Request;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,20 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Created by lipeng on 16/10/20.
  */
-public class HttpApiRequestAttributeParser implements HttpApiRequestParser {
+public class HttpApiRequestAttributeParser extends BaseHttpApiRequestParser {
 
     private String serviceAttribute = "service";
     private String methodAttribute = "method";
-    private String paramTypeAttribute = "paramType";
-    private String paramAttribute = "param";
 
     @Override
-    public Request parse(HttpServletRequest request) {
-        Request re = new Request();
+    public Request parse(HttpServletRequest request) throws BridgeRoutingException {
+        Request re = super.parse(request);
         re.setServiceName(request.getParameter(serviceAttribute));
         re.setMethod(request.getParameter(methodAttribute));
-        re.setParamType(request.getParameter(paramTypeAttribute));
-        re.setArg(request.getParameter(paramAttribute));
         return re;
     }
 
@@ -40,11 +37,4 @@ public class HttpApiRequestAttributeParser implements HttpApiRequestParser {
         this.methodAttribute = methodAttribute;
     }
 
-    public String getParamTypeAttribute() {
-        return paramTypeAttribute;
-    }
-
-    public void setParamTypeAttribute(String paramTypeAttribute) {
-        this.paramTypeAttribute = paramTypeAttribute;
-    }
 }

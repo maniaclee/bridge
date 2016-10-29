@@ -52,4 +52,10 @@ public class Context {
         this.apiMethod = apiMethod;
     }
 
+    @Override
+    public String toString() {
+        return "Context{" +
+                "request=" + request +
+                '}';
+    }
 }

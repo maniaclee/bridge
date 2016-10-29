@@ -15,10 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpUserFilter extends AbstractHttpAnnotationFilter<HttpUser> {
     private HttpUserManager httpUserManager;
 
+    private HttpUserFilter(HttpUserManager httpUserManager) {
+        this.httpUserManager = httpUserManager;
+    }
+
     public static HttpUserFilter of(HttpUserManager httpUserManager) {
-        HttpUserFilter re = new HttpUserFilter();
-        re.httpUserManager = httpUserManager;
-        return re;
+        return new HttpUserFilter(httpUserManager);
     }
 
     @Override

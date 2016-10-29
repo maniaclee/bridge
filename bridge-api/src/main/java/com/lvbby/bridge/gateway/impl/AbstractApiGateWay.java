@@ -16,6 +16,13 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     protected List<ApiGateWayFilter> apiGateWayFilters = Lists.newLinkedList();
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
+    protected List<ErrorHandler> errorHandlers = Lists.newLinkedList();
+
+    @Override
+    public void addErrorHandler(ErrorHandler errorHandler) {
+        if (errorHandler != null)
+            errorHandlers.add(errorHandler);
+    }
 
     @Override
     public void addApiFilter(ApiGateWayFilter apiGateWayFilter) {
