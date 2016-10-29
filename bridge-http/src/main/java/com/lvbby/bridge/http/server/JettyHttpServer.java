@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class JettyHttpServer implements HttpServer{
     private Server server;
-    private int port = 8000;
+    private int port = 7000;
     private String contextPath = "/";
     private ServletContextHandler servletContextHandler = new ServletContextHandler();
     private List<Handler> handlers = Lists.newLinkedList();

@@ -36,9 +36,13 @@ public class HttpBridgeServer extends BaseServer {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
         this.httpBridge = HttpBridge.of(apiGateWay);
-        addServlet(new HttpProxyServlet(httpBridge), apiPath);
     }
 
+    @Override
+    public void start() throws Exception {
+        addServlet(new HttpProxyServlet(httpBridge), apiPath);
+        super.start();
+    }
 
     public String getApiPath() {
         return apiPath;
