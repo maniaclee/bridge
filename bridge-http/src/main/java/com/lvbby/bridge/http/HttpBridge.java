@@ -5,7 +5,9 @@ import com.google.common.collect.Lists;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.InjectProcessor;
 import com.lvbby.bridge.gateway.Request;
+import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
+import com.lvbby.bridge.http.filter.anno.HttpUserFilter;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
 
@@ -26,7 +28,10 @@ public class HttpBridge {
     public HttpBridge(ApiGateWay apiGateWay) {
         this.apiGateWay = apiGateWay;
 
+        /** add default filters */
         this.apiGateWay.addApiFilter(new HttpMethodFilter());
+        this.apiGateWay.addApiFilter(new HttpUserFilter());
+        this.apiGateWay.addApiFilter(new HttpAttributeAnnotationValidateFilter());
     }
 
     public static HttpBridge of(ApiGateWay apiGateWay) {
