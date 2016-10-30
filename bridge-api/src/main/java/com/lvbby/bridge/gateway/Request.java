@@ -27,6 +27,12 @@ public class Request {
         this.method = method;
     }
 
+    public Request(String serviceName, String method, Object arg) {
+        this.serviceName = serviceName;
+        this.method = method;
+        this.arg = arg;
+    }
+
     /***
      * add attribute for the Context to use in interceptor
      *

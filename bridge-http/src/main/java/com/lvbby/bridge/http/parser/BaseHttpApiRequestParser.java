@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by lipeng on 16/10/20.
- * extract param && paramType
+ * extract param && paramType , let subclass to parse the service && method
  */
 public class BaseHttpApiRequestParser implements HttpApiRequestParser {
 
