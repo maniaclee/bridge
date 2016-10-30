@@ -9,5 +9,5 @@ public interface ParamsParser {
 
     boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters);
 
-    Params parse(ParamParsingContext context, MethodParameter[] methodParameters);
+    Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters);
 }

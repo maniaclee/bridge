@@ -33,10 +33,10 @@ public class JsonArrayParamsParser implements ParamsParser {
 
 
     @Override
-    public Params parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
         Object arg = context.getRequest().getArg();
         List<Object> jsonObject = JSON.parseArray(arg.toString(), BridgeUtil.getParameterTypes(methodParameters).toArray(new Type[0]));
-        return Params.of(jsonObject.toArray());
+        return Parameters.of(jsonObject.toArray());
     }
 
 }

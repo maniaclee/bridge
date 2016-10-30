@@ -34,12 +34,12 @@ public class MapParamsParser implements ParamsParser {
     }
 
     @Override
-    public Params parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        List<Param> ps = Lists.newLinkedList();
+    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+        List<Parameter> ps = Lists.newLinkedList();
         Map<String, String> map = (Map<String, String>) context.getRequest().getArg();
 
         for (MethodParameter methodParameter : methodParameters)
-            ps.add(new Param(JSON.parseObject(map.get(methodParameter.getName()), methodParameter.getType()), methodParameter.getName()));
-        return new Params(ps.toArray(new Param[0]));
+            ps.add(new Parameter(JSON.parseObject(map.get(methodParameter.getName()), methodParameter.getType()), methodParameter.getName()));
+        return new Parameters(ps.toArray(new Parameter[0]));
     }
 }

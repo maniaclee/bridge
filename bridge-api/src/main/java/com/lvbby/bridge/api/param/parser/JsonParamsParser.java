@@ -32,15 +32,15 @@ public class JsonParamsParser implements ParamsParser {
 
 
     @Override
-    public Params parse(ParamParsingContext context, MethodParameter[] parameters) {
+    public Parameters parse(ParamParsingContext context, MethodParameter[] parameters) {
         Object arg = context.getRequest().getArg();
-        Param[] ps = new Param[parameters.length];
+        Parameter[] ps = new Parameter[parameters.length];
         JSONObject jsonObject = JSON.parseObject(arg.toString());
         for (MethodParameter methodParameter : parameters) {
             Object o = jsonObject.getObject(methodParameter.getName(), methodParameter.getType());
-            ps[methodParameter.getIndex()] = new Param(o, methodParameter.getName());
+            ps[methodParameter.getIndex()] = new Parameter(o, methodParameter.getName());
         }
-        return new Params(ps);
+        return new Parameters(ps);
     }
 
 }

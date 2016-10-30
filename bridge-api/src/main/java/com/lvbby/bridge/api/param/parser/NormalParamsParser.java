@@ -25,7 +25,7 @@ public class NormalParamsParser implements ParamsParser {
     }
 
     @Override
-    public Params parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        return Params.of((Object[]) context.getRequest().getArg());
+    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+        return Parameters.of((Object[]) context.getRequest().getArg());
     }
 }

@@ -2,6 +2,7 @@ package com.lvbby.bridge.api.impl;
 
 import com.google.common.base.Objects;
 import com.lvbby.bridge.api.*;
+import com.lvbby.bridge.api.param.extracotr.AnnotationParameterNameExtractor;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 
@@ -18,6 +19,7 @@ public class DefaultApiMethod implements ApiMethod {
      * default parameterName finder
      */
     private static final ParameterNameExtractor defaultParameterNameExtractor = new DefaultParameterNameExtractor();
+    private static final ParameterNameExtractor annotationParameterNameExtractor = new AnnotationParameterNameExtractor();
     private Method method;
     private String name;
     private MethodParameter[] methodParameters;
@@ -38,17 +40,23 @@ public class DefaultApiMethod implements ApiMethod {
             methodParameter.setIndex(i);
             methodParameter.setType(parameterTypes[i]);
             methodParameters[i] = methodParameter;
-            //map for parameter name
         }
         /** parameter names, only available when method has parameters*/
         if (parameterNameExtractor != null && methodParameters.length > 0) {
             String[] parameterNames = parameterNameExtractor.getParameterName(method);
             if (parameterNames == null || parameterNames.length == 0 || parameterNames.length != methodParameters.length)
                 throw new IllegalArgumentException("invalid value parameter length : " + method);
+
+            /** annotation parameters will overwrite the others, annotation as the native way */
+            String[] annotationParamNames = annotationParameterNameExtractor.getParameterName(method);
+            for (int i = 0; i < parameterNames.length; i++) {
+                if (annotationParamNames[i] != null)
+                    parameterNames[i] = annotationParamNames[i];
+            }
             for (int i = 0; i < methodParameters.length; i++) {
                 methodParameters[i].setName(parameterNames[i]);
+                //map for parameter name
                 parameterMap.put(parameterNames[i], methodParameters[i]);
-
             }
         }
         return this;
@@ -58,36 +66,36 @@ public class DefaultApiMethod implements ApiMethod {
     /***
      * get real parameters for value to invoke
      *
-     * @param params
+     * @param parameters
      * @return
      */
-    public Object[] getRealParameters(Params params) {
-        Param[] ps = params.getParams();
+    public Object[] getRealParameters(Parameters parameters) {
+        Parameter[] ps = parameters.getParameters();
         //void
         if ((ps == null || ps.length == 0))
             return null;
 
         Object[] re = new Object[ps.length];
         //match by index
-        if (Objects.equal(params.getType(), Params.byIndex)) {
+        if (Objects.equal(parameters.getType(), Parameters.byIndex)) {
             for (int i = 0; i < ps.length; i++) re[i] = ps[i].getParam();
             return re;
         }
         //match by name
-        if (Objects.equal(params.getType(), Params.byName)) {
-            for (Param p : ps) {
+        if (Objects.equal(parameters.getType(), Parameters.byName)) {
+            for (Parameter p : ps) {
                 MethodParameter methodParameter = parameterMap.get(p.getName());
                 re[methodParameter.getIndex()] = p.getParam();
 
             }
             return re;
         }
-        throw new IllegalArgumentException("unknown parameter type : " + params.getType());
+        throw new IllegalArgumentException("unknown parameter type : " + parameters.getType());
     }
 
     @Override
-    public Object invoke(ApiService apiService, Params params) throws BridgeInvokeException {
-        Object[] realParameters = getRealParameters(params);
+    public Object invoke(ApiService apiService, Parameters parameters) throws BridgeInvokeException {
+        Object[] realParameters = getRealParameters(parameters);
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {

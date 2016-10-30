@@ -7,6 +7,8 @@ import com.lvbby.bridge.gateway.InjectProcessor;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
+import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
+import com.lvbby.bridge.http.handler.HttpSessionSavePostHandler;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
 
@@ -30,6 +32,10 @@ public class HttpBridge {
         /** add default filters */
         this.apiGateWay.addApiFilter(new HttpMethodFilter());
         this.apiGateWay.addApiFilter(new HttpAttributeAnnotationValidateFilter());
+
+        /** add default post handlers */
+        this.apiGateWay.addPostHandler(new HttpSessionSavePostHandler());
+        this.apiGateWay.addPostHandler(new HttpSessionClearPostHandler());
     }
 
     public static HttpBridge of(ApiGateWay apiGateWay) {

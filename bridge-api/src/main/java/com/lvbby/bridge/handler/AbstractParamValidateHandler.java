@@ -1,7 +1,7 @@
 package com.lvbby.bridge.handler;
 
-import com.lvbby.bridge.api.Param;
-import com.lvbby.bridge.api.Params;
+import com.lvbby.bridge.api.Parameter;
+import com.lvbby.bridge.api.Parameters;
 import com.lvbby.bridge.gateway.ApiGateWayPreHandler;
 import com.lvbby.bridge.gateway.Context;
 
@@ -12,13 +12,13 @@ public abstract class AbstractParamValidateHandler implements ApiGateWayPreHandl
 
     @Override
     public void preProcess(Context request) {
-        Params param = request.getParams();
-        if (param == null || param.getParams() == null || param.getParams().length == 0)
+        Parameters param = request.getParameters();
+        if (param == null || param.getParameters() == null || param.getParameters().length == 0)
             return;
-        for (Param p : param.getParams()) {
+        for (Parameter p : param.getParameters()) {
             processParam(request, p);
         }
     }
 
-    public abstract boolean processParam(Context request, Param p);
+    public abstract boolean processParam(Context request, Parameter p);
 }

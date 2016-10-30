@@ -1,5 +1,6 @@
 package com.lvbby.bridge.api.impl;
 
+import com.lvbby.bridge.annotation.BridgeService;
 import com.lvbby.bridge.api.ServiceNameExtractor;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 
@@ -9,6 +10,11 @@ import com.lvbby.bridge.exception.BridgeRunTimeException;
 public class ClassNameServiceNameExtractor implements ServiceNameExtractor {
     @Override
     public String getServiceName(Object service) {
+        if (!(service instanceof Class)) {
+            BridgeService annotation = service.getClass().getAnnotation(BridgeService.class);
+            if (annotation != null)
+                return annotation.value();
+        }
         Class<?> clz = service instanceof Class ? (Class<?>) service : service.getClass();
         Class<?>[] interfaces = clz.getInterfaces();
         if (interfaces.length < 1)

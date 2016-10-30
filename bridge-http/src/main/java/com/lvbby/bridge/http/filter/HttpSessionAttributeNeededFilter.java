@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by lipeng on 16/10/19.
- * http request must have the give session key and the value must not be null
+ * http request must have the give session key and the sessionAttribute must not be null
  */
 public class HttpSessionAttributeNeededFilter implements ApiGateWayFilter {
 

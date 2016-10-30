@@ -3,8 +3,8 @@ package com.lvbby.bridge.gateway;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.ApiMethod;
 import com.lvbby.bridge.api.MethodParameter;
-import com.lvbby.bridge.api.Param;
-import com.lvbby.bridge.api.Params;
+import com.lvbby.bridge.api.Parameter;
+import com.lvbby.bridge.api.Parameters;
 import com.lvbby.bridge.util.BridgeUtil;
 
 import java.lang.reflect.Type;
@@ -38,26 +38,26 @@ public class InjectProcessor {
         return re.toArray(new MethodParameter[0]);
     }
 
-    public void injectValue(Params params, ApiMethod apiMethod) {
-        if (params == null || params.getParams().length == 0 || params.getParams().length == apiMethod.getParamTypes().length)
+    public void injectValue(Parameters parameters, ApiMethod apiMethod) {
+        if (parameters == null || parameters.getParameters().length == 0 || parameters.getParameters().length == apiMethod.getParamTypes().length)
             return;
         List injects = injectValue.get();
         if (injects == null)
             return;
-        Param[] ps = new Param[apiMethod.getParamTypes().length];
+        Parameter[] ps = new Parameter[apiMethod.getParamTypes().length];
         //inject the value first
         for (MethodParameter methodParameter : apiMethod.getParamTypes())
             for (Object value : injects)
                 if (isInjectType(value, methodParameter.getType()))
-                    ps[methodParameter.getIndex()] = new Param(value, methodParameter.getName());
-        for (int i = 0, resultIndex = 0; i < params.getParams().length; i++, resultIndex++) {
+                    ps[methodParameter.getIndex()] = new Parameter(value, methodParameter.getName());
+        for (int i = 0, resultIndex = 0; i < parameters.getParameters().length; i++, resultIndex++) {
             while (resultIndex < ps.length && ps[resultIndex] != null)//skip the injected value
                 ++resultIndex;
             if (resultIndex == ps.length)
                 break;
-            ps[resultIndex] = params.getParams()[i];
+            ps[resultIndex] = parameters.getParameters()[i];
         }
-        params.setParams(ps);
+        parameters.setParameters(ps);
 
     }
 

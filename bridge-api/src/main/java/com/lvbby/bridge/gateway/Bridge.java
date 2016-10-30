@@ -57,7 +57,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             /** invoke */
             BridgeInvokeException invokeException = null;
             try {
-                re = context.getApiMethod().invoke(context.getApiService(), context.getParams());
+                re = context.getApiMethod().invoke(context.getApiService(), context.getParameters());
             } catch (BridgeInvokeException e) {
                 invokeException = e;
             }
@@ -109,21 +109,21 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
 
         /** parse params , filtered by inject processor */
-        Params params = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
-        params.setType(getParamType(request));//set param parsing type
+        Parameters parameters = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
+        parameters.setType(getParamType(request));//set param parsing type
 
         /** inject value */
-        injectProcessor.injectValue(params, methodWrapper);
+        injectProcessor.injectValue(parameters, methodWrapper);
 
         Context context = Context.of(request, service);
         context.setApiMethod(methodWrapper);
-        context.setParams(params);
+        context.setParameters(parameters);
         return context;
     }
 
     private String getParamType(Request request) {
         return request.getParamType().equalsIgnoreCase(ParamFormat.JSON_ARRAY.getValue())
-                || request.getParamType().equalsIgnoreCase(ParamFormat.NORMAL.getValue()) ? Params.byIndex : Params.byName;
+                || request.getParamType().equalsIgnoreCase(ParamFormat.NORMAL.getValue()) ? Parameters.byIndex : Parameters.byName;
     }
 
     private ApiMethod findApiMethod(ParamParsingContext request, ApiService service, ParamsParser paramsParser) {

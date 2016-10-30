@@ -3,19 +3,19 @@ package com.lvbby.bridge.api;
 /**
  * Created by lipeng on 16/9/23.
  */
-public class Param {
+public class Parameter {
     private Object param;
     private String name;
 
-    public Param() {
+    public Parameter() {
     }
 
-    public Param(Object param) {
+    public Parameter(Object param) {
         this.param = param;
     }
 
 
-    public Param(Object param, String name) {
+    public Parameter(Object param, String name) {
         this.param = param;
         this.name = name;
     }
