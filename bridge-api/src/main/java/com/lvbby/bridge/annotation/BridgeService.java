@@ -14,10 +14,4 @@ public @interface BridgeService {
      * service name
      */
     String value();
-
-    /**
-     * service interfaces
-     */
-    Class[] serviceType() default Object.class;
-
 }

@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
 /**
  * Created by lipeng on 16/10/28.
  */
-public abstract class AbstractAnnotationPostHanlder<T extends Annotation> extends AbstractAnnotationCapable<T> implements ApiGateWayPostHandler {
+public abstract class AbstractAnnotationPostHandler<T extends Annotation> extends AbstractAnnotationCapable<T> implements ApiGateWayPostHandler {
 
     @Override
     public Object success(Context context, Object result) {
