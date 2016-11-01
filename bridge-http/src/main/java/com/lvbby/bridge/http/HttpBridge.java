@@ -11,6 +11,7 @@ import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
 import com.lvbby.bridge.http.handler.HttpSessionSavePostHandler;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
+import com.lvbby.bridge.http.tool.HttpLoginHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +37,10 @@ public class HttpBridge {
         /** add default post handlers */
         this.apiGateWay.addPostHandler(new HttpSessionSavePostHandler());
         this.apiGateWay.addPostHandler(new HttpSessionClearPostHandler());
+
+        /** add login function */
+        this.apiGateWay.addPreHandler(new HttpLoginHandler());
+        this.apiGateWay.addPostHandler(new HttpLoginHandler());
     }
 
     public static HttpBridge of(ApiGateWay apiGateWay) {

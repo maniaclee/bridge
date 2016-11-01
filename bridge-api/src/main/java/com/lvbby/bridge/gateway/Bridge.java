@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
-import com.lvbby.bridge.exception.BridgeException;
-import com.lvbby.bridge.exception.BridgeInvokeException;
-import com.lvbby.bridge.exception.BridgeProcessException;
-import com.lvbby.bridge.exception.BridgeRoutingException;
+import com.lvbby.bridge.exception.*;
 import com.lvbby.bridge.filter.anno.DefaultFilter;
 import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
@@ -50,6 +47,8 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             try {
                 for (ApiGateWayPreHandler preHandler : preHandlers)
                     preHandler.preProcess(context);
+            } catch (BridgeInterruptException ine) {
+                return ine.getArg();
             } catch (Exception e) {
                 throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PreProcess);
             }
