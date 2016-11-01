@@ -1,6 +1,7 @@
 package com.lvbby.bridge.api.impl;
 
 import com.google.common.base.Objects;
+import com.lvbby.bridge.annotation.BridgeMethod;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.extracotr.AnnotationParameterNameExtractor;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
@@ -28,8 +29,15 @@ public class DefaultApiMethod implements ApiMethod {
 
     public DefaultApiMethod(Method method) {
         this.method = method;
-        this.name = method.getName();
+        this.name = getMethodName();
         method.setAccessible(true);
+    }
+
+    private String getMethodName() {
+        BridgeMethod annotation = method.getAnnotation(BridgeMethod.class);
+        if (annotation != null)
+            return annotation.value();
+        return method.getName();
     }
 
     public DefaultApiMethod init() {

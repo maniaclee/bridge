@@ -2,6 +2,7 @@ package com.lvbby.bridge.util;
 
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
+import com.lvbby.bridge.gateway.Request;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -73,6 +74,10 @@ public class BridgeUtil {
             clz = clz.getSuperclass();
         }
         return null;
+    }
+
+    public static String getDefaultServiceMethodName(Request request) {
+        return request.getServiceName() + "." + request.getMethod();
     }
 
 }

@@ -40,6 +40,11 @@
             <version>9.2.11.v20150529</version>
             <!--<scope>provided</scope>-->
         </dependency>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-kaptcha</artifactId>
+            <version>5.4-beta-22</version>
+        </dependency>
     </dependencies>
 
 </project>

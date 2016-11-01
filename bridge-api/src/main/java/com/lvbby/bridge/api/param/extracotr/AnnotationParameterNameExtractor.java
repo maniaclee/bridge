@@ -1,6 +1,6 @@
 package com.lvbby.bridge.api.param.extracotr;
 
-import com.lvbby.bridge.annotation.Param;
+import com.lvbby.bridge.annotation.BridgeParam;
 import com.lvbby.bridge.api.ParameterNameExtractor;
 
 import java.lang.annotation.Annotation;
@@ -18,8 +18,8 @@ public class AnnotationParameterNameExtractor implements ParameterNameExtractor 
             Annotation[] parameterAnnotation = parameterAnnotations[i];
             if (parameterAnnotation != null)
                 for (Annotation annotation : parameterAnnotation) {
-                    if (Param.class.equals(annotation))
-                        re[i] = ((Param) annotation).value();
+                    if (BridgeParam.class.equals(annotation))
+                        re[i] = ((BridgeParam) annotation).value();
                     break;
                 }
         }
