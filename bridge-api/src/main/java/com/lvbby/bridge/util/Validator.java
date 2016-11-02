@@ -1,4 +1,4 @@
-package com.lvbby.bridge.http.util;
+package com.lvbby.bridge.util;
 
 import java.util.regex.Pattern;
 
