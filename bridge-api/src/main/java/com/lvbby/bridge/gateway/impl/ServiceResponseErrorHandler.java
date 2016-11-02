@@ -11,6 +11,8 @@ import com.lvbby.bridge.util.ServiceResponse;
 public class ServiceResponseErrorHandler implements ErrorHandler {
     @Override
     public Object handleError(Request request, Object result, Exception e) throws BridgeException {
+        if(e instanceof BridgeException)
+            e= (Exception) e.getCause();
         return ServiceResponse.error(e.getMessage());
     }
 }

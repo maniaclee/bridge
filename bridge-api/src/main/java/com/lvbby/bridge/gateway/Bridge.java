@@ -28,7 +28,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         addPostHandler(new DefaultApiGateWayPostHandler());
     }
 
-
+    /***
+     * @param request
+     * @return
+     * @throws BridgeException all BridgeException's subclasses will wrap
+     */
     @Override
     public Object proxy(Request request) throws BridgeException {
 
@@ -38,7 +42,14 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
-                if (!apiGateWayFilter.canVisit(context))
+                boolean canVisit = false;
+                try {
+                    canVisit = !apiGateWayFilter.canVisit(context);
+                } catch (Exception e) {
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
+                            .setErrorType(BridgeProcessException.Filter);
+                }
+                if (canVisit)
                     throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
                             .setErrorType(BridgeProcessException.Filter);
             }

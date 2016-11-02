@@ -15,9 +15,16 @@ import java.util.List;
 public class ServiceResponseTypedErrorHandler implements ErrorHandler {
     List<Class<? extends Exception>> echoExceptionClasses = Lists.newLinkedList();
 
+    public ServiceResponseTypedErrorHandler(Class<? extends Exception>... echoExceptionClasses) {
+        if (echoExceptionClasses != null)
+            for (Class<? extends Exception> echoExceptionClass : echoExceptionClasses)
+                this.echoExceptionClasses.add(echoExceptionClass);
+    }
+
     @Override
     public Object handleError(Request request, Object result, Exception e) throws BridgeException {
-        e = (Exception) e.getCause();
+        if (e instanceof BridgeException)
+            e = (Exception) e.getCause();
         for (Class<? extends Exception> ex : echoExceptionClasses) {
             if (BridgeUtil.isInstance(e.getClass(), ex))
                 return ServiceResponse.error(e.getMessage());

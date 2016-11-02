@@ -7,6 +7,7 @@ import com.lvbby.bridge.api.param.extracotr.AnnotationParameterNameExtractor;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -107,6 +108,8 @@ public class DefaultApiMethod implements ApiMethod {
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {
+            if(e instanceof InvocationTargetException)
+                e= (Exception) ((InvocationTargetException) e).getTargetException();
             throw new BridgeInvokeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()), e);
         }
     }
