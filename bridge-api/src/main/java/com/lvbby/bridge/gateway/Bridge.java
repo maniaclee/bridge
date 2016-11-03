@@ -34,7 +34,7 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
      * @throws BridgeException all BridgeException's subclasses will wrap
      */
     @Override
-    public Object proxy(Request request) throws BridgeException {
+    public Object proxy(Request request) throws Exception {
 
         Object re = null;
         try {

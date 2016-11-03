@@ -12,7 +12,7 @@ import com.lvbby.bridge.gateway.Request;
  */
 public abstract class TypeErrorHandler implements ErrorHandler {
     @Override
-    public Object handleError(Request request, Object result, Exception e) throws BridgeException {
+    public Object handleError(Request request, Object result, Exception e) throws Exception {
         if (e instanceof BridgeInvokeException)
             return handleInvokeError(request, result, (BridgeInvokeException) e);
         if (e instanceof BridgeProcessException)

@@ -9,9 +9,7 @@ import com.lvbby.bridge.gateway.Request;
  */
 public class DefaultErrorHandler implements ErrorHandler {
     @Override
-    public Object handleError(Request request, Object result, Exception e) throws BridgeException {
-        if (e instanceof BridgeException)
-            throw (BridgeException) e;
+    public Object handleError(Request request, Object result, Exception e) throws Exception {
         throw new BridgeException(e);
     }
 }
