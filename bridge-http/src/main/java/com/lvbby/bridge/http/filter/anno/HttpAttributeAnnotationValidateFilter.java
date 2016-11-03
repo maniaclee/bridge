@@ -23,9 +23,11 @@ public class HttpAttributeAnnotationValidateFilter extends AbstractHttpAnnotatio
         String requestKey = annotation.requestAttribute();
         if (StringUtils.isEmpty(requestKey))
             requestKey = BridgeUtil.getDefaultServiceMethodName(context.getRequest());
+        System.out.println(httpServletRequest.getSession().getAttribute(sessionKey));
+        System.out.println(httpServletRequest.getParameter(requestKey));
         return httpServletRequest.getSession() != null
                 && httpServletRequest.getSession().getAttribute(sessionKey) != null
-                && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getAttribute(requestKey));
+                && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getParameter(requestKey));
 
     }
 }

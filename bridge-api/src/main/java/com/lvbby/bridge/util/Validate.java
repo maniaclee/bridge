@@ -43,6 +43,12 @@ public class Validate {
         return s;
     }
 
+    public static String isPassword(String s, String error, Object... obj) {
+        if (!Validator.isPassword(s))
+            throwEx(error, obj);
+        return s;
+    }
+
     private static void throwEx(String error, Object... obj) {
         if (obj == null || obj.length == 0)
             throw new BridgeValidateException(error);
