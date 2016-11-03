@@ -2,6 +2,7 @@ package com.lvbby.bridge.http.parser;
 
 import com.lvbby.bridge.exception.BridgeRoutingException;
 import com.lvbby.bridge.gateway.Request;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +18,8 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
     @Override
     public Request parse(HttpServletRequest request) throws BridgeRoutingException {
         Request re = new Request();
-        re.setParamType(request.getParameter(paramTypeAttribute));
+        if (StringUtils.isNotBlank(request.getParameter(paramTypeAttribute)))
+            re.setParamType(request.getParameter(paramTypeAttribute));
         re.setArg(request.getParameter(paramAttribute));
         return re;
     }

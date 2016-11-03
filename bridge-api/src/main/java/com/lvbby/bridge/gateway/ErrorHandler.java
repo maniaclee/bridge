@@ -6,4 +6,9 @@ package com.lvbby.bridge.gateway;
 public interface ErrorHandler {
 
     Object handleError(Request request, Object result, Exception e) throws Exception;
+
+    ErrorHandler getNextErrorHandler();
+
+    void setNextErrorHandler(ErrorHandler errorHandler);
+
 }

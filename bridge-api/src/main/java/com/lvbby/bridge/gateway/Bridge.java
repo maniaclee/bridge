@@ -7,7 +7,6 @@ import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
 import com.lvbby.bridge.exception.*;
 import com.lvbby.bridge.filter.anno.DefaultFilter;
-import com.lvbby.bridge.gateway.impl.AbstractApiGateWay;
 import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
 
 import java.util.List;
@@ -84,11 +83,9 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             }
             throw invokeException;
         } catch (Exception e) {
-            if (errorHandlers.isEmpty())
+            if (errorHandler == null)
                 throw e;
-            for (ErrorHandler errorHandler : errorHandlers)
-                re = errorHandler.handleError(request, re, e);
-            return re;
+            return errorHandler.handleError(request, re, e);
         } finally {
             /** clear the inject value */
             InjectProcessor.clear();

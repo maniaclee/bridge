@@ -1,4 +1,4 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.gateway;
 
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.ServiceNameExtractor;
@@ -17,11 +17,23 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
     protected List<ErrorHandler> errorHandlers = Lists.newLinkedList();
+    protected ErrorHandler errorHandler;
 
     @Override
-    public void addErrorHandler(ErrorHandler errorHandler) {
-        if (errorHandler != null)
-            errorHandlers.add(errorHandler);
+    public void addErrorHandler(ErrorHandler eh) {
+        if (eh != null) {
+            if (errorHandler == null) {
+                errorHandler = eh;
+                return;
+            }
+            getTailErrorHanlder(errorHandler).setNextErrorHandler(eh);
+        }
+    }
+
+    private ErrorHandler getTailErrorHanlder(ErrorHandler errorHandler) {
+        while (errorHandler.getNextErrorHandler() != null)
+            errorHandler = errorHandler.getNextErrorHandler();
+        return errorHandler;
     }
 
     @Override

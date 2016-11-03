@@ -1,16 +1,16 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.exception.errorhandler;
 
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
-import com.lvbby.bridge.gateway.ErrorHandler;
+import com.lvbby.bridge.exception.errorhandler.AbstractErrorHandler;
 import com.lvbby.bridge.gateway.Request;
 
 /**
  * Created by lipeng on 16/10/27.
  */
-public abstract class TypeErrorHandler implements ErrorHandler {
+public abstract class TypeErrorHandler extends AbstractErrorHandler {
     @Override
     public Object handleError(Request request, Object result, Exception e) throws Exception {
         if (e instanceof BridgeInvokeException)

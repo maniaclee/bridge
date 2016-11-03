@@ -3,7 +3,7 @@ package com.lvbby.bridge.http.admin;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.gateway.Request;
-import com.lvbby.bridge.gateway.impl.ServiceResponseErrorHandler;
+import com.lvbby.bridge.exception.errorhandler.ServiceResponseTypedErrorHandler;
 import com.lvbby.bridge.http.HttpBridge;
 import com.lvbby.bridge.http.server.BaseServer;
 import com.lvbby.bridge.http.servlet.HttpBridgeDelegateServlet;
@@ -29,7 +29,7 @@ public class AdminServer extends BaseServer {
                 new HttpBridge(
                         new Bridge().addService(
                                 new HttpBridgeService(httpBridge.getApiGateWay())))), "/admin");
-        httpBridge.getApiGateWay().addErrorHandler(new ServiceResponseErrorHandler());
+        httpBridge.getApiGateWay().addErrorHandler(ServiceResponseTypedErrorHandler.of(Exception.class));
     }
 
 
