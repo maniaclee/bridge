@@ -10,7 +10,7 @@ public class Validate {
             throwEx(error, obj);
         s = s.trim();
         if (s.isEmpty())
-            throw new BridgeValidateException(error);
+            throwEx(error, obj);
         return s;
     }
 
@@ -51,7 +51,7 @@ public class Validate {
 
     private static void throwEx(String error, Object... obj) {
         if (obj == null || obj.length == 0)
-            throw new BridgeValidateException(error);
-        throw new BridgeValidateException(String.format(error, obj));
+            throw new IllegalArgumentException(error);
+        throw new IllegalArgumentException(String.format(error, obj));
     }
 }
