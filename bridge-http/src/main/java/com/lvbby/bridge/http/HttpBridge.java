@@ -2,9 +2,7 @@ package com.lvbby.bridge.http;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.lvbby.bridge.gateway.ApiGateWay;
-import com.lvbby.bridge.gateway.InjectProcessor;
-import com.lvbby.bridge.gateway.Request;
+import com.lvbby.bridge.gateway.*;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
 import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
@@ -35,12 +33,31 @@ public class HttpBridge {
         this.apiGateWay.addApiFilter(new HttpAttributeAnnotationValidateFilter());
 
         /** add default post handlers */
-        this.apiGateWay.addPostHandler(new HttpSessionSavePostHandler());
-        this.apiGateWay.addPostHandler(new HttpSessionClearPostHandler());
+        _addPostHandlerFirst(new HttpSessionSavePostHandler());
+        _addPostHandlerFirst(new HttpSessionClearPostHandler());
 
         /** add login function */
-        this.apiGateWay.addPreHandler(new HttpLoginHandler());
-        this.apiGateWay.addPostHandler(new HttpLoginHandler());
+        _addPreHandlerFirst(new HttpLoginHandler());
+        _addPostHandlerFirst(new HttpLoginHandler());
+    }
+
+    /***
+     * add the system post handler to the first
+     *
+     * @param apiGateWayPostHandler
+     */
+    private void _addPostHandlerFirst(ApiGateWayPostHandler apiGateWayPostHandler) {
+        ApiGateWay apiGateWay = getApiGateWay();
+        if (apiGateWay instanceof AbstractApiGateWay) {
+            ((AbstractApiGateWay) apiGateWay).getPostHandlers().add(0, apiGateWayPostHandler);
+        }
+    }
+
+    private void _addPreHandlerFirst(ApiGateWayPreHandler apiGateWayPreHandler) {
+        ApiGateWay apiGateWay = getApiGateWay();
+        if (apiGateWay instanceof AbstractApiGateWay) {
+            ((AbstractApiGateWay) apiGateWay).getPreHandlers().add(0, apiGateWayPreHandler);
+        }
     }
 
     public static HttpBridge of(ApiGateWay apiGateWay) {

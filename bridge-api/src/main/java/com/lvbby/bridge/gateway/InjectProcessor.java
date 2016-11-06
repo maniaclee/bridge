@@ -39,7 +39,9 @@ public class InjectProcessor {
     }
 
     public void injectValue(Parameters parameters, ApiMethod apiMethod) {
-        if (parameters == null || parameters.getParameters().length == 0 || parameters.getParameters().length == apiMethod.getParamTypes().length)
+        int paramSize = (parameters != null && parameters.getParameters() != null) ? parameters.getParameters().length : 0;
+        /** no need to inject */
+        if (paramSize == apiMethod.getParamTypes().length)
             return;
         List injects = injectValue.get();
         if (injects == null)
@@ -50,7 +52,7 @@ public class InjectProcessor {
             for (Object value : injects)
                 if (isInjectType(value, methodParameter.getType()))
                     ps[methodParameter.getIndex()] = new Parameter(value, methodParameter.getName());
-        for (int i = 0, resultIndex = 0; i < parameters.getParameters().length; i++, resultIndex++) {
+        for (int i = 0, resultIndex = 0; i < paramSize; i++, resultIndex++) {
             while (resultIndex < ps.length && ps[resultIndex] != null)//skip the injected value
                 ++resultIndex;
             if (resultIndex == ps.length)

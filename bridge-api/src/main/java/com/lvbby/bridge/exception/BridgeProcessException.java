@@ -9,6 +9,7 @@ public class BridgeProcessException extends BridgeException {
     public static final String PostProcess = "PostProcess";
 
     private String errorType;
+    private Object bridgeComponent;
 
     public BridgeProcessException(String message) {
         super(message);
@@ -27,4 +28,12 @@ public class BridgeProcessException extends BridgeException {
         super(cause);
     }
 
+    public Object getBridgeComponent() {
+        return bridgeComponent;
+    }
+
+    public BridgeProcessException setBridgeComponent(Object bridgeComponent) {
+        this.bridgeComponent = bridgeComponent;
+        return this;
+    }
 }

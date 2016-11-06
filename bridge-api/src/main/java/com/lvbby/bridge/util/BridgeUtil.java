@@ -2,6 +2,7 @@ package com.lvbby.bridge.util;
 
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
+import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.gateway.Request;
 
 import java.lang.reflect.Field;
@@ -78,6 +79,12 @@ public class BridgeUtil {
 
     public static String getDefaultServiceMethodName(Request request) {
         return request.getServiceName() + "." + request.getMethod();
+    }
+
+    public static Exception getUserException(Exception e) {
+        if (e instanceof BridgeException)
+            return (Exception) e.getCause();
+        return e;
     }
 
 }

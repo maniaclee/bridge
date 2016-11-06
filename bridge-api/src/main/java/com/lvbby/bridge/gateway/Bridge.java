@@ -7,7 +7,6 @@ import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.api.param.parser.ParamsParserFactory;
 import com.lvbby.bridge.exception.*;
 import com.lvbby.bridge.filter.anno.DefaultFilter;
-import com.lvbby.bridge.handler.DefaultApiGateWayPostHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -22,9 +21,6 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
     public Bridge() {
         addApiFilter(new DefaultFilter());
-
-        /** add the default post handler */
-        addPostHandler(new DefaultApiGateWayPostHandler());
     }
 
     /***
@@ -40,27 +36,32 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
             Context context = initContext(request);
 
             /** filter */
-            for (ApiGateWayFilter apiGateWayFilter : apiGateWayFilters) {
+            for (ApiGateWayFilter apiGateWayFilter : filters) {
                 boolean canVisit = false;
                 try {
                     canVisit = !apiGateWayFilter.canVisit(context);
                 } catch (Exception e) {
                     throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
+                            .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
                 }
                 if (canVisit)
                     throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
+                            .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
             }
 
             /** pre handlers */
+            ApiGateWayPreHandler errorPreHandler = null;
             try {
-                for (ApiGateWayPreHandler preHandler : preHandlers)
+                for (ApiGateWayPreHandler preHandler : preHandlers) {
+                    errorPreHandler = preHandler;
                     preHandler.preProcess(context);
+                }
             } catch (BridgeInterruptException ine) {
                 return ine.getArg();
             } catch (Exception e) {
-                throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PreProcess);
+                throw new BridgeProcessException(e).setBridgeComponent(errorPreHandler).setErrorType(BridgeProcessException.PreProcess);
             }
 
             /** invoke */
@@ -73,12 +74,15 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
 
             /** post handlers for success*/
             if (invokeException == null) {
+                ApiGateWayPostHandler errorPostHandler = null;
                 try {
-                    for (ApiGateWayPostHandler postHandler : postHandlers)
+                    for (ApiGateWayPostHandler postHandler : postHandlers) {
+                        errorPostHandler = postHandler;
                         re = postHandler.success(context, re);
+                    }
                     return re;
                 } catch (Exception e) {
-                    throw new BridgeProcessException(e).setErrorType(BridgeProcessException.PostProcess);
+                    throw new BridgeProcessException(e).setBridgeComponent(errorPostHandler).setErrorType(BridgeProcessException.PostProcess);
                 }
             }
             throw invokeException;
@@ -115,8 +119,11 @@ public class Bridge extends AbstractApiGateWay implements ApiGateWay, ApiService
         if (methodWrapper == null)
             throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
 
-        /** parse params , filtered by inject processor */
-        Parameters parameters = request.getArg() == null ? null : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
+        /**
+         * parse params , filtered by inject processor
+         * param parser doesn't know about value injection, so remove them first
+         * */
+        Parameters parameters = request.getArg() == null ? Parameters.of(null) : paramsParser.parse(paramParsingContext, injectProcessor.filterValue(methodWrapper.getParamTypes()));
         parameters.setType(getParamType(request));//set param parsing type
 
         /** inject value */

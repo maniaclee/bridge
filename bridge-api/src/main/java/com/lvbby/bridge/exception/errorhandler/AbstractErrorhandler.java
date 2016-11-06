@@ -25,4 +25,5 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
             return getNextErrorHandler().handleError(request, result, e);
         throw e;
     }
+
 }

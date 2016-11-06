@@ -3,7 +3,6 @@ package com.lvbby.bridge.gateway;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.ServiceNameExtractor;
 import com.lvbby.bridge.api.impl.ClassNameServiceNameExtractor;
-import com.lvbby.bridge.gateway.*;
 
 import java.util.List;
 
@@ -13,10 +12,9 @@ import java.util.List;
 public abstract class AbstractApiGateWay implements ApiGateWay {
     protected List<ApiGateWayPreHandler> preHandlers = Lists.newLinkedList();
     protected List<ApiGateWayPostHandler> postHandlers = Lists.newArrayList();
-    protected List<ApiGateWayFilter> apiGateWayFilters = Lists.newLinkedList();
+    protected List<ApiGateWayFilter> filters = Lists.newLinkedList();
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
-    protected List<ErrorHandler> errorHandlers = Lists.newLinkedList();
     protected ErrorHandler errorHandler;
 
     @Override
@@ -26,11 +24,11 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
                 errorHandler = eh;
                 return;
             }
-            getTailErrorHanlder(errorHandler).setNextErrorHandler(eh);
+            getTailErrorHandler(errorHandler).setNextErrorHandler(eh);
         }
     }
 
-    private ErrorHandler getTailErrorHanlder(ErrorHandler errorHandler) {
+    private ErrorHandler getTailErrorHandler(ErrorHandler errorHandler) {
         while (errorHandler.getNextErrorHandler() != null)
             errorHandler = errorHandler.getNextErrorHandler();
         return errorHandler;
@@ -39,7 +37,7 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     @Override
     public void addApiFilter(ApiGateWayFilter apiGateWayFilter) {
         if (apiGateWayFilter != null)
-            apiGateWayFilters.add(apiGateWayFilter);
+            filters.add(apiGateWayFilter);
     }
 
     @Override
@@ -59,5 +57,21 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
 
     public void setServiceNameExtractor(ServiceNameExtractor serviceNameExtractor) {
         this.serviceNameExtractor = serviceNameExtractor;
+    }
+
+    public List<ApiGateWayPreHandler> getPreHandlers() {
+        return preHandlers;
+    }
+
+    public List<ApiGateWayPostHandler> getPostHandlers() {
+        return postHandlers;
+    }
+
+    public List<ApiGateWayFilter> getFilters() {
+        return filters;
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 }

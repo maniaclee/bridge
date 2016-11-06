@@ -16,7 +16,7 @@ public abstract class AbstractAnnotationPostHandler<T extends Annotation> extend
         T annotation = getAnnotation(context);
         if (annotation != null)
             return success(context, annotation, result);
-        return null;
+        return result;
     }
 
     public abstract Object success(Context context, T t, Object result);
