@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by lipeng on 16/10/19.
  * http request must have equal sessionAttribute of request.requestKey && session.sessionKey
  */
-public class HttpAttributeAnnotationValidateFilter extends AbstractHttpAnnotationFilter<HttpAttribute> {
+public class HttpAttributeAnnotationValidateFilter extends HttpAnnotationFilter<HttpAttribute> {
 
 
     @Override

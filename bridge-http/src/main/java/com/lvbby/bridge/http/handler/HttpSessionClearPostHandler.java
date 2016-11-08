@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by lipeng on 16/10/30.
  */
-public class HttpSessionClearPostHandler extends AbstractHttpAnnotationPostHandler<HttpSessionClear> {
+public class HttpSessionClearPostHandler extends HttpAnnotationPostHandler<HttpSessionClear> {
 
     @Override
     public Object success(Context context, HttpSessionClear httpSessionSave, Object result, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {

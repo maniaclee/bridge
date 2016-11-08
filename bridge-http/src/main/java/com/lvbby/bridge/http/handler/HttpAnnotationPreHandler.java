@@ -1,6 +1,6 @@
 package com.lvbby.bridge.http.handler;
 
-import com.lvbby.bridge.annotation.AbstractAnnotationCapable;
+import com.lvbby.bridge.annotation.AnnotationCapable;
 import com.lvbby.bridge.gateway.ApiGateWayPreHandler;
 import com.lvbby.bridge.gateway.Context;
 import com.lvbby.bridge.http.HttpBridgeUtil;
@@ -12,7 +12,7 @@ import java.lang.annotation.Annotation;
 /**
  * Created by lipeng on 16/10/30.
  */
-public abstract class AbstractHttpAnnotationPreHandler<T extends Annotation> extends AbstractAnnotationCapable<T> implements ApiGateWayPreHandler {
+public abstract class HttpAnnotationPreHandler<T extends Annotation> extends AnnotationCapable<T> implements ApiGateWayPreHandler {
 
     @Override
     public void preProcess(Context context) {

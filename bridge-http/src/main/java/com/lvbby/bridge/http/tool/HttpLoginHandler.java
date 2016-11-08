@@ -6,7 +6,7 @@ import com.lvbby.bridge.gateway.ApiGateWayPreHandler;
 import com.lvbby.bridge.gateway.Context;
 import com.lvbby.bridge.http.HttpBridgeUtil;
 import com.lvbby.bridge.http.annotation.HttpLogin;
-import com.lvbby.bridge.http.handler.AbstractHttpAnnotationPostHandler;
+import com.lvbby.bridge.http.handler.HttpAnnotationPostHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by lipeng on 16/11/1.
  */
-public class HttpLoginHandler extends AbstractHttpAnnotationPostHandler<HttpLogin> implements ApiGateWayPreHandler {
+public class HttpLoginHandler extends HttpAnnotationPostHandler<HttpLogin> implements ApiGateWayPreHandler {
     @Override
     public void preProcess(Context context) {
         HttpLogin annotation = getAnnotation(context);

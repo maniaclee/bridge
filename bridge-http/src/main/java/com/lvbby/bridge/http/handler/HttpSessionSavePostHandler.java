@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by lipeng on 16/10/30.
  */
-public class HttpSessionSavePostHandler extends AbstractHttpAnnotationPostHandler<HttpSessionSave> {
+public class HttpSessionSavePostHandler extends HttpAnnotationPostHandler<HttpSessionSave> {
 
     @Override
     public Object success(Context context, HttpSessionSave httpSessionSave, Object result, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
