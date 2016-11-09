@@ -11,4 +11,14 @@ public class TypeCapable<T> {
         ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
         return (Class<T>) (parameterizedType.getActualTypeArguments()[0]);
     }
+
+    /***
+     * if the obj is instance of this type
+     *
+     * @param obj can't not be null
+     * @return
+     */
+    public boolean isType(Object obj) {
+        return BridgeUtil.isInstance(obj.getClass(), getType());
+    }
 }
