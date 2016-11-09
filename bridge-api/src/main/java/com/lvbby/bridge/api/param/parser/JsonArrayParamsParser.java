@@ -12,7 +12,7 @@ import java.util.List;
  * Created by lipeng on 16/10/21.
  * jsonString
  */
-public class JsonArrayParamsParser implements ParamsParser {
+public class JsonArrayParamsParser extends AbstractParamsParser {
     private static final String type = ParamFormat.JSON_ARRAY.getValue();
 
     @Override

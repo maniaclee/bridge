@@ -9,7 +9,7 @@ import com.lvbby.bridge.util.BridgeUtil;
  * Created by lipeng on 16/10/21.
  * jsonString
  */
-public class JsonParamsParser implements ParamsParser {
+public class JsonParamsParser extends AbstractParamsParser {
     private static final String type = ParamFormat.JSON.getValue();
 
     @Override
