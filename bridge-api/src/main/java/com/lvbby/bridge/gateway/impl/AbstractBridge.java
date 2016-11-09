@@ -33,12 +33,12 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
                 try {
                     canVisit = !apiGateWayFilter.canVisit(context);
                 } catch (Exception e) {
-                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
                             .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
                 }
                 if (canVisit)
-                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getServiceName(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
+                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
                             .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
             }
@@ -95,9 +95,9 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
      * @throws BridgeRoutingException
      */
     private Context initContext(Request request) throws BridgeRoutingException {
-        ApiService service = serviceMap.get(request.getServiceName());
+        ApiService service = serviceMap.get(request.getService());
         if (service == null)
-            throw new BridgeRoutingException(String.format("service not found:%s", request.getServiceName()));
+            throw new BridgeRoutingException(String.format("service not found:%s", request.getService()));
 
         ParamsParser paramsParser = paramsParser(request);
         if (paramsParser == null)
@@ -108,10 +108,10 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
         /** find method */
         ApiMethod methodWrapper = findApiMethod(paramParsingContext, service, paramsParser);
         if (methodWrapper == null)
-            throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getArg())));
+            throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getParam())));
 
 
-        Parameters parameters = request.getArg() == null ? Parameters.of(null) : paramsParser.parse(paramParsingContext, methodWrapper.getParamTypes());
+        Parameters parameters = request.getParam() == null ? Parameters.of(null) : paramsParser.parse(paramParsingContext, methodWrapper.getParamTypes());
         parameters.setType(getParamType(request));//set param parsing type
 
         Context context = Context.of(request, service);
@@ -134,7 +134,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
         for (ApiMethod apiMethod : apiMethods) {
             MethodParameter[] methodParameters = paramsParser.getMethodParameter(apiMethod);
             /** common case : if method's parameter is void */
-            if (request.getRequest().getArg() == null)
+            if (request.getRequest().getParam() == null)
                 return methodParameters.length == 0 ? apiMethod : null;
             /** check method name && param types|length */
             if (paramsParser.matchMethod(request, methodParameters))

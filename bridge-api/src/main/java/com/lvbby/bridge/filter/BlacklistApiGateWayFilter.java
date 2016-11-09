@@ -24,7 +24,7 @@ public class BlacklistApiGateWayFilter implements ApiGateWayFilter {
 
     @Override
     public boolean canVisit(Context request) {
-        String serviceName = request.getRequest().getServiceName();
+        String serviceName = request.getRequest().getService();
         if (!map.containsKey(serviceName))
             return true;
         return !map.containsEntry(serviceName, INNER_VALUE) && !map.containsEntry(serviceName, request.getRequest().getMethod());

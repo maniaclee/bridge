@@ -17,7 +17,7 @@ public class NormalParamsParser extends AbstractParamsParser {
 
     @Override
     public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         if (arg instanceof Object[]) {
             return BridgeUtil.equalCollection(BridgeUtil.getParameterTypes(methodParameters), BridgeUtil.getTypes((Object[]) arg));
         }
@@ -26,6 +26,6 @@ public class NormalParamsParser extends AbstractParamsParser {
 
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        return Parameters.of((Object[]) context.getRequest().getArg());
+        return Parameters.of((Object[]) context.getRequest().getParam());
     }
 }

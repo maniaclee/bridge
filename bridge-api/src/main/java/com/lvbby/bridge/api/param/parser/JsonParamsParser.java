@@ -19,7 +19,7 @@ public class JsonParamsParser extends AbstractParamsParser {
 
     @Override
     public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         if (arg instanceof String) {
             JSONObject jsonObject = JSON.parseObject(arg.toString());
             if (jsonObject == null)
@@ -33,7 +33,7 @@ public class JsonParamsParser extends AbstractParamsParser {
 
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] parameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         Parameter[] ps = new Parameter[parameters.length];
         JSONObject jsonObject = JSON.parseObject(arg.toString());
         for (MethodParameter methodParameter : parameters) {

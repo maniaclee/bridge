@@ -22,7 +22,7 @@ public class JsonArrayParamsParser extends AbstractParamsParser {
 
     @Override
     public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         if (arg instanceof String) {
             JSONArray jsonObject = JSON.parseArray(arg.toString());
             //TODO don't check parameter type for now
@@ -34,7 +34,7 @@ public class JsonArrayParamsParser extends AbstractParamsParser {
 
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         List<Object> jsonObject = JSON.parseArray(arg.toString(), BridgeUtil.getParameterTypes(methodParameters).toArray(new Type[0]));
         return Parameters.of(jsonObject.toArray());
     }

@@ -20,7 +20,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         Request re = new Request();
         if (StringUtils.isNotBlank(request.getParameter(paramTypeAttribute)))
             re.setParamType(request.getParameter(paramTypeAttribute));
-        re.setArg(request.getParameter(paramAttribute));
+        re.setParam(request.getParameter(paramAttribute));
         return re;
     }
 

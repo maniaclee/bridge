@@ -21,7 +21,7 @@ public class MapParamsParser extends AbstractParamsParser {
 
     @Override
     public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Object arg = context.getRequest().getArg();
+        Object arg = context.getRequest().getParam();
         if (arg instanceof Map) {
             Map<String, String> map = (Map<String, String>) arg;
             for (MethodParameter methodParameter : methodParameters) {
@@ -36,7 +36,7 @@ public class MapParamsParser extends AbstractParamsParser {
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
         List<Parameter> ps = Lists.newLinkedList();
-        Map<String, String> map = (Map<String, String>) context.getRequest().getArg();
+        Map<String, String> map = (Map<String, String>) context.getRequest().getParam();
 
         for (MethodParameter methodParameter : methodParameters)
             ps.add(new Parameter(JSON.parseObject(map.get(methodParameter.getName()), methodParameter.getType()), methodParameter.getName()));

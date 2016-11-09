@@ -2,6 +2,7 @@ package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ParamFormat;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,10 +10,11 @@ import java.util.Map;
  * Created by peng on 16/9/22.
  * the entrance parameter to api gateway
  */
-public class Request {
-    private String serviceName;
+public class Request implements Serializable{
+    private static final long serialVersionUID = 968548429772162075L;
+    private String service;
     private String method;
-    private Object arg;
+    private Object param;
     private String paramType = ParamFormat.JSON.getValue();
     /***
      * extended or user custom param
@@ -22,15 +24,15 @@ public class Request {
     public Request() {
     }
 
-    public Request(String serviceName, String method) {
-        this.serviceName = serviceName;
+    public Request(String service, String method) {
+        this.service = service;
         this.method = method;
     }
 
-    public Request(String serviceName, String method, Object arg) {
-        this.serviceName = serviceName;
+    public Request(String service, String method, Object param) {
+        this.service = service;
         this.method = method;
-        this.arg = arg;
+        this.param = param;
     }
 
     /***
@@ -57,20 +59,20 @@ public class Request {
         this.paramType = paramType;
     }
 
-    public Object getArg() {
-        return arg;
+    public Object getParam() {
+        return param;
     }
 
-    public void setArg(Object arg) {
-        this.arg = arg;
+    public void setParam(Object param) {
+        this.param = param;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public String getService() {
+        return service;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setService(String service) {
+        this.service = service;
     }
 
     public String getMethod() {
@@ -93,9 +95,9 @@ public class Request {
     public String toString() {
         return "Request{" +
                 "paramType='" + paramType + '\'' +
-                ", arg=" + arg +
+                ", param=" + param +
                 ", method='" + method + '\'' +
-                ", serviceName='" + serviceName + '\'' +
+                ", service='" + service + '\'' +
                 '}';
     }
 }

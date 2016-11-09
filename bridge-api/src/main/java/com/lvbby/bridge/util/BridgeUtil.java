@@ -78,7 +78,7 @@ public class BridgeUtil {
     }
 
     public static String getDefaultServiceMethodName(Request request) {
-        return request.getServiceName() + "." + request.getMethod();
+        return request.getService() + "." + request.getMethod();
     }
 
     public static Exception getUserException(Exception e) {

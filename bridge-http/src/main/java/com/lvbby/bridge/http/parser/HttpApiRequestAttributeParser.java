@@ -16,7 +16,7 @@ public class HttpApiRequestAttributeParser extends BaseHttpApiRequestParser {
     @Override
     public Request parse(HttpServletRequest request) throws BridgeRoutingException {
         Request re = super.parse(request);
-        re.setServiceName(request.getParameter(serviceAttribute));
+        re.setService(request.getParameter(serviceAttribute));
         re.setMethod(request.getParameter(methodAttribute));
         return re;
     }

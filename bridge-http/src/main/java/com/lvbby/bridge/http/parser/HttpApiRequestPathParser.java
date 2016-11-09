@@ -29,7 +29,7 @@ public class HttpApiRequestPathParser extends BaseHttpApiRequestParser {
         String[] split = trimPath(url.substring(rootPath.length())).split("/");
         if (split.length != 2)
             throw new BridgeRoutingException(String.format("Invalid url[%s] , show be /{rootPath}/{service}/{method}", request.getRequestURI()));
-        re.setServiceName(split[0]);
+        re.setService(split[0]);
         re.setMethod(split[1]);
         return re;
     }
