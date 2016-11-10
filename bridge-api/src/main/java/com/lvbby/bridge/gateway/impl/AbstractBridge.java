@@ -155,12 +155,12 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
     }
 
     @Override
-    public AbstractBridge addApiService(ApiService apiService) {
+    public ApiGateWay addApiService(ApiService apiService) {
         serviceMap.put(apiService.getServiceName(), apiService);
         return this;
     }
 
-    public AbstractBridge addService(Object apiService) {
+    public ApiGateWay addService(Object apiService) {
         return addApiService(ApiService.of(apiService, serviceNameExtractor.getServiceName(apiService)));
     }
 
