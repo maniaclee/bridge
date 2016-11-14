@@ -9,10 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +22,7 @@ public class HttpServiceProxy<T> {
     private int port = 80;
     private String path = "/";
     private String url;
+    private String scheme = "http";
     private OkHttpClient client = new OkHttpClient();
     private Map<String, String> httpMethodTypes = Maps.newHashMap();
     private Class<T> clz;
@@ -36,11 +34,21 @@ public class HttpServiceProxy<T> {
     }
 
 
+    public static <R> HttpServiceProxy<R> of(Class<R> clz){
+        return new HttpServiceProxy<R>(clz);
+    }
     public HttpServiceProxy(Class<T> clz) {
         this.clz = clz;
     }
+    public HttpServiceProxy() {
+    }
 
-    public void init() {
+    public Class<T> getType() {
+        ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
+        return (Class<T>) (parameterizedType.getActualTypeArguments()[0]);
+    }
+
+    private void init() {
         Validate.notNull(host);
         Validate.notNull(path);
         for (Method method : clz.getDeclaredMethods()) {
@@ -50,7 +58,7 @@ public class HttpServiceProxy<T> {
                 httpMethodTypes.put(methodName, methodType);
             }
         }
-        url = new HttpUrl.Builder().addPathSegment(path).port(port).host(this.host).build().url().toString();
+        url = new HttpUrl.Builder().scheme(scheme).addPathSegment(path).port(port).host(this.host).build().url().toString();
     }
 
     private boolean isValidMethod(Method method) {
@@ -79,6 +87,7 @@ public class HttpServiceProxy<T> {
     }
 
     public <T> T proxy() {
+        init();
         return (T) Proxy.newProxyInstance(HttpServiceProxy.class.getClassLoader(), new Class[]{clz}, new HttpInvocationHandler());
     }
 
@@ -106,7 +115,7 @@ public class HttpServiceProxy<T> {
     }
 
     public Request get(Method method, Object[] args) {
-        HttpUrl.Builder url = new HttpUrl.Builder().addPathSegment(path).port(port).host(this.host);
+        HttpUrl.Builder url = new HttpUrl.Builder().scheme(scheme).addPathSegment(path).port(port).host(this.host);
         HttpUrl host = url
                 .addQueryParameter("service", clz.getSimpleName())
                 .addQueryParameter("param", serialParam(args))
@@ -123,7 +132,10 @@ public class HttpServiceProxy<T> {
                 throw new IllegalAccessException("Object method are not supported");
             Response response = client.newCall(buildHttpRequest(method, args)).execute();
             if (response.isSuccessful()) {
-                return JSON.parseObject(response.body().string(), method.getReturnType());
+                String re = response.body().string();
+                if (StringUtils.isEmpty(re))
+                    return null;
+                return JSON.parseObject(re, method.getReturnType());
             } else {
                 throw new IOException("Unexpected code " + response);
             }
@@ -157,6 +169,14 @@ public class HttpServiceProxy<T> {
     public void setDefaultHttpMethodType(String methodType) {
         if (StringUtils.isNotBlank(methodType))
             this.methodType = methodType.trim();
+    }
+
+    public String getScheme() {
+        return scheme;
+    }
+
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
     }
 
     public Class<T> getClz() {
