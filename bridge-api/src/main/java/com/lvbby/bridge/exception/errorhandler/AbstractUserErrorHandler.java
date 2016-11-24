@@ -6,7 +6,7 @@ import com.lvbby.bridge.util.BridgeUtil;
 /**
  * Created by lipeng on 16/11/3.
  */
-public abstract class AbstractUserErrorHandler extends AbstractErrorEHandler {
+public abstract class AbstractUserErrorHandler extends AbstractErrorHandler {
 
     @Override
     public Object handleError(Request request, Object result, Exception e) throws Exception {

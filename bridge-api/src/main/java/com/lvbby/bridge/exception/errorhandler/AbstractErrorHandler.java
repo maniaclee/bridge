@@ -6,7 +6,7 @@ import com.lvbby.bridge.gateway.Request;
 /**
  * Created by lipeng on 16/11/3.
  */
-public abstract class AbstractErrorEHandler implements ErrorHandler {
+public abstract class AbstractErrorHandler implements ErrorHandler {
 
     private ErrorHandler nextErrorHandler;
 
