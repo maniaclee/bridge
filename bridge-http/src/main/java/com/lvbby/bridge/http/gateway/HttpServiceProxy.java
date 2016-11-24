@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class HttpServiceProxy<T> {
 
-    private String host;
+    private String host="localhost";
     private int port = 80;
     private String path = "/";
     private String url;
