@@ -20,6 +20,8 @@ public abstract class TypedResultConverter<T> extends TypeCapable<T> implements 
             return convert(context, result);
         }
         if (result instanceof Collection) {
+            if (supportBatch(context,result))
+                return doConvertBatch(context, (Collection<T>) result);
             List re = Lists.newLinkedList();
             ((Collection) result).forEach(o -> {
                 Object convert = convert(context, result);
@@ -31,6 +33,16 @@ public abstract class TypedResultConverter<T> extends TypeCapable<T> implements 
         return result;
     }
 
+
+    protected boolean supportBatch(Context context, Object result) {
+        return false;
+    }
+
     public abstract Object doConvert(Context context, T result);
+
+    public Object doConvertBatch(Context context, Collection<T> result) {
+        return result;
+    }
+
 
 }
