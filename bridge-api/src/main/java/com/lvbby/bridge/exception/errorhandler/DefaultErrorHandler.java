@@ -1,6 +1,5 @@
 package com.lvbby.bridge.exception.errorhandler;
 
-import com.lvbby.bridge.exception.errorhandler.AbstractErrorHandler;
 import com.lvbby.bridge.gateway.Request;
 
 /**
