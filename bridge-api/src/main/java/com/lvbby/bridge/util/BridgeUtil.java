@@ -3,11 +3,13 @@ package com.lvbby.bridge.util;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.exception.BridgeException;
+import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.Request;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by lipeng on 16/10/21.
@@ -85,6 +87,14 @@ public class BridgeUtil {
         if (e instanceof BridgeException)
             return (Exception) e.getCause();
         return e;
+    }
+
+    public static <T> T newInstance(Class<T> clz) {
+        try {
+            return clz.newInstance();
+        } catch (Exception e) {
+            throw new BridgeRunTimeException("failed to instance class " + clz.getName(), e);
+        }
     }
 
 }
