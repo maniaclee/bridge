@@ -5,7 +5,7 @@ import com.lvbby.bridge.util.BridgeUtil;
 
 /**
  * Created by lipeng on 16/10/21.
- * Map<String,String>  key -> jsonString
+ * simply use ParamParsingContext.getRequest().getParam() as the parameters
  */
 public class NormalParamsParser extends AbstractParamsParser {
     private static final String type = ParamFormat.NORMAL.getValue();

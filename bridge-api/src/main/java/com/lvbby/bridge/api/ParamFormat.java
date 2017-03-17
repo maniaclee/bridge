@@ -19,6 +19,10 @@ public enum ParamFormat {
      */
     MAP("map"),
     /***
+     * like map, but ignore the error properties
+     */
+    MAP_BEST_MATCH("map_best_match"),
+    /***
      * normal parameter args
      */
     NORMAL("normal");

@@ -1,6 +1,7 @@
 package com.lvbby.bridge.api;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Created by lipeng on 16/9/23.
@@ -22,6 +23,17 @@ public class Parameters {
         for (int i = 0; i < objects.length; i++)
             parameters[i] = new Parameter(objects[i]);
         return new Parameters(parameters);
+    }
+
+    public static Parameters ofMap(Map map) {
+        Parameters re = new Parameters();
+        re.setType(byName);
+        if (map != null) {
+            for (Object o : map.keySet()) {
+            //TODO
+            }
+        }
+        return re;
     }
 
     public Parameters() {
