@@ -3,12 +3,13 @@ package com.lvbby.bridge.api.impl;
 import com.google.common.base.Objects;
 import com.lvbby.bridge.annotation.BridgeMethod;
 import com.lvbby.bridge.api.*;
+import com.lvbby.bridge.api.Parameter;
 import com.lvbby.bridge.api.param.extracotr.AnnotationParameterNameExtractor;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
 import com.lvbby.bridge.exception.BridgeInvokeException;
+import com.lvbby.bridge.util.BridgeUtil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -84,22 +85,37 @@ public class DefaultApiMethod implements ApiMethod {
         if ((ps == null || ps.length == 0))
             return null;
 
-        Object[] re = new Object[ps.length];
         //match by index
         if (Objects.equal(parameters.getType(), Parameters.byIndex)) {
+            Object[] re = newRawResult();
             for (int i = 0; i < ps.length; i++) re[i] = ps[i].getParam();
             return re;
         }
         //match by name
         if (Objects.equal(parameters.getType(), Parameters.byName)) {
+            Object[] re = newRawResultWithDefaultValue();
             for (Parameter p : ps) {
                 MethodParameter methodParameter = parameterMap.get(p.getName());
-                re[methodParameter.getIndex()] = p.getParam();
-
+                //skip the useless one
+                if (methodParameter != null)
+                    re[methodParameter.getIndex()] = p.getParam();
             }
             return re;
         }
         throw new IllegalArgumentException("unknown parameter type : " + parameters.getType());
+    }
+
+    private Object[] newRawResultWithDefaultValue() {
+        java.lang.reflect.Parameter[] parameters = method.getParameters();
+        Object[] re = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            re[i] = BridgeUtil.defaultValueForType(parameters[i].getType());
+        }
+        return re;
+    }
+
+    private Object[] newRawResult() {
+        return new Object[method.getParameters().length];
     }
 
     @Override
@@ -108,8 +124,8 @@ public class DefaultApiMethod implements ApiMethod {
         try {
             return method.invoke(apiService.getService(), realParameters);
         } catch (Exception e) {
-            if(e instanceof InvocationTargetException)
-                e= (Exception) ((InvocationTargetException) e).getTargetException();
+            if (e instanceof InvocationTargetException)
+                e = (Exception) ((InvocationTargetException) e).getTargetException();
             throw new BridgeInvokeException(String.format("error invoke %s.%s", apiService.getServiceName(), getName()), e);
         }
     }

@@ -97,4 +97,19 @@ public class BridgeUtil {
         }
     }
 
+    public static Object defaultValueForType(Class clz) {
+        if (clz.isPrimitive()) {
+            if (int.class.equals(clz) || short.class.equals(clz))
+                return 0;
+            if (float.class.equals(clz))
+                return 0f;
+            if (long.class.equals(clz))
+                return 0l;
+            if (byte.class.equals(clz))
+                return 0x0;
+            if (double.class.equals(clz))
+                return 0.0;
+        }
+        return null;
+    }
 }

@@ -1,10 +1,10 @@
 package com.lvbby.bridge.api.param.parser;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import com.lvbby.bridge.api.*;
+import com.lvbby.bridge.api.MethodParameter;
+import com.lvbby.bridge.api.ParamFormat;
+import com.lvbby.bridge.api.ParamParsingContext;
+import com.lvbby.bridge.api.Parameters;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,11 +26,7 @@ public class MapBestMatchParamsParser extends AbstractParamsParser {
 
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        List<Parameter> ps = Lists.newLinkedList();
         Map<String, String> map = (Map<String, String>) context.getRequest().getParam();
-
-        for (MethodParameter methodParameter : methodParameters)
-            ps.add(new Parameter(JSON.parseObject(map.get(methodParameter.getName()), methodParameter.getType()), methodParameter.getName()));
-        return new Parameters(ps.toArray(new Parameter[0]));
+        return Parameters.ofMap(map);
     }
 }

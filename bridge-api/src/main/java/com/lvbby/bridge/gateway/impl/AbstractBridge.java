@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGateWay, ApiServiceBuilder {
     private Map<String, ApiService> serviceMap = Maps.newHashMap();
+
     /***
      * @param request
      * @return
@@ -126,7 +127,6 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
     }
 
     private ApiMethod findApiMethod(ParamParsingContext request, ApiService service, ParamsParser paramsParser) {
-        ApiMethod methodWrapper = null;
         List<ApiMethod> apiMethods = service.getApiMethods(request.getRequest().getMethod());
         if (apiMethods.isEmpty())
             return null;
@@ -140,7 +140,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             if (paramsParser.matchMethod(request, methodParameters))
                 return apiMethod;
         }
-        return methodWrapper;
+        return null;
     }
 
 

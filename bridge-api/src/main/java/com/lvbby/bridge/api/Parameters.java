@@ -1,6 +1,9 @@
 package com.lvbby.bridge.api;
 
+import com.google.common.collect.Lists;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,13 +28,21 @@ public class Parameters {
         return new Parameters(parameters);
     }
 
+    /**
+     * parameters as map
+     *
+     * @param map
+     * @return
+     */
     public static Parameters ofMap(Map map) {
         Parameters re = new Parameters();
         re.setType(byName);
         if (map != null) {
-            for (Object o : map.keySet()) {
-            //TODO
+            List<Parameter> list = Lists.newArrayList();
+            for (Object key : map.keySet()) {
+                list.add(new Parameter(map.get(key), key.toString()));
             }
+            re.setParameters(list.toArray(new Parameter[0]));
         }
         return re;
     }
