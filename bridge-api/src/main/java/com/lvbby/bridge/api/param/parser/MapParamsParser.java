@@ -10,12 +10,12 @@ import java.util.Map;
 /**
  * Created by lipeng on 16/10/21.
  */
-public class MapBestMatchParamsParser extends AbstractParamsParser {
-    private static final String type = ParamFormat.MAP_BEST_MATCH.getValue();
+public class MapParamsParser extends AbstractParamsParser {
+    private static final String type = ParamFormat.MAP.getValue();
 
     @Override
     public String getType() {
-        return type;
+        return ParamFormat.MAP.getValue();
     }
 
     @Override

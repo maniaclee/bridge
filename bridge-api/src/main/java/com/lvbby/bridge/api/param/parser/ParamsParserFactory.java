@@ -16,7 +16,7 @@ public class ParamsParserFactory {
         addParamsParser(new JsonArrayParamsParser());
         addParamsParser(new JsonParamsParser());
         addParamsParser(new NormalParamsParser());
-        addParamsParser(new MapsParamsParser());
+        addParamsParser(new MapParamsParser());
     }
 
     public ParamsParser getParamsParser(String type) {
