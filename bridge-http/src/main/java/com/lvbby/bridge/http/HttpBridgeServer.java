@@ -44,6 +44,11 @@ public class HttpBridgeServer extends BaseServer {
         super.start();
     }
 
+    public HttpBridgeServer buildApiPath(String apiPath) {
+        setApiPath(apiPath);
+        return this;
+    }
+
     public String getApiPath() {
         return apiPath;
     }

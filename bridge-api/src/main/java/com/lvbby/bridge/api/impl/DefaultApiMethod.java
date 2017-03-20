@@ -95,6 +95,8 @@ public class DefaultApiMethod implements ApiMethod {
         if (Objects.equal(parameters.getType(), Parameters.byName)) {
             Object[] re = newRawResultWithDefaultValue();
             for (Parameter p : ps) {
+                if (p == null)
+                    continue;
                 MethodParameter methodParameter = parameterMap.get(p.getName());
                 //skip the useless one
                 if (methodParameter != null)

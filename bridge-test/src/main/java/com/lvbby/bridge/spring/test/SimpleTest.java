@@ -1,11 +1,15 @@
 package com.lvbby.bridge.spring.test;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by lipeng on 16/9/26.
@@ -55,9 +59,14 @@ public class SimpleTest {
     }
 
     @Test
-    public void dd() {
-//        getMethodInfo("java.util.HashSet");
-        getMethodInfo(HashSet.class);
+    public void dd() throws URISyntaxException {
+        String url = "one=1&two=2&three=3&three=3a";
+//        List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+        List<NameValuePair> params = URLEncodedUtils.parse(url, Charset.forName("UTF-8"));
+
+        for (NameValuePair param : params) {
+            System.out.println(param.getName() + " : " + param.getValue());
+        }
     }
 
 }

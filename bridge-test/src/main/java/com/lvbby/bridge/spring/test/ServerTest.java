@@ -10,8 +10,10 @@ import com.lvbby.bridge.spring.test.service.TestServiceImpl;
 public class ServerTest {
 
     public static void main(String[] args) throws Exception {
-        HttpBridgeServer.of(Lists.newArrayList(new TestServiceImpl())).start();
-//        AdminServer.of(new HttpBridge(new Bridge().addService(new TestServiceImpl()))).start();
+        HttpBridgeServer server = HttpBridgeServer.of(Lists.newArrayList(new TestServiceImpl()));
+        server.getServer().setPort(9000);
+        server.start();
+        //        AdminServer.of(new HttpBridge(new Bridge().addService(new TestServiceImpl()))).start();
     }
 
 }

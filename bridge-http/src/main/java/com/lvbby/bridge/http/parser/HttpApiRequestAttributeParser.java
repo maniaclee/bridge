@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HttpApiRequestAttributeParser extends BaseHttpApiRequestParser {
 
-    private String serviceAttribute = "service";
-    private String methodAttribute = "method";
+    private String serviceAttribute = "_service";
+    private String methodAttribute = "_method";
 
     @Override
     public Request parse(HttpServletRequest request) throws BridgeRoutingException {
