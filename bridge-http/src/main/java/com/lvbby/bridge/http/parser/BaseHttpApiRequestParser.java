@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Created by lipeng on 16/10/20.
@@ -32,26 +33,32 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
             re.setParamType(request.getParameter(paramTypeAttribute));
 
         //handle parameters
-        if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.MAP_PRECISE.getValue().equals(re.getParamType())) {
-            try {
-                re.setParam(extractHttpParameters(request));
-            } catch (URISyntaxException e) {
-                throw new BridgeRoutingException("bad url format ", e);
+        try {
+            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.MAP_PRECISE.getValue().equals(re.getParamType())) {
+                re.setParam(extractHttpParameters(request, s -> !isSystemParamter(s)));
+            } else {
+                re.setParam(extractHttpParameters(request, null).get(paramAttribute));
             }
-        } else {
-            re.setParam(request.getParameter(paramAttribute));
+        } catch (URISyntaxException e) {
+            throw new BridgeRoutingException("bad url format", e);
         }
         return re;
     }
 
-    private Map<String, Object> extractHttpParameters(HttpServletRequest request) throws URISyntaxException {
+    /***
+     * extract parameters
+     * @param request
+     * @param keyFilter
+     * @return
+     * @throws URISyntaxException
+     */
+    private Map<String, Object> extractHttpParameters(HttpServletRequest request, Predicate<String> keyFilter) throws URISyntaxException {
         Map<String, Object> re = Maps.newHashMap();
         //from url
         if ("get".equalsIgnoreCase(request.getMethod())) {
             List<NameValuePair> params = URLEncodedUtils.parse(request.getQueryString(), Charset.forName("UTF-8"));
-//            List<NameValuePair> params = URLEncodedUtils.parse(new URI(request.getRequestURI()), "UTF-8");
             for (NameValuePair param : params) {
-                if (!isSystemParamter(param.getName()))
+                if (keyFilter == null || keyFilter.test(param.getName()))
                     re.put(param.getName(), param.getValue());
             }
             return re;
@@ -59,7 +66,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         //from attribute
         for (Enumeration ps = request.getAttributeNames(); ps.hasMoreElements(); ) {
             String key = ps.nextElement().toString().trim();
-            if (!isSystemParamter(key))
+            if (keyFilter == null || keyFilter.test(key))
                 re.put(key, request.getAttribute(key));
         }
         return re;

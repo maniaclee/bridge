@@ -24,7 +24,7 @@ public class JsonParamsParser extends AbstractParamsParser {
             JSONObject jsonObject = JSON.parseObject(arg.toString());
             if (jsonObject == null)
                 return methodParameters.length == 0;
-            /** match if only all the parameter name is contained in the paramter map */
+            /** match if only all the parameter name is contained in the parameter map */
             return BridgeUtil.getParameterNames(methodParameters).containsAll(jsonObject.keySet());
         }
         return false;
