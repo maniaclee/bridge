@@ -13,11 +13,10 @@ import java.util.List;
  * jsonString
  */
 public class JsonArrayParamsParser extends AbstractParamsParser {
-    private static final String type = ParamFormat.JSON_ARRAY.getValue();
 
     @Override
     public String getType() {
-        return type;
+        return ParamFormat.JSON_ARRAY.getValue();
     }
 
     @Override

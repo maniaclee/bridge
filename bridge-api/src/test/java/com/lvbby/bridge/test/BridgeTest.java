@@ -32,8 +32,8 @@ public class BridgeTest {
                 put("value", "fuck");
             }
         });
-        request.setParamType(ParamFormat.MAP.getValue());
-//        request.setParamType(ParamFormat.MAP_BEST_MATCH.getValue());
+//        request.setParamType(ParamFormat.MAP.getValue());
+        request.setParamType(ParamFormat.MAP_PRECISE.getValue());
         Object proxy = bridge.proxy(request);
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }

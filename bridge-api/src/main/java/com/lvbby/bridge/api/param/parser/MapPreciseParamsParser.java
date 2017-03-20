@@ -11,12 +11,11 @@ import java.util.Map;
  * Created by lipeng on 16/10/21.
  * Map<String,String>  key -> jsonString
  */
-public class MapParamsParser extends AbstractParamsParser {
-    private static final String type = ParamFormat.MAP.getValue();
+public class MapPreciseParamsParser extends AbstractParamsParser {
 
     @Override
     public String getType() {
-        return type;
+        return ParamFormat.MAP_PRECISE.getValue();
     }
 
     @Override

@@ -14,7 +14,7 @@ public class JsonParamsParser extends AbstractParamsParser {
 
     @Override
     public String getType() {
-        return type;
+        return ParamFormat.JSON.getValue();
     }
 
     @Override

@@ -8,11 +8,10 @@ import com.lvbby.bridge.util.BridgeUtil;
  * simply use ParamParsingContext.getRequest().getParam() as the parameters
  */
 public class NormalParamsParser extends AbstractParamsParser {
-    private static final String type = ParamFormat.NORMAL.getValue();
 
     @Override
     public String getType() {
-        return type;
+        return ParamFormat.NORMAL.getValue();
     }
 
     @Override

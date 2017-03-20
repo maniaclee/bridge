@@ -21,7 +21,7 @@ public enum ParamFormat {
     /***
      * like map, but ignore the error properties
      */
-    MAP_BEST_MATCH("map_best_match"),
+    MAP_PRECISE("map_precise"),
     /***
      * normal parameter args
      */

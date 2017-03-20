@@ -12,11 +12,11 @@ public class ParamsParserFactory {
     Map<String, ParamsParser> map = Maps.newHashMap();
 
     {
-        addParamsParser(new MapParamsParser());
+        addParamsParser(new MapPreciseParamsParser());
         addParamsParser(new JsonArrayParamsParser());
         addParamsParser(new JsonParamsParser());
         addParamsParser(new NormalParamsParser());
-        addParamsParser(new MapBestMatchParamsParser());
+        addParamsParser(new MapsParamsParser());
     }
 
     public ParamsParser getParamsParser(String type) {
