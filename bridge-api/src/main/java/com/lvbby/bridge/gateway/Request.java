@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by peng on 16/9/22.
  * the entrance parameter to api gateway
  */
-public class Request implements Serializable{
+public class Request implements Serializable {
     private static final long serialVersionUID = 968548429772162075L;
     private String service;
     private String method;
@@ -33,6 +33,16 @@ public class Request implements Serializable{
         this.service = service;
         this.method = method;
         this.param = param;
+    }
+
+    public Request buildType(ParamFormat paramFormat) {
+        setParamType(paramFormat.getValue());
+        return this;
+    }
+
+    public Request buildParam(Object param) {
+        setParam(param);
+        return this;
     }
 
     /***

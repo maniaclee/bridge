@@ -26,14 +26,14 @@ public class BridgeTest {
     @Test
     public void map() throws Exception {
         ApiGateWay bridge = new Bridge().addService(testService);
-        Request request = new Request("TestService", "run", new HashMap() {
-            {
-                put("key", "key");
-                put("value", "fuck");
-            }
-        });
-//        request.setParamType(ParamFormat.MAP.getValue());
-        request.setParamType(ParamFormat.MAP_PRECISE.getValue());
+        Request request = new Request("TestService", "run")
+                .buildType(ParamFormat.MAP)
+                .buildParam(new HashMap() {
+                    {
+                        put("key", "key");
+                        put("value", "fuck");
+                    }
+                });
         Object proxy = bridge.proxy(request);
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }

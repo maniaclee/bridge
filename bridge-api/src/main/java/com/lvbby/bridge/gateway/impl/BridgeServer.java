@@ -11,7 +11,7 @@ import com.lvbby.bridge.handler.common.AnnotationResponseWrapperHandler;
  */
 public class BridgeServer extends AbstractBridge {
 
-    private ParamsParserFactory paramsParserFactory = new ParamsParserFactory();
+    private ParamsParserFactory paramsParserFactory = ParamsParserFactory.getInstance();
 
     {
         addApiFilter(new DefaultFilter());

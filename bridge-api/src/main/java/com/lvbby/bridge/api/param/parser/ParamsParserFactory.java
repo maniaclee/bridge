@@ -9,6 +9,13 @@ import java.util.Map;
  * Created by lipeng on 16/10/21.
  */
 public class ParamsParserFactory {
+
+    private static final ParamsParserFactory instance = new ParamsParserFactory();
+
+    public static ParamsParserFactory getInstance() {
+        return instance;
+    }
+
     Map<String, ParamsParser> map = Maps.newHashMap();
 
     {
@@ -17,6 +24,9 @@ public class ParamsParserFactory {
         addParamsParser(new JsonParamsParser());
         addParamsParser(new NormalParamsParser());
         addParamsParser(new MapParamsParser());
+    }
+
+    private ParamsParserFactory() {
     }
 
     public ParamsParser getParamsParser(String type) {
