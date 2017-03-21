@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Created by lipeng on 16/10/21.
- * Map<String,String>  key -> jsonString
+ * 输入param= Map ， 精确匹配，参数一定要全
  */
 public class MapPreciseParamsParser extends AbstractParamsParser {
 

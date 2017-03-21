@@ -4,18 +4,18 @@ import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.api.ParamParsingContext;
 import com.lvbby.bridge.api.Parameters;
+import com.lvbby.bridge.util.BridgeUtil;
 
 import java.util.Map;
 
 /**
- * Created by lipeng on 16/10/21.
- * 输入param= Map , 最大可能的匹配
+ * Created by lipeng on 2017/3/21.
  */
-public class MapParamsParser extends AbstractParamsParser {
+public class MapWrapperParamsParser extends AbstractParamsParser {
 
     @Override
     public String getType() {
-        return ParamFormat.MAP.getValue();
+        return ParamFormat.MAP_WRAPPER.getValue();
     }
 
     @Override
@@ -27,6 +27,12 @@ public class MapParamsParser extends AbstractParamsParser {
     @Override
     public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
         Map map = (Map) context.getRequest().getParam();
+        //类型转化
+        for (MethodParameter methodParameter : methodParameters) {
+            String key = methodParameter.getName();
+            Object value = map.get(key);
+            map.put(key, BridgeUtil.convertValueForType(methodParameter.getType(), value));
+        }
         return Parameters.ofMap(map);
     }
 

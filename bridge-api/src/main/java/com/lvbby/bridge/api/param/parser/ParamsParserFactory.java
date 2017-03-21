@@ -19,14 +19,24 @@ public class ParamsParserFactory {
     Map<String, ParamsParser> map = Maps.newHashMap();
 
     {
-        addParamsParser(new MapPreciseParamsParser());
-        addParamsParser(new JsonArrayParamsParser());
-        addParamsParser(new JsonParamsParser());
-        addParamsParser(new NormalParamsParser());
-        addParamsParser(new MapParamsParser());
+        addParamsParser(MapWrapperParamsParser.class);
+        addParamsParser(MapParamsParser.class);
+        addParamsParser(MapPreciseParamsParser.class);
+        
+        addParamsParser(JsonArrayParamsParser.class);
+        addParamsParser(JsonParamsParser.class);
+        addParamsParser(NormalParamsParser.class);
     }
 
     private ParamsParserFactory() {
+    }
+
+    private void addParamsParser(Class<? extends ParamsParser> clz) {
+        try {
+            addParamsParser(clz.newInstance());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("error instance ParamsParser:" + clz.getName(), e);
+        }
     }
 
     public ParamsParser getParamsParser(String type) {

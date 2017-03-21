@@ -7,10 +7,9 @@ import com.lvbby.bridge.util.BridgeUtil;
 
 /**
  * Created by lipeng on 16/10/21.
- * jsonString
+ * 输入param= {param1:{},param2:'string',param3:3}
  */
 public class JsonParamsParser extends AbstractParamsParser {
-    private static final String type = ParamFormat.JSON.getValue();
 
     @Override
     public String getType() {

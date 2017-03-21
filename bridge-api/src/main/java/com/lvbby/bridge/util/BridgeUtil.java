@@ -1,10 +1,12 @@
 package com.lvbby.bridge.util;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.exception.BridgeException;
 import com.lvbby.bridge.exception.BridgeRunTimeException;
 import com.lvbby.bridge.gateway.Request;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -97,19 +99,59 @@ public class BridgeUtil {
         }
     }
 
+    public static Object convertValueForType(Class targetClass, Object src) {
+        if (src == null)
+            return defaultValueForType(targetClass);
+        if (targetClass.isAssignableFrom(src.getClass()))
+            return src;
+        if (src instanceof String) {
+            String s = src.toString();
+            if (StringUtils.isEmpty(s))
+                return defaultValueForType(targetClass);
+            if (int.class.equals(targetClass) || Integer.class.equals(targetClass))
+                return Integer.parseInt(s);
+            if (long.class.equals(targetClass) || Long.class.equals(targetClass))
+                return Long.parseLong(s);
+            if (short.class.equals(targetClass) || Short.class.equals(targetClass))
+                return Short.parseShort(s);
+            if (float.class.equals(targetClass) || Float.class.equals(targetClass))
+                return Float.parseFloat(s);
+            if (double.class.equals(targetClass) || Double.class.equals(targetClass))
+                return Double.parseDouble(s);
+            if (byte.class.equals(targetClass) || Byte.class.equals(targetClass))
+                return Byte.parseByte(s);
+            if (boolean.class.equals(targetClass) || Boolean.class.equals(targetClass))
+                return Boolean.parseBoolean(s);
+            if (char.class.equals(targetClass) || Character.class.equals(targetClass)) {
+                org.apache.commons.lang3.Validate.isTrue(s.length() == 1);
+                return s.charAt(0);
+            }
+            return JSON.parseObject(s, targetClass);
+        }
+        throw new IllegalArgumentException(String.format("parameter no match: %s is not match for [%s] ", src.getClass().getName(), targetClass.getName()));
+    }
+
     public static Object defaultValueForType(Class clz) {
         if (clz.isPrimitive()) {
-            if (int.class.equals(clz) || short.class.equals(clz))
+            if (int.class.equals(clz))
                 return 0;
-            if (float.class.equals(clz))
-                return 0f;
             if (long.class.equals(clz))
                 return 0l;
-            if (byte.class.equals(clz))
-                return 0x0;
+            if (short.class.equals(clz))
+                return 0;
+            if (float.class.equals(clz))
+                return 0.f;
             if (double.class.equals(clz))
                 return 0.0;
+            if (byte.class.equals(clz))
+                return 0x0;
+            if (boolean.class.equals(clz))
+                return false;
+            if (char.class.equals(clz)) {
+                return ' ';
+            }
         }
         return null;
     }
+
 }

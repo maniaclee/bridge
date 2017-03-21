@@ -34,8 +34,8 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
 
         //handle parameters
         try {
-            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.MAP_PRECISE.getValue().equals(re.getParamType())) {
-                re.setParam(extractHttpParameters(request, s -> !isSystemParamter(s)));
+            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.MAP_PRECISE.getValue().equals(re.getParamType()) || ParamFormat.MAP_WRAPPER.getValue().equals(re.getParamType())) {
+                re.setParam(extractHttpParameters(request, s -> !isSystemParameter(s)));
             } else {
                 re.setParam(extractHttpParameters(request, null).get(paramAttribute));
             }
@@ -72,7 +72,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         return re;
     }
 
-    private boolean isSystemParamter(String key) {
+    private boolean isSystemParameter(String key) {
         return key.startsWith("_");
     }
 

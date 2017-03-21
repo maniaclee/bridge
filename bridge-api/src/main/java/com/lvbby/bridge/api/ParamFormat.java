@@ -18,6 +18,11 @@ public enum ParamFormat {
      * if method parameters each have a name
      */
     MAP("map"),
+
+    /***
+     * 自动转化参数，尽力而为
+     */
+    MAP_WRAPPER("map_wrapper"),
     /***
      * like map, but ignore the error properties
      */

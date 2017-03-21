@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Created by lipeng on 16/10/21.
- * jsonString
+ * 输入param= [{},{}]
  */
 public class JsonArrayParamsParser extends AbstractParamsParser {
 
