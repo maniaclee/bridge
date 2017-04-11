@@ -63,11 +63,11 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
             }
             return re;
         }
-        //from attribute
-        for (Enumeration ps = request.getAttributeNames(); ps.hasMoreElements(); ) {
+        //from parameters
+        for (Enumeration ps = request.getParameterNames(); ps.hasMoreElements(); ) {
             String key = ps.nextElement().toString().trim();
             if (keyFilter == null || keyFilter.test(key))
-                re.put(key, request.getAttribute(key));
+                re.put(key, request.getParameter(key));
         }
         return re;
     }
