@@ -1,7 +1,6 @@
 package com.lvbby.bridge.http;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
 import com.lvbby.bridge.gateway.*;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
@@ -93,7 +92,8 @@ public class HttpBridge {
         Request req = httpApiRequestParser.parse(request);
 
         /** inject HttpServletRequest && HttpServletResponse */
-        InjectProcessor.setInjectValue(Lists.newArrayList(request, response));
+        InjectProcessor.inject(HttpServletRequest.class,request);
+        InjectProcessor.inject(HttpServletResponse.class,response);
 
         req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
         return apiGateWay.proxy(req);

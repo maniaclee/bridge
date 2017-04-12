@@ -47,6 +47,8 @@ public class ObjectPropertyHandler implements ApiGateWayPostHandler {
     }
 
     private Map<String, Object> getMap(Object test) {
+        if (test == null)
+            return null;
         for (Class clz : valueMap.keySet()) {
             if (BridgeUtil.isInstance(test.getClass(), clz))
                 return valueMap.get(clz);

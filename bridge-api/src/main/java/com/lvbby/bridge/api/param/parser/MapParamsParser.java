@@ -1,6 +1,5 @@
 package com.lvbby.bridge.api.param.parser;
 
-import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.api.ParamParsingContext;
 import com.lvbby.bridge.api.Parameters;
@@ -19,15 +18,14 @@ public class MapParamsParser extends AbstractParamsParser {
     }
 
     @Override
-    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public boolean match(ParamParsingContext context) {
         Object arg = context.getRequest().getParam();
         return arg instanceof Map;
     }
 
     @Override
-    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        Map map = (Map) context.getRequest().getParam();
-        return Parameters.ofMap(map);
+    public Parameters doParse(ParamParsingContext context) {
+        return Parameters.ofMap(context.getApiMethod(), (Map) context.getRequest().getParam());
     }
 
 }

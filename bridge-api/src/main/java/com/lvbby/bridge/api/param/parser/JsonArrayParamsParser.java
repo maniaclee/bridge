@@ -2,8 +2,9 @@ package com.lvbby.bridge.api.param.parser;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.lvbby.bridge.api.*;
-import com.lvbby.bridge.util.BridgeUtil;
+import com.lvbby.bridge.api.ParamFormat;
+import com.lvbby.bridge.api.ParamParsingContext;
+import com.lvbby.bridge.api.Parameters;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -20,22 +21,21 @@ public class JsonArrayParamsParser extends AbstractParamsParser {
     }
 
     @Override
-    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public boolean match(ParamParsingContext context) {
         Object arg = context.getRequest().getParam();
         if (arg instanceof String) {
             JSONArray jsonObject = JSON.parseArray(arg.toString());
-            //TODO don't check parameter type for now
-            return jsonObject.size() == methodParameters.length;
+            return jsonObject.size() == context.findRealParameters().size();
         }
         return false;
     }
 
 
     @Override
-    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public Parameters doParse(ParamParsingContext context) {
         Object arg = context.getRequest().getParam();
-        List<Object> jsonObject = JSON.parseArray(arg.toString(), BridgeUtil.getParameterTypes(methodParameters).toArray(new Type[0]));
-        return Parameters.of(jsonObject.toArray());
+        List<Object> jsonObject = JSON.parseArray(arg.toString(), context.findRealParameterTypes().toArray(new Type[0]));
+        return Parameters.of(context.getApiMethod(), jsonObject.toArray());
     }
 
 }

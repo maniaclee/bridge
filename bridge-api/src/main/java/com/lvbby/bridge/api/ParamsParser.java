@@ -1,5 +1,7 @@
 package com.lvbby.bridge.api;
 
+import com.lvbby.bridge.exception.BridgeRoutingException;
+
 /**
  * Created by lipeng on 16/10/21.
  */
@@ -7,9 +9,8 @@ public interface ParamsParser {
 
     String getType();
 
-    boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters);
+    boolean matchMethod(ParamParsingContext context);
 
-    Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters);
+    Parameters parse(ParamParsingContext context) throws BridgeRoutingException;
 
-    MethodParameter[] getMethodParameter(ApiMethod apiMethod);
 }

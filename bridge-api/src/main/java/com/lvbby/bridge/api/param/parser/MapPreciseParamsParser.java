@@ -1,10 +1,12 @@
 package com.lvbby.bridge.api.param.parser;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import com.lvbby.bridge.api.*;
+import com.google.common.collect.Maps;
+import com.lvbby.bridge.api.MethodParameter;
+import com.lvbby.bridge.api.ParamFormat;
+import com.lvbby.bridge.api.ParamParsingContext;
+import com.lvbby.bridge.api.Parameters;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,11 +21,11 @@ public class MapPreciseParamsParser extends AbstractParamsParser {
     }
 
     @Override
-    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public boolean match(ParamParsingContext context) {
         Object arg = context.getRequest().getParam();
         if (arg instanceof Map) {
             Map<String, String> map = (Map<String, String>) arg;
-            for (MethodParameter methodParameter : methodParameters) {
+            for (MethodParameter methodParameter : context.findRealParameters()) {
                 if (!map.containsKey(methodParameter.getName()))
                     return false;
             }
@@ -33,12 +35,12 @@ public class MapPreciseParamsParser extends AbstractParamsParser {
     }
 
     @Override
-    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
-        List<Parameter> ps = Lists.newLinkedList();
-        Map<String, String> map = (Map<String, String>) context.getRequest().getParam();
+    public Parameters doParse(ParamParsingContext context) {
+        Map map = (Map) context.getRequest().getParam();
 
-        for (MethodParameter methodParameter : methodParameters)
-            ps.add(new Parameter(JSON.parseObject(map.get(methodParameter.getName()), methodParameter.getType()), methodParameter.getName()));
-        return new Parameters(ps.toArray(new Parameter[0]));
+        Map re = Maps.newHashMap();
+        for (MethodParameter methodParameter : context.findRealParameters())
+            re.put(methodParameter.getName(), JSON.parseObject(map.get(methodParameter.getName()).toString(), methodParameter.getType()));
+        return Parameters.ofMap(context.getApiMethod(), re);
     }
 }

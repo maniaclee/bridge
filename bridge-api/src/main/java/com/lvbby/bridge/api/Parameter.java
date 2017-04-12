@@ -6,12 +6,14 @@ package com.lvbby.bridge.api;
 public class Parameter {
     private Object param;
     private String name;
+    private int index;
 
     public Parameter() {
     }
 
-    public Parameter(Object param) {
+    public Parameter(Object param, int index) {
         this.param = param;
+        this.index = index;
     }
 
 
@@ -34,6 +36,14 @@ public class Parameter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     @Override

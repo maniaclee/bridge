@@ -19,21 +19,21 @@ public class MapWrapperParamsParser extends AbstractParamsParser {
     }
 
     @Override
-    public boolean matchMethod(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public boolean match(ParamParsingContext context) {
         Object arg = context.getRequest().getParam();
         return arg instanceof Map;
     }
 
     @Override
-    public Parameters parse(ParamParsingContext context, MethodParameter[] methodParameters) {
+    public Parameters doParse(ParamParsingContext context) {
         Map map = (Map) context.getRequest().getParam();
         //类型转化
-        for (MethodParameter methodParameter : methodParameters) {
+        for (MethodParameter methodParameter : context.findRealParameters()) {
             String key = methodParameter.getName();
             Object value = map.get(key);
             map.put(key, BridgeUtil.convertValueForType(methodParameter.getType(), value));
         }
-        return Parameters.ofMap(map);
+        return Parameters.ofMap(context.getApiMethod(), map);
     }
 
 }

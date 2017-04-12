@@ -1,11 +1,9 @@
-package com.lvbby.bridge.gateway.impl;
+package com.lvbby.bridge.gateway;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.*;
 import com.lvbby.bridge.exception.*;
-import com.lvbby.bridge.gateway.*;
 
 import java.util.List;
 import java.util.Map;
@@ -82,6 +80,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
         } catch (Exception e) {
             if (errorHandler == null)
                 throw e;
+            e.printStackTrace();//TODO debug
             return errorHandler.handleError(request, re, e);
         }
     }
@@ -96,53 +95,49 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
      * @throws BridgeRoutingException
      */
     private Context initContext(Request request) throws BridgeRoutingException {
+        /** service */
         ApiService service = serviceMap.get(request.getService());
         if (service == null)
             throw new BridgeRoutingException(String.format("service not found:%s", request.getService()));
 
+        /** parser */
         ParamsParser paramsParser = paramsParser(request);
         if (paramsParser == null)
             throw new BridgeRoutingException(String.format("unknown param type %s", request.getParamType()));
 
-        ParamParsingContext paramParsingContext = new ParamParsingContext(request);
+        /** method */
+        List<ApiMethod> apiMethods = service.getApiMethods(request.getMethod());
+        if (apiMethods.isEmpty())
+            throw new BridgeRoutingException(String.format("no such method type %s", request.getMethod()));
 
-        /** find method */
-        ApiMethod methodWrapper = findApiMethod(paramParsingContext, service, paramsParser);
-        if (methodWrapper == null)
-            throw new BridgeRoutingException(String.format("%s.%s not found for params[%s]", service.getServiceName(), request.getMethod(), JSON.toJSONString(request.getParam())));
+        //处理方法参数，包括overload
+        for (ApiMethod apiMethod : apiMethods) {
+            ParamParsingContext paramParsingContext = new ParamParsingContext(request).method(apiMethod);
+            //重载时，需要先找出匹配的方法
+            if (paramsParser.matchMethod(paramParsingContext))
+                return buildContext(request, service, paramsParser, paramParsingContext);
+        }
+        throw new BridgeRoutingException(String.format("failed to route %s", request));
+    }
 
+    private Context buildContext(Request request, ApiService service, ParamsParser paramsParser, ParamParsingContext paramParsingContext) throws BridgeRoutingException {
+        /** check method name && param types|length */
+        Parameters parameters = paramsParser.parse(paramParsingContext);
+        if (parameters != null) {
+            parameters.setType(getParamType(request));//set param parsing type
 
-        Parameters parameters = request.getParam() == null ? Parameters.of(null) : paramsParser.parse(paramParsingContext, methodWrapper.getParamTypes());
-        parameters.setType(getParamType(request));//set param parsing type
-
-        Context context = Context.of(request, service);
-        context.setApiMethod(methodWrapper);
-        context.setParameters(parameters);
-        return context;
+            Context context = Context.of(request, service);
+            context.setApiMethod(paramParsingContext.getApiMethod());
+            context.setParameters(parameters);
+            return context;
+        }
+        return null;
     }
 
     private String getParamType(Request request) {
         return request.getParamType().equalsIgnoreCase(ParamFormat.JSON_ARRAY.getValue())
                 || request.getParamType().equalsIgnoreCase(ParamFormat.NORMAL.getValue()) ? Parameters.byIndex : Parameters.byName;
     }
-
-    private ApiMethod findApiMethod(ParamParsingContext request, ApiService service, ParamsParser paramsParser) {
-        List<ApiMethod> apiMethods = service.getApiMethods(request.getRequest().getMethod());
-        if (apiMethods.isEmpty())
-            return null;
-
-        for (ApiMethod apiMethod : apiMethods) {
-            MethodParameter[] methodParameters = paramsParser.getMethodParameter(apiMethod);
-            /** common case : if method's parameter is void */
-            if (request.getRequest().getParam() == null)
-                return methodParameters.length == 0 ? apiMethod : null;
-            /** check method name && param types|length */
-            if (paramsParser.matchMethod(request, methodParameters))
-                return apiMethod;
-        }
-        return null;
-    }
-
 
     @Override
     public List<ApiService> getAllApiServices() {
