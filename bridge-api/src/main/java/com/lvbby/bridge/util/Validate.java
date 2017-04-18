@@ -1,5 +1,7 @@
 package com.lvbby.bridge.util;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 /**
  * Created by lipeng on 16/11/2.
  */
@@ -14,8 +16,19 @@ public class Validate {
         return s;
     }
 
+    public static void hasNoneNull(String error, Object... obj) {
+        if (ObjectUtils.firstNonNull(obj) == null)
+            throwEx(error);
+    }
+
     public static <T> T notNull(T t, String error, Object... obj) {
         if (t == null)
+            throwEx(error, obj);
+        return t;
+    }
+
+    public static <T> T isNull(T t, String error, Object... obj) {
+        if (t != null)
             throwEx(error, obj);
         return t;
     }
