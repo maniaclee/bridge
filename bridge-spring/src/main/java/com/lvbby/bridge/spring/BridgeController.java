@@ -41,6 +41,11 @@ public class BridgeController implements ApplicationListener<ContextRefreshedEve
         ApiGateWay bridge = applicationContext.getBean(ApiGateWay.class);
         if (bridge == null)
             throw new BridgeRunTimeException("no bridge found in spring context");
-        httpBridge = HttpBridge.of(bridge);
+
+        /** 支持从url解析service和method */
+        RequestMapping annotation = getClass().getAnnotation(RequestMapping.class);
+        if (annotation == null)
+            throw new IllegalArgumentException(String.format("controller class[%s] is a proxy class, don't use Configuration etc annotation in controller." , getClass().getName()));
+        httpBridge = HttpBridge.of(bridge).enableUrlPathParsing(annotation.value()[0]);
     }
 }

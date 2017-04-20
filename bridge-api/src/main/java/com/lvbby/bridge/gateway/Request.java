@@ -15,7 +15,7 @@ public class Request implements Serializable {
     private String service;
     private String method;
     private Object param;
-    private String paramType = ParamFormat.JSON.getValue();
+    private String paramType = ParamFormat.MAP_WRAPPER.getValue();
     /***
      * extended or user custom param
      */

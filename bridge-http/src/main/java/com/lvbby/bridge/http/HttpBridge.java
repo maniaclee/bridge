@@ -8,6 +8,7 @@ import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
 import com.lvbby.bridge.http.handler.HttpSessionSavePostHandler;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
+import com.lvbby.bridge.http.parser.HttpApiRequestPathParser;
 import com.lvbby.bridge.http.tool.HttpLoginHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,11 @@ public class HttpBridge {
         /** add login function */
         _addPreHandlerFirst(new HttpLoginHandler());
         _addPostHandlerFirst(new HttpLoginHandler());
+    }
+
+    public HttpBridge enableUrlPathParsing(String path) {
+        this.httpApiRequestParser = HttpApiRequestPathParser.of(path);
+        return this;
     }
 
     /***
@@ -92,8 +98,8 @@ public class HttpBridge {
         Request req = httpApiRequestParser.parse(request);
 
         /** inject HttpServletRequest && HttpServletResponse */
-        InjectProcessor.inject(HttpServletRequest.class,request);
-        InjectProcessor.inject(HttpServletResponse.class,response);
+        InjectProcessor.inject(HttpServletRequest.class, request);
+        InjectProcessor.inject(HttpServletResponse.class, response);
 
         req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
         return apiGateWay.proxy(req);
