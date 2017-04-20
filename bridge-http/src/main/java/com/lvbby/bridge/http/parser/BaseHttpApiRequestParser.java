@@ -56,15 +56,18 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         Map<String, Object> re = Maps.newHashMap();
         //from url
         if ("get".equalsIgnoreCase(request.getMethod())) {
-            List<NameValuePair> params = URLEncodedUtils.parse(request.getQueryString(), Charset.forName("UTF-8"));
-            for (NameValuePair param : params) {
-                if (keyFilter == null || keyFilter.test(param.getName()))
-                    re.put(param.getName(), param.getValue());
+            String queryString = request.getQueryString();
+            if (!StringUtils.isBlank(queryString)) {
+                List<NameValuePair> params = URLEncodedUtils.parse(queryString, Charset.forName("UTF-8"));
+                for (NameValuePair param : params) {
+                    if (keyFilter == null || keyFilter.test(param.getName()))
+                        re.put(param.getName(), param.getValue());
+                }
             }
             return re;
         }
         //from parameters
-        for (Enumeration ps = request.getParameterNames(); ps.hasMoreElements(); ) {
+        for (Enumeration ps = request.getParameterNames(); ps != null && ps.hasMoreElements(); ) {
             String key = ps.nextElement().toString().trim();
             if (keyFilter == null || keyFilter.test(key))
                 re.put(key, request.getParameter(key));

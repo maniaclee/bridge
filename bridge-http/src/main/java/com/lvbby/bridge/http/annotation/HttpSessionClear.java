@@ -9,4 +9,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface HttpSessionClear {
+    /**
+     * url to return
+     */
+    String value() default "";
 }
