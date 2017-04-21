@@ -15,7 +15,6 @@ public class JdkParameterNameExtractor implements ParameterNameExtractor {
         String[] parameterNames = new String[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             Parameter param = parameters[i];
-            System.out.println(param.getName());
             if (!param.isNamePresent()) {
                 return null;
             }
