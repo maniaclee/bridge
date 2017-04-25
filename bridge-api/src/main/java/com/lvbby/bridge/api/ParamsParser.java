@@ -11,6 +11,8 @@ public interface ParamsParser {
 
     boolean matchMethod(ParamParsingContext context);
 
+    void addParameter(ParamParsingContext context, MethodParameter methodParameter, Object arg);
+
     Parameters parse(ParamParsingContext context) throws BridgeRoutingException;
 
 }

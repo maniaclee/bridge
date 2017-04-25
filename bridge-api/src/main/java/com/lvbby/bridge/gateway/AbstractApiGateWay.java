@@ -13,6 +13,7 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     protected List<ApiGateWayPreHandler> preHandlers = Lists.newLinkedList();
     protected List<ApiGateWayPostHandler> postHandlers = Lists.newArrayList();
     protected List<ApiGateWayFilter> filters = Lists.newLinkedList();
+    protected List<ApiGateWayInitHandler> initHandlers = Lists.newLinkedList();
     protected ServiceNameExtractor serviceNameExtractor = new ClassNameServiceNameExtractor();
 
     protected ErrorHandler errorHandler;
@@ -47,6 +48,12 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
     }
 
     @Override
+    public void addInitHandler(ApiGateWayInitHandler apiGateWayInitHandler) {
+        if (apiGateWayInitHandler != null)
+            initHandlers.add(apiGateWayInitHandler);
+    }
+
+    @Override
     public void addPostHandler(ApiGateWayPostHandler apiGateWayPostHandler) {
         postHandlers.add(apiGateWayPostHandler);
     }
@@ -73,5 +80,9 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
 
     public ErrorHandler getErrorHandler() {
         return errorHandler;
+    }
+
+    public List<ApiGateWayInitHandler> getInitHandlers() {
+        return initHandlers;
     }
 }

@@ -1,31 +1,41 @@
 package com.lvbby.bridge.api.param.parser;
 
-import com.lvbby.bridge.api.ParamFormat;
-import com.lvbby.bridge.api.ParamParsingContext;
-import com.lvbby.bridge.api.Parameters;
+import com.lvbby.bridge.api.*;
 
 import java.util.Map;
 
 /**
  * Created by lipeng on 16/10/21.
- * 输入param= Map , 最大可能的匹配
  */
-public class MapParamsParser extends AbstractParamsParser {
+public class MapParamsParser implements ParamsParser {
 
     @Override
     public String getType() {
-        return ParamFormat.MAP.getValue();
+        return ParamFormat.Map.getValue();
     }
 
     @Override
-    public boolean match(ParamParsingContext context) {
-        Object arg = context.getRequest().getParam();
-        return arg instanceof Map;
+    public boolean matchMethod(ParamParsingContext context) {
+        MethodParameter[] paramTypes = context.getApiMethod().getParamTypes();
+        Map params = (Map) context.getRequest().getParam();
+        if (paramTypes.length == 0)
+            return params == null || params.isEmpty();
+        if (params == null || params.isEmpty())
+            return false;
+        for (MethodParameter methodParameter : paramTypes) {
+            if (!params.containsKey(methodParameter.getName()))
+                return false;
+        }
+        return true;
+    }
+
+    public void addParameter(ParamParsingContext context, MethodParameter methodParameter, Object arg) {
+        Map params = (Map) context.getRequest().getParam();
+        params.put(methodParameter.getName(), arg);
     }
 
     @Override
-    public Parameters doParse(ParamParsingContext context) {
+    public Parameters parse(ParamParsingContext context) {
         return Parameters.ofMap(context.getApiMethod(), (Map) context.getRequest().getParam());
     }
-
 }

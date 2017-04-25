@@ -1,6 +1,7 @@
 package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ApiService;
+import com.lvbby.bridge.api.ParamsParser;
 import com.lvbby.bridge.exception.BridgeInvokeException;
 import com.lvbby.bridge.exception.BridgeProcessException;
 import com.lvbby.bridge.exception.BridgeRoutingException;
@@ -37,10 +38,14 @@ public interface ApiGateWay {
      */
     void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler);
 
+    void addInitHandler(ApiGateWayInitHandler apiGateWayInitHandler);
+
     /***
      * add post handler after execution,
      * result handling and error handling is pretty useful
      */
     void addPostHandler(ApiGateWayPostHandler apiGateWayPostHandler);
+
+    ParamsParser paramsParser(Request request);
 
 }

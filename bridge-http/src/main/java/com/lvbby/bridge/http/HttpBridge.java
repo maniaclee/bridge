@@ -1,6 +1,7 @@
 package com.lvbby.bridge.http;
 
 import com.alibaba.fastjson.JSON;
+import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.gateway.*;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
@@ -32,6 +33,17 @@ public class HttpBridge {
         this.apiGateWay.addApiFilter(new HttpMethodFilter());
         this.apiGateWay.addApiFilter(new HttpAttributeAnnotationValidateFilter());
 
+        /** inject */
+        this.apiGateWay.addInitHandler(paramParsingContext -> {
+            for (MethodParameter methodParameter : paramParsingContext.getApiMethod().getParamTypes()) {
+                if (methodParameter.getType().isAssignableFrom(HttpServletRequest.class)) {
+                    apiGateWay.paramsParser(paramParsingContext.getRequest()).addParameter(paramParsingContext, methodParameter, paramParsingContext.getRequest().getAttribute(EXT_HTTP_REQUEST));
+                }
+                if (methodParameter.getType().isAssignableFrom(HttpServletResponse.class)) {
+                    apiGateWay.paramsParser(paramParsingContext.getRequest()).addParameter(paramParsingContext, methodParameter, paramParsingContext.getRequest().getAttribute(EXT_HTTP_RESPONSE));
+                }
+            }
+        });
         /** add default post handlers */
         _addPostHandlerFirst(new HttpSessionSavePostHandler());
         _addPostHandlerFirst(new HttpSessionClearPostHandler());
@@ -96,10 +108,6 @@ public class HttpBridge {
     public Object process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Request req = httpApiRequestParser.parse(request);
-
-        /** inject HttpServletRequest && HttpServletResponse */
-        InjectProcessor.inject(HttpServletRequest.class, request);
-        InjectProcessor.inject(HttpServletResponse.class, response);
 
         req.addAttribute(EXT_HTTP_REQUEST, request).addAttribute(EXT_HTTP_RESPONSE, response);
         return apiGateWay.proxy(req);

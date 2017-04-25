@@ -34,7 +34,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
 
         //handle parameters
         try {
-            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.MAP_PRECISE.getValue().equals(re.getParamType()) || ParamFormat.MAP_WRAPPER.getValue().equals(re.getParamType())) {
+            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.Map.getValue().equals(re.getParamType()) || ParamFormat.MAP_WRAPPER.getValue().equals(re.getParamType())) {
                 re.setParam(extractHttpParameters(request, s -> !isSystemParameter(s)));
             } else {
                 re.setParam(extractHttpParameters(request, null).get(paramAttribute));

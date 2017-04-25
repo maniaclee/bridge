@@ -107,12 +107,12 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
 
         /** method */
         List<ApiMethod> apiMethods = service.getApiMethods(request.getMethod());
-        if (apiMethods.isEmpty())
-            throw new BridgeRoutingException(String.format("no such method type %s", request.getMethod()));
-
-        //处理方法参数，包括overload
         for (ApiMethod apiMethod : apiMethods) {
             ParamParsingContext paramParsingContext = new ParamParsingContext(request).method(apiMethod);
+
+            for (ApiGateWayInitHandler apiGateWayInitHandler : getInitHandlers()) {
+                apiGateWayInitHandler.handle(paramParsingContext);
+            }
             //重载时，需要先找出匹配的方法
             if (paramsParser.matchMethod(paramParsingContext))
                 return buildContext(request, service, paramsParser, paramParsingContext);
@@ -124,19 +124,12 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
         /** check method name && param types|length */
         Parameters parameters = paramsParser.parse(paramParsingContext);
         if (parameters != null) {
-            parameters.setType(getParamType(request));//set param parsing type
-
             Context context = Context.of(request, service);
             context.setApiMethod(paramParsingContext.getApiMethod());
             context.setParameters(parameters);
             return context;
         }
         return null;
-    }
-
-    private String getParamType(Request request) {
-        return request.getParamType().equalsIgnoreCase(ParamFormat.JSON_ARRAY.getValue())
-                || request.getParamType().equalsIgnoreCase(ParamFormat.NORMAL.getValue()) ? Parameters.byIndex : Parameters.byName;
     }
 
     @Override

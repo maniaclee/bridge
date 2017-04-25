@@ -21,12 +21,4 @@ public class Bridge extends AbstractBridge {
         return paramsParserFactory.getParamsParser(request.getParamType());
     }
 
-    @Override
-    public Object proxy(Request request) throws Exception {
-        try {
-            return super.proxy(request);
-        } finally {
-            InjectProcessor.clear();//clear
-        }
-    }
 }
