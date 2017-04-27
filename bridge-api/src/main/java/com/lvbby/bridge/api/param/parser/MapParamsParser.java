@@ -20,7 +20,7 @@ public class MapParamsParser implements ParamsParser {
         Map params = (Map) context.getRequest().getParam();
         if (paramTypes.length == 0)
             return params == null || params.isEmpty();
-        if (params == null || params.isEmpty())
+        if (params == null || params.isEmpty() || params.size() != paramTypes.length)
             return false;
         for (MethodParameter methodParameter : paramTypes) {
             if (!params.containsKey(methodParameter.getName()))

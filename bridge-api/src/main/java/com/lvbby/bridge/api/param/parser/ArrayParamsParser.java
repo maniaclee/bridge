@@ -23,15 +23,13 @@ public class ArrayParamsParser implements ParamsParser {
         Object[] params = (Object[]) context.getRequest().getParam();
         if (paramTypes.length == 0)
             return params == null || params.length == 0;
-        if (params == null || params.length == 0)
+        if (params == null || params.length == 0 || params.length != paramTypes.length)
             return false;
-        if (params.length != paramTypes.length)
-            return false;
-        for (int i = 0; i < paramTypes.length; i++) {
-            Object param = params[i];
-            if (param != null && !paramTypes[i].getType().isAssignableFrom(param.getClass()))
-                return false;
-        }
+        //        for (int i = 0; i < paramTypes.length; i++) {
+        //            Object param = params[i];
+        //            if (param != null && !paramTypes[i].getType().isAssignableFrom(param.getClass()))
+        //                return false;
+        //        }
         return true;
     }
 

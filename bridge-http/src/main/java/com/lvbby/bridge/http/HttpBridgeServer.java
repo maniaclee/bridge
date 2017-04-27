@@ -1,8 +1,10 @@
 package com.lvbby.bridge.http;
 
 import com.lvbby.bridge.exception.BridgeRunTimeException;
+import com.lvbby.bridge.exception.errorhandler.AbstractErrorHandler;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
+import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.server.BaseServer;
 
 import javax.servlet.ServletException;
@@ -29,13 +31,21 @@ public class HttpBridgeServer extends BaseServer {
     }
 
     public static HttpBridgeServer of(ApiGateWay apiGateWay) {
+        apiGateWay.addErrorHandler(new AbstractErrorHandler() {
+
+            @Override
+            public Object handleError(Request request, Object result, Exception e) throws Exception {
+                e.printStackTrace();
+                throw e;
+            }
+        });
         return new HttpBridgeServer(apiGateWay);
     }
 
     private HttpBridgeServer(ApiGateWay apiGateWay) {
         if (apiGateWay == null)
             throw new BridgeRunTimeException("no bridge.");
-        this.httpBridge = HttpBridge.of(apiGateWay);
+        this.httpBridge = HttpBridge.of(apiGateWay).enableUrlPathParsing(apiPath);
     }
 
     @Override

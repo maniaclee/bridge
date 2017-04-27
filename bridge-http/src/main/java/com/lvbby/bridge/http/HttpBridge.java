@@ -5,6 +5,7 @@ import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.gateway.*;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
+import com.lvbby.bridge.http.handler.HttpParameterParsingInitHandler;
 import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
 import com.lvbby.bridge.http.handler.HttpSessionSavePostHandler;
 import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
@@ -33,6 +34,8 @@ public class HttpBridge {
         this.apiGateWay.addApiFilter(new HttpMethodFilter());
         this.apiGateWay.addApiFilter(new HttpAttributeAnnotationValidateFilter());
 
+        /** param convert */
+        this.apiGateWay.addInitHandler(new HttpParameterParsingInitHandler());
         /** inject */
         this.apiGateWay.addInitHandler(paramParsingContext -> {
             for (MethodParameter methodParameter : paramParsingContext.getApiMethod().getParamTypes()) {

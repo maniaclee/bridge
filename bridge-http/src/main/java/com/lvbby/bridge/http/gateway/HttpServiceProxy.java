@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ParamFormat;
+import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
 import com.squareup.okhttp.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -18,7 +19,7 @@ import java.util.Map;
  */
 public class HttpServiceProxy<T> {
 
-    private String host="localhost";
+    private String host = "localhost";
     private int port = 80;
     private String path = "/";
     private String url;
@@ -34,12 +35,14 @@ public class HttpServiceProxy<T> {
     }
 
 
-    public static <R> HttpServiceProxy<R> of(Class<R> clz){
+    public static <R> HttpServiceProxy<R> of(Class<R> clz) {
         return new HttpServiceProxy<R>(clz);
     }
+
     public HttpServiceProxy(Class<T> clz) {
         this.clz = clz;
     }
+
     public HttpServiceProxy() {
     }
 
@@ -104,24 +107,39 @@ public class HttpServiceProxy<T> {
     }
 
     public Request post(Method method, Object[] args) {
+        FormEncodingBuilder builder = new FormEncodingBuilder()
+                .add("_service", clz.getSimpleName())
+                .add("_method", method.getName())
+                .add("_paramType", ParamFormat.Map.getValue());
+        serialize(method, args).entrySet().forEach(stringObjectEntry -> builder.add(stringObjectEntry.getKey(), stringObjectEntry.getValue()));
         return new Request.Builder()
                 .url(url)
-                .post(new FormEncodingBuilder()
-                        .add("service", clz.getSimpleName())
-                        .add("param", serialParam(args))
-                        .add("method", method.getName())
-                        .add("paramType", ParamFormat.JSON_ARRAY.getValue()).build())
+                .post(builder.build())
                 .build();
     }
 
     public Request get(Method method, Object[] args) {
         HttpUrl.Builder url = new HttpUrl.Builder().scheme(scheme).addPathSegment(path).port(port).host(this.host);
+        serialize(method, args).entrySet().forEach(stringObjectEntry -> url.addQueryParameter(stringObjectEntry.getKey(), stringObjectEntry.getValue()));
         HttpUrl host = url
-                .addQueryParameter("service", clz.getSimpleName())
-                .addQueryParameter("param", serialParam(args))
-                .addQueryParameter("method", method.getName())
-                .addQueryParameter("paramType", ParamFormat.JSON_ARRAY.getValue()).build();
+                .addQueryParameter("_service", clz.getSimpleName())
+                .addQueryParameter("_method", method.getName())
+                .addQueryParameter("_paramType", ParamFormat.Map.getValue()).build();
         return new Request.Builder().url(host).build();
+    }
+
+    private Map<String, String> serialize(Method method, Object[] args) {
+        String[] parameterName = new DefaultParameterNameExtractor().getParameterName(method);
+        System.out.println(parameterName);
+        Map<String, String> map = Maps.newHashMap();
+        if (args == null || args.length == 0)
+            Validate.isTrue(parameterName.length == 0);
+        if (parameterName == null)
+            Validate.isTrue(args == null || args.length == 0);
+        for (int i = 0; i < args.length; i++) {
+            map.put(parameterName[i], args[i] == null ? null : JSON.toJSONString(args[i]));
+        }
+        return map;
     }
 
     private class HttpInvocationHandler implements InvocationHandler {

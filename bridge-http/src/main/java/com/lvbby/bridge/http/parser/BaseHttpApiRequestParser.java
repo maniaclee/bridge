@@ -31,19 +31,25 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         //handle paramType
         if (StringUtils.isNotBlank(request.getParameter(paramTypeAttribute)))
             re.setParamType(request.getParameter(paramTypeAttribute));
+        else
+            re.setParamType(ParamFormat.Map.getValue());
 
         //handle parameters
         try {
-            if (ParamFormat.MAP.getValue().equals(re.getParamType()) || ParamFormat.Map.getValue().equals(re.getParamType()) || ParamFormat.MAP_WRAPPER.getValue().equals(re.getParamType())) {
-                re.setParam(extractHttpParameters(request, s -> !isSystemParameter(s)));
-            } else {
-                re.setParam(extractHttpParameters(request, null).get(paramAttribute));
+            switch (ParamFormat.parse(re.getParamType())) {
+                case Map:
+                    re.setParam(extractHttpParameters(request, s -> !isSystemParameter(s)));
+                    break;
+                case Array:
+                    re.setParam(extractHttpParameters(request, null).get(paramAttribute));
+                    break;
             }
         } catch (URISyntaxException e) {
             throw new BridgeRoutingException("bad url format", e);
         }
         return re;
     }
+
 
     /***
      * extract parameters

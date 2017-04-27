@@ -107,6 +107,8 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
 
         /** method */
         List<ApiMethod> apiMethods = service.getApiMethods(request.getMethod());
+        if (apiMethods.isEmpty())
+            throw new BridgeRoutingException(String.format("no method found %s", request));
         for (ApiMethod apiMethod : apiMethods) {
             ParamParsingContext paramParsingContext = new ParamParsingContext(request).method(apiMethod);
 
@@ -117,7 +119,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             if (paramsParser.matchMethod(paramParsingContext))
                 return buildContext(request, service, paramsParser, paramParsingContext);
         }
-        throw new BridgeRoutingException(String.format("failed to route %s", request));
+        throw new BridgeRoutingException(String.format("failed to route (arguments don't fit): %s", request));
     }
 
     private Context buildContext(Request request, ApiService service, ParamsParser paramsParser, ParamParsingContext paramParsingContext) throws BridgeRoutingException {

@@ -15,4 +15,12 @@ public enum ParamFormat {
     public String getValue() {
         return value;
     }
+
+    public static ParamFormat parse(String s) {
+        for (ParamFormat paramFormat : values()) {
+            if (paramFormat.value.equals(s))
+                return paramFormat;
+        }
+        throw new IllegalArgumentException("invalid param format");
+    }
 }
