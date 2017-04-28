@@ -47,6 +47,7 @@ public class DefaultApiMethod implements ApiMethod {
             MethodParameter methodParameter = new MethodParameter();
             methodParameter.setIndex(i);
             methodParameter.setType(parameterTypes[i]);
+            methodParameter.setMethod(method);
             methodParameters[i] = methodParameter;
         }
         /** parameter names, only available when method has parameters*/

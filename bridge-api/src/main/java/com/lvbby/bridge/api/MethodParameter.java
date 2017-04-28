@@ -1,9 +1,12 @@
 package com.lvbby.bridge.api;
 
+import java.lang.reflect.Method;
+
 public class MethodParameter {
     private int index;
     private String name;
     private Class type;
+    private Method method;
 
     public int getIndex() {
         return index;
@@ -27,5 +30,13 @@ public class MethodParameter {
 
     public void setType(Class type) {
         this.type = type;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
     }
 }
