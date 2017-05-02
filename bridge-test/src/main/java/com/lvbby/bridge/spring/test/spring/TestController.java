@@ -22,6 +22,6 @@ public class TestController {
     @RequestMapping("api")
     @ResponseBody
     public Object sdff(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return new HttpBridge(bridge).process(request, response);
+        return HttpBridge.of(bridge).process(request, response);
     }
 }

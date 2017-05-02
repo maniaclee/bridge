@@ -48,4 +48,11 @@ public interface ApiGateWay {
 
     ParamsParser paramsParser(Request request);
 
+    List<ApiGateWayPreHandler> getPreHandlers();
+
+    List<ApiGateWayPostHandler> getPostHandlers();
+
+    List<ApiGateWayFilter> getFilters();
+
+    List<ApiGateWayInitHandler> getInitHandlers();
 }

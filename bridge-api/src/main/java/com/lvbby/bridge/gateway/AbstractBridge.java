@@ -50,7 +50,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
                     preHandler.preProcess(context);
                 }
             } catch (BridgeInterruptException ine) {
-                return ine.getArg();
+                //                return ine.getArg();TODO 不能直接return，负责后面的处理器没有走完
             } catch (Exception e) {
                 throw new BridgeProcessException(e).setBridgeComponent(errorPreHandler).setErrorType(BridgeProcessException.PreProcess);
             }

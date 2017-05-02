@@ -25,7 +25,9 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
                 errorHandler = eh;
                 return;
             }
-            getTailErrorHandler(errorHandler).setNextErrorHandler(eh);
+            if (!checkTypeExisted(errorHandler, eh)) {
+                getTailErrorHandler(errorHandler).setNextErrorHandler(eh);
+            }
         }
     }
 
@@ -37,25 +39,41 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
 
     @Override
     public void addApiFilter(ApiGateWayFilter apiGateWayFilter) {
-        if (apiGateWayFilter != null)
+        if (apiGateWayFilter != null && !checkTypeExisted(filters, apiGateWayFilter))
             filters.add(apiGateWayFilter);
     }
 
+
     @Override
     public void addPreHandler(ApiGateWayPreHandler apiGateWayPreHandler) {
-        if (apiGateWayPreHandler != null)
+        if (apiGateWayPreHandler != null && !checkTypeExisted(preHandlers, apiGateWayPreHandler))
             preHandlers.add(apiGateWayPreHandler);
     }
 
     @Override
     public void addInitHandler(ApiGateWayInitHandler apiGateWayInitHandler) {
-        if (apiGateWayInitHandler != null)
+        if (apiGateWayInitHandler != null && !checkTypeExisted(initHandlers, apiGateWayInitHandler))
             initHandlers.add(apiGateWayInitHandler);
     }
 
     @Override
     public void addPostHandler(ApiGateWayPostHandler apiGateWayPostHandler) {
         postHandlers.add(apiGateWayPostHandler);
+    }
+
+    private boolean checkTypeExisted(List list, Object object) {
+        return list.stream().anyMatch(o -> o.getClass().equals(object.getClass()));
+    }
+
+    private boolean checkTypeExisted(ErrorHandler src, ErrorHandler eh) {
+        if (src == null || eh == null)
+            return false;
+        while (src != null) {
+            if (src.getClass().equals(eh.getClass()))
+                return true;
+            src = src.getNextErrorHandler();
+        }
+        return false;
     }
 
     public ServiceNameExtractor getServiceNameExtractor() {
@@ -66,23 +84,27 @@ public abstract class AbstractApiGateWay implements ApiGateWay {
         this.serviceNameExtractor = serviceNameExtractor;
     }
 
+    @Override
     public List<ApiGateWayPreHandler> getPreHandlers() {
         return preHandlers;
     }
 
+    @Override
     public List<ApiGateWayPostHandler> getPostHandlers() {
         return postHandlers;
     }
 
+    @Override
     public List<ApiGateWayFilter> getFilters() {
         return filters;
     }
 
-    public ErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
+    @Override
     public List<ApiGateWayInitHandler> getInitHandlers() {
         return initHandlers;
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 }

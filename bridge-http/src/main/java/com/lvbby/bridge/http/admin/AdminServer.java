@@ -26,7 +26,7 @@ public class AdminServer extends BaseServer {
          * use HttpBridge to admin the HttpBridge!
          */
         addServlet(new HttpBridgeDelegateServlet(
-                new HttpBridge(
+                HttpBridge.of(
                         new Bridge().addService(
                                 new HttpBridgeService(httpBridge.getApiGateWay())))), "/admin");
         httpBridge.getApiGateWay().addErrorHandler(ServiceResponseTypedErrorHandler.of(Exception.class));
@@ -34,7 +34,7 @@ public class AdminServer extends BaseServer {
 
 
     public static void main(String[] args) throws Exception {
-        AdminServer.of(new HttpBridge(new Bridge().addService(new Request()))).start();
+        AdminServer.of(HttpBridge.of(new Bridge().addService(new Request()))).start();
     }
 
 }

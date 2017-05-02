@@ -13,4 +13,6 @@ public interface HttpUserManager {
     boolean isLogin(Context context, HttpServletRequest request, HttpServletResponse response);
 
     String getUserRole(Context context, HttpServletRequest request, HttpServletResponse response);
+
+    String getUserId(HttpServletRequest httpServletRequest);
 }
