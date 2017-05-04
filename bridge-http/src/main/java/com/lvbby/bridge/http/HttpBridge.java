@@ -35,17 +35,9 @@ public class HttpBridge {
 
     public static HttpBridge of(ApiGateWay apiGateWay) {
         HttpBridge httpBridge = new HttpBridge();
-        return httpBridge.init(apiGateWay);
-    }
-
-    public static HttpBridge empty() {
-        return new HttpBridge();
-    }
-
-    public HttpBridge init(ApiGateWay apiGateWay) {
-        this.apiGateWay = apiGateWay;
-        init();
-        return this;
+        httpBridge.apiGateWay = apiGateWay;
+        httpBridge.init();
+        return httpBridge;
     }
 
     private void init() {
@@ -98,14 +90,14 @@ public class HttpBridge {
     private void _addPostHandlerFirst(ApiGateWayPostHandler apiGateWayPostHandler) {
         ApiGateWay apiGateWay = getApiGateWay();
         if (apiGateWay instanceof AbstractApiGateWay) {
-            ((AbstractApiGateWay) apiGateWay).getPostHandlers().add(0, apiGateWayPostHandler);
+            apiGateWay.getPostHandlers().add(0, apiGateWayPostHandler);
         }
     }
 
     private void _addPreHandlerFirst(ApiGateWayPreHandler apiGateWayPreHandler) {
         ApiGateWay apiGateWay = getApiGateWay();
         if (apiGateWay instanceof AbstractApiGateWay) {
-            ((AbstractApiGateWay) apiGateWay).getPreHandlers().add(0, apiGateWayPreHandler);
+            apiGateWay.getPreHandlers().add(0, apiGateWayPreHandler);
         }
     }
 
@@ -169,4 +161,5 @@ public class HttpBridge {
         this.httpUserManager = httpUserManager;
         return this;
     }
+
 }

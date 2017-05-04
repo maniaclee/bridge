@@ -1,5 +1,6 @@
 package com.lvbby.bridge.http.parser;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.exception.BridgeRoutingException;
@@ -64,10 +65,18 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         if ("get".equalsIgnoreCase(request.getMethod())) {
             String queryString = request.getQueryString();
             if (!StringUtils.isBlank(queryString)) {
+                ArrayListMultimap<String, String> map = ArrayListMultimap.create();
                 List<NameValuePair> params = URLEncodedUtils.parse(queryString, Charset.forName("UTF-8"));
-                for (NameValuePair param : params) {
-                    if (keyFilter == null || keyFilter.test(param.getName()))
-                        re.put(param.getName(), param.getValue());
+                if (params != null) {
+                    params.forEach(nameValuePair -> map.put(nameValuePair.getName(), nameValuePair.getValue()));
+                }
+                for (String key : map.keySet()) {
+                    List<String> values = map.get(key);
+                    Object value = null;
+                    if (values != null && !values.isEmpty())
+                        value = values.size() == 1 ? values.get(0) : values;
+                    if (keyFilter == null || keyFilter.test(key))
+                        re.put(key, value);
                 }
             }
             return re;

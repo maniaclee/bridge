@@ -27,7 +27,6 @@ public class HttpLoginHandler extends HttpAnnotationPostHandler<HttpLogin> imple
             throw new BridgeRunTimeException("session attribute is empty from " + annotation.getClass().getName());
         HttpSession session = HttpBridgeUtil.getHttpServletRequest(context).getSession();
         Object re = session.getAttribute(sessionAttribute);
-        /** if already logged , return the result directly */
         if (re != null)
             throw new BridgeInterruptException("already logged in").setArg(re);
     }

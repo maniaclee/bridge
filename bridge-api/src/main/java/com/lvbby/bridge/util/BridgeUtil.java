@@ -128,6 +128,9 @@ public class BridgeUtil {
             }
             return JSON.parseObject(s, targetClass);
         }
+        if (Collection.class.isAssignableFrom(targetClass)) {
+            //TODO collection type, url or map
+        }
         throw new IllegalArgumentException(String.format("parameter no match: %s is not match for [%s] ", src.getClass().getName(), targetClass.getName()));
     }
 
