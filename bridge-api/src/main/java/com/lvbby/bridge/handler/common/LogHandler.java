@@ -61,7 +61,13 @@ public class LogHandler extends AbstractErrorHandler implements ApiGateWayPreHan
     }
 
     public String doSerialize(Object parameter) {
-        return JSON.toJSONString(parameter);
+        try {
+            return JSON.toJSONString(parameter);
+        } catch (Exception e) {
+            String format = String.format("error-serialize response[%s] ", parameter.getClass());
+            logger.error(format, e);
+            return format;
+        }
     }
 
 }

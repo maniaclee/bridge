@@ -20,8 +20,10 @@ public class HttpLogHanlder extends LogHandler {
 
     @Override
     public String doSerialize(Object parameter) {
-        if (exclude.contains(parameter.getClass())) {
-            return "";
+        for (Class clz : exclude) {
+            if (clz.isAssignableFrom(parameter.getClass())) {
+                return "";
+            }
         }
         return super.doSerialize(parameter);
     }
