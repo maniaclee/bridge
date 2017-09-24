@@ -1,9 +1,12 @@
 package com.lvbby.bridge.spring.test;
 
 import com.alibaba.fastjson.JSON;
+import com.lvbby.bridge.spring.BridgeFactoryBean;
+import org.aopalliance.intercept.MethodInterceptor;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
 
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
@@ -61,7 +64,7 @@ public class SimpleTest {
     @Test
     public void dd() throws URISyntaxException {
         String url = "one=1&two=2&three=3&three=3a";
-//        List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+        //        List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
         List<NameValuePair> params = URLEncodedUtils.parse(url, Charset.forName("UTF-8"));
 
         for (NameValuePair param : params) {
@@ -69,4 +72,20 @@ public class SimpleTest {
         }
     }
 
+    @Test
+    public void mai() throws Exception {
+        BridgeFactoryBean service = new BridgeFactoryBean();
+        for (Class<?> aClass : service.getClass().getInterfaces()) {
+            System.out.println(aClass.getName());
+        }
+        ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+        proxyFactoryBean.setTarget(service);
+        proxyFactoryBean.setProxyTargetClass(true);
+        proxyFactoryBean.addAdvice((MethodInterceptor) methodInvocation -> {
+            System.out.println("log");
+            return methodInvocation.proceed();
+        });
+        BridgeFactoryBean object = (BridgeFactoryBean) proxyFactoryBean.getObject();
+        object.getObject();
+    }
 }

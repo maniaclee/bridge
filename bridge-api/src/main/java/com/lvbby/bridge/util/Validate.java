@@ -2,6 +2,8 @@ package com.lvbby.bridge.util;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.util.function.Function;
+
 /**
  * Created by lipeng on 16/11/2.
  */
@@ -25,6 +27,11 @@ public class Validate {
         if (t == null)
             throwEx(error, obj);
         return t;
+    }
+    public static <T,R> R notNull(T t, Function<T,R> function,String error, Object... obj) {
+        if (t == null)
+            throwEx(error, obj);
+        return function.apply(t);
     }
 
     public static <T> T isNull(T t, String error, Object... obj) {

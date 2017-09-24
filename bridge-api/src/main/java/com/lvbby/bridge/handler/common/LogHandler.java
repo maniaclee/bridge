@@ -30,13 +30,13 @@ public class LogHandler extends AbstractErrorHandler implements ApiGateWayPreHan
 
     @Override
     public Object success(Context context, Object result) {
-        logger.info(String.format("%s.%s invoke success request[%s] , response[%s]", context.getApiService().getServiceName(), context.getApiMethod().getName(), requestToString(context.getParameters()), doSerialize(result)));
+        logger.info(String.format("%s.%s invoke success request[%s] , response[%s]", context.getApiService().getServiceName(), context.getApiMethod().getName(), requestToString(context.getParameters()), serialize(result)));
         return result;
     }
 
     @Override
     public Object handleError(Request request, Object result, Exception e) throws Exception {
-        logger.error(String.format("%s.%s invoke failed request[%s] ", request.getService(), request.getMethod(), doSerialize(request.getParam())), e);
+        logger.error(String.format("%s.%s invoke failed request[%s] ", request.getService(), request.getMethod(), serialize(request.getParam())), e);
         return result;
     }
 
