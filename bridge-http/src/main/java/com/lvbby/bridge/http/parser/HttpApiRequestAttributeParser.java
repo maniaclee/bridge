@@ -6,6 +6,7 @@ import com.lvbby.bridge.gateway.Request;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 从url参数里查找service和method， path?_service=XXX&_method=XXX
  * Created by lipeng on 16/10/20.
  */
 public class HttpApiRequestAttributeParser extends BaseHttpApiRequestParser {
