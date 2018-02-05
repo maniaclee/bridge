@@ -18,11 +18,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 生成全局的Bridge，持有所有的service
+ * 支持
+ * 1. Annotation，扫描spring容器的bean
+ * 2. Class         将一个Class生成一个实例注入到框架
+ * 3. Object        将一个实例注入到框架
  * Created by peng on 16/9/22.
  */
 public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>, ApplicationListener {
+    //注解扫描
     List<Class> annotations = Lists.newArrayList();
+    //Class注入
     List<Class> beanClasses = Lists.newLinkedList();
+    //实例注入
     List beanObjects = Lists.newLinkedList();
     private ApplicationContext applicationContext;
 
