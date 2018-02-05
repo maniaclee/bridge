@@ -1,5 +1,6 @@
 package com.lvbby.bridge.test;
 
+import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
@@ -19,7 +20,11 @@ public class BridgeTest {
     @Test
     public void sdf() throws Exception {
         ApiGateWay bridge = new Bridge().addService(testService);
-        Object proxy = bridge.proxy(new Request("TestService", "echo", "{s:'sdf'}"));
+
+        HashMap<Object, Object> param = Maps.newHashMap();
+        param.put("s","fuck");
+
+        Object proxy = bridge.proxy(new Request("TestService", "echo", param));
         System.out.println(ReflectionToStringBuilder.toString(proxy));
     }
 
