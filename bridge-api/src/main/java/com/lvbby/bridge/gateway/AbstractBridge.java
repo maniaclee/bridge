@@ -30,13 +30,13 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             for (ApiGateWayFilter apiGateWayFilter : filters) {
                 boolean canVisit = false;
                 try {
-                    canVisit = !apiGateWayFilter.canVisit(context);
+                    canVisit = apiGateWayFilter.canVisit(context);
                 } catch (Exception e) {
-                    throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
+                    throw new BridgeProcessException(String.format("%s.%s [exception] can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
                             .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
                 }
-                if (canVisit)
+                if (!canVisit)
                     throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
                             .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
@@ -115,6 +115,9 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             for (ApiGateWayInitHandler apiGateWayInitHandler : getInitHandlers()) {
                 apiGateWayInitHandler.handle(paramParsingContext);
             }
+//            if (apiMethods.size() == 1) {
+//                return buildContext(request, service, paramsParser, paramParsingContext);
+//            }
             //重载时，需要先找出匹配的方法
             if (paramsParser.matchMethod(paramParsingContext))
                 return buildContext(request, service, paramsParser, paramParsingContext);
