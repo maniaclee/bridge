@@ -25,7 +25,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
         Object re = null;
         try {
             Context context = initContext(request);
-
+            BridgeContextHolder.put(context);
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : filters) {
                 boolean canVisit = false;
@@ -82,6 +82,8 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
                 throw e;
             e.printStackTrace();//TODO debug
             return errorHandler.handleError(request, re, e);
+        } finally {
+            BridgeContextHolder.clear();
         }
     }
 
@@ -123,15 +125,10 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
     }
 
     private Context buildContext(Request request, ApiService service, ParamsParser paramsParser, ParamParsingContext paramParsingContext) throws BridgeRoutingException {
-        /** check method name && param types|length */
-        Object[] parameters = paramsParser.parse(paramParsingContext);
-        if (parameters != null) {
-            Context context = Context.of(request, service);
-            context.setApiMethod(paramParsingContext.getApiMethod());
-            context.setParameters(parameters);
-            return context;
-        }
-        return null;
+        Context context = Context.of(request, service);
+        context.setApiMethod(paramParsingContext.getApiMethod());
+        context.setParameters(paramsParser.parse(paramParsingContext));
+        return context;
     }
 
     @Override

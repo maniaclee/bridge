@@ -5,6 +5,7 @@ package com.lvbby.bridge.api;
  */
 public enum ParamFormat {
     Json("json"),
+    JsonMap("jsonMap"),
     Map("map"),
     Array("array");
     private String value;

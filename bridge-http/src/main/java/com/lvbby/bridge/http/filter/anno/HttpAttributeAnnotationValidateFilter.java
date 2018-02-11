@@ -26,6 +26,5 @@ public class HttpAttributeAnnotationValidateFilter extends HttpAnnotationFilter<
         return httpServletRequest.getSession() != null
                 && httpServletRequest.getSession().getAttribute(sessionKey) != null
                 && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getParameter(requestKey));
-
     }
 }

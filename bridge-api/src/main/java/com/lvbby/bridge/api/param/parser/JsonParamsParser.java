@@ -6,6 +6,7 @@ import com.lvbby.bridge.api.ParamParsingContext;
 import com.lvbby.bridge.api.ParamsParser;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.util.Validate;
+import org.apache.commons.lang3.ClassUtils;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class JsonParamsParser implements ParamsParser {
     public boolean matchMethod(ParamParsingContext context) {
         Map params = (Map) context.getRequest().getParam();
         Map<String, MethodParameter> parameterMap = Arrays.stream(context.getApiMethod().getParamTypes())
-            .collect(Collectors.toMap(o -> o.getName(), Function.identity()));
+                .collect(Collectors.toMap(o -> o.getName(), Function.identity()));
         if (params == null) {
             return parameterMap.isEmpty();
         }
@@ -49,19 +50,19 @@ public class JsonParamsParser implements ParamsParser {
             //比较简单粗暴的方式
             Object value = map.get(parameterType.getName());
             if (value != null) {
-                re[i] = parse(parameterType.getType(),value);
+                re[i] = parse(parameterType.getType(), value);
             }
         }
         return re;
     }
 
-    private static Object parse(Class clz , Object object){
-        if(object==null)
+    protected Object parse(Class clz, Object object) {
+        if (object == null)
             return null;
-        if(clz.isAssignableFrom(object.getClass()))
+        if (ClassUtils.isAssignable(object.getClass(), clz))
             return object;
-        if(object instanceof Map){
-            return new JSONObject((Map<String, Object>) object).toJavaObject(clz);
+        if (object instanceof Map) {
+            return new JSONObject((Map) object).toJavaObject(clz);
         }
         throw new IllegalArgumentException("can't parse object");
     }

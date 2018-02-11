@@ -2,7 +2,11 @@ package com.lvbby.bridge.http;
 
 import com.alibaba.fastjson.JSON;
 import com.lvbby.bridge.api.MethodParameter;
-import com.lvbby.bridge.gateway.*;
+import com.lvbby.bridge.gateway.AbstractApiGateWay;
+import com.lvbby.bridge.gateway.ApiGateWay;
+import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
+import com.lvbby.bridge.gateway.ApiGateWayPreHandler;
+import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.http.filter.anno.HttpAttributeAnnotationValidateFilter;
 import com.lvbby.bridge.http.filter.anno.HttpMethodFilter;
 import com.lvbby.bridge.http.filter.anno.HttpUserFilter;

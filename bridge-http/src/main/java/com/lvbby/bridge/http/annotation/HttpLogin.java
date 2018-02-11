@@ -15,7 +15,7 @@ public @interface HttpLogin {
     /***
      * mark the session key
      */
-    String sessionAttribute() default "";
+    String sessionAttribute() default "USER";
 
     Class<? extends Serializer> serializer() default NoneSerializer.class;
 

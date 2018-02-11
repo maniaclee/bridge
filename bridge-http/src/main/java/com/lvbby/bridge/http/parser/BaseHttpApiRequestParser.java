@@ -34,7 +34,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
         if (StringUtils.isNotBlank(request.getParameter(paramTypeAttribute)))
             re.setParamType(request.getParameter(paramTypeAttribute));
         else
-            re.setParamType(ParamFormat.Json.getValue());
+            re.setParamType(ParamFormat.JsonMap.getValue());
 
         //handle parameters
         try {
@@ -62,7 +62,6 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
                 List<NameValuePair> params = URLEncodedUtils.parse(queryString, Charset.forName("UTF-8"));
                 if (params != null) {
                     params.stream().filter(nameValuePair -> keyFilter == null || keyFilter.test(nameValuePair.getName()))
-                        .filter(nameValuePair -> nameValuePair.getValue() == null)
                         .forEach(nameValuePair -> re.putIfAbsent(nameValuePair.getName(), nameValuePair.getValue()));
                 }
             }
@@ -74,7 +73,7 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
             if (keyFilter == null || keyFilter.test(key))
                 re.put(key, request.getParameter(key));
         }
-        return parseBridgeParameters(re);
+        return re;
     }
 
     //a.b.c=value 形式的参数转为json形式的map
