@@ -12,24 +12,20 @@ import java.util.ArrayList;
 public class ArrayParamsParser implements ParamsParser {
 
     @Override
-    public String getType() {
-        return ParamFormat.Array.getValue();
-    }
-
-    @Override
     public boolean matchMethod(ParamParsingContext context) {
         MethodParameter[] paramTypes = context.getApiMethod().getParamTypes();
 
         Object[] params = (Object[]) context.getRequest().getParam();
-        if (paramTypes.length == 0)
-            return params == null || params.length == 0;
-        if (params == null || params.length == 0 || params.length != paramTypes.length)
+        if (params == null) {
+            return paramTypes.length == 0;
+        }
+        if (params.length != paramTypes.length)
             return false;
-        //        for (int i = 0; i < paramTypes.length; i++) {
-        //            Object param = params[i];
-        //            if (param != null && !paramTypes[i].getType().isAssignableFrom(param.getClass()))
-        //                return false;
-        //        }
+        for (int i = 0; i < params.length; i++) {
+            if (!paramTypes[i].match(params[i])) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -42,7 +38,7 @@ public class ArrayParamsParser implements ParamsParser {
     }
 
     @Override
-    public Parameters parse(ParamParsingContext context) {
-        return Parameters.of(context.getApiMethod(), (Object[]) context.getRequest().getParam());
+    public Object[] parse(ParamParsingContext context) {
+        return (Object[]) context.getRequest().getParam();
     }
 }

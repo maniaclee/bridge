@@ -1,5 +1,7 @@
 package com.lvbby.bridge.api;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import java.lang.reflect.Method;
 
 public class MethodParameter {
@@ -7,6 +9,17 @@ public class MethodParameter {
     private String name;
     private Class type;
     private Method method;
+
+    /***
+     * 参数类型是否匹配
+     * @param object
+     * @return
+     */
+    public boolean match(Object object){
+        if(object==null)
+            return true;
+        return ClassUtils.isAssignable(object.getClass(),type);
+    }
 
     public int getIndex() {
         return index;

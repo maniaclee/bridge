@@ -7,12 +7,10 @@ import com.lvbby.bridge.exception.BridgeRoutingException;
  */
 public interface ParamsParser {
 
-    String getType();
-
     boolean matchMethod(ParamParsingContext context);
 
     void addParameter(ParamParsingContext context, MethodParameter methodParameter, Object arg);
 
-    Parameters parse(ParamParsingContext context) throws BridgeRoutingException;
+    Object[] parse(ParamParsingContext context) throws BridgeRoutingException;
 
 }

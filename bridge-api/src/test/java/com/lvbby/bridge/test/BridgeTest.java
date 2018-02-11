@@ -5,6 +5,7 @@ import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.gateway.ApiGateWay;
 import com.lvbby.bridge.gateway.Bridge;
 import com.lvbby.bridge.gateway.Request;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Test;
 
@@ -18,14 +19,20 @@ public class BridgeTest {
     private TestService testService = new TestService();
 
     @Test
-    public void sdf() throws Exception {
+    public void mapEmpty() throws Exception {
         ApiGateWay bridge = new Bridge().addService(testService);
 
         HashMap<Object, Object> param = Maps.newHashMap();
-        param.put("s","fuck");
 
-        Object proxy = bridge.proxy(new Request("TestService", "echo", param));
-        System.out.println(ReflectionToStringBuilder.toString(proxy));
+        Object proxy = null;
+        Exception ex=null;
+        try {
+            proxy = bridge.proxy(new Request("TestService", "echo", param).buildType(ParamFormat.Map));
+
+        } catch (Exception e) {
+            ex=e;
+        }
+        Validate.notNull(ex);
     }
 
     @Test
@@ -38,6 +45,29 @@ public class BridgeTest {
                         put("key", "key");
                         put("value", "fuck");
                         put("type", 1);
+                    }
+                });
+        Object proxy = bridge.proxy(request);
+        System.out.println(ReflectionToStringBuilder.toString(proxy));
+    }
+    @Test
+    public void mapObject() throws Exception {
+        ApiGateWay bridge = new Bridge().addService(testService);
+        Request request = new Request("TestService", "signle")
+                .buildType(ParamFormat.Json)
+                .buildParam(new HashMap() {
+                    {
+                        put("request", new HashMap() {
+                            {
+                                put("name", "key");
+                                put("request",new HashMap() {
+                                    {
+                                        put("service", "service");
+                                        put("method", "method");
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
         Object proxy = bridge.proxy(request);

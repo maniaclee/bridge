@@ -1,6 +1,7 @@
 package com.lvbby.bridge.api.param.parser;
 
 import com.google.common.collect.Maps;
+import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.api.ParamsParser;
 
 import java.util.Map;
@@ -19,18 +20,19 @@ public class ParamsParserFactory {
     Map<String, ParamsParser> map = Maps.newHashMap();
 
     {
-        addParamsParser(MapParamsParser.class);
-        addParamsParser(ArrayParamsParser.class);
+        addParamsParser(MapParamsParser.class, ParamFormat.Map);
+        addParamsParser(ArrayParamsParser.class,ParamFormat.Array);
+        addParamsParser(JsonParamsParser.class,ParamFormat.Json);
     }
 
     private ParamsParserFactory() {
     }
 
-    private void addParamsParser(Class<? extends ParamsParser> clz) {
+    private void addParamsParser(Class<? extends ParamsParser> clz,ParamFormat type) {
         try {
             ParamsParser paramsParser = clz.newInstance();
             if (paramsParser != null)
-                map.put(paramsParser.getType(), paramsParser);
+                map.put(type.getValue(), paramsParser);
         } catch (Exception e) {
             throw new IllegalArgumentException("error instance ParamsParser:" + clz.getName(), e);
         }

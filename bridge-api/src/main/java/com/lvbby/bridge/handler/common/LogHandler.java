@@ -1,15 +1,14 @@
 package com.lvbby.bridge.handler.common;
 
 import com.alibaba.fastjson.JSON;
-import com.lvbby.bridge.api.Parameters;
 import com.lvbby.bridge.exception.errorhandler.AbstractErrorHandler;
 import com.lvbby.bridge.gateway.ApiGateWayPostHandler;
 import com.lvbby.bridge.gateway.ApiGateWayPreHandler;
 import com.lvbby.bridge.gateway.Context;
 import com.lvbby.bridge.gateway.Request;
 import org.apache.log4j.Logger;
-import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -40,14 +39,11 @@ public class LogHandler extends AbstractErrorHandler implements ApiGateWayPreHan
         return result;
     }
 
-    public String requestToString(Parameters parameters) {
-        if (CollectionUtils.isEmpty(parameters.getParameters())) {
+    private String requestToString(Object[] parameters) {
+        if (parameters==null || parameters.length==0) {
             return "";
         }
-        if (parameters.getType().equalsIgnoreCase(Parameters.byIndex)) {
-            return parameters.getParameters().stream().map(parameter -> serialize(parameter)).collect(Collectors.joining(","));
-        }
-        return parameters.getParameters().stream().map(parameter -> String.format("%s:%s", parameter.getName(), serialize(parameter.getParam()))).collect(Collectors.joining(","));
+        return Arrays.stream(parameters).map(o -> serialize(o)).collect(Collectors.joining(","));
     }
 
     private String serialize(Object parameter) {

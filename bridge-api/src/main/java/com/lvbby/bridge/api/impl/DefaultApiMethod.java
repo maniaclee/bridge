@@ -73,10 +73,9 @@ public class DefaultApiMethod implements ApiMethod {
 
 
     @Override
-    public Object invoke(ApiService apiService, Parameters parameters) throws BridgeInvokeException {
-        Object[] realParameters = parameters.toParameters();
+    public Object invoke(ApiService apiService, Object[] parameters) throws BridgeInvokeException {
         try {
-            return method.invoke(apiService.getService(), realParameters);
+            return method.invoke(apiService.getService(), parameters);
         } catch (Exception e) {
             if (e instanceof InvocationTargetException)
                 e = (Exception) ((InvocationTargetException) e).getTargetException();

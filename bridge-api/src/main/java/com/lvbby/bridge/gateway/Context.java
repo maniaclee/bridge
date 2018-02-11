@@ -2,7 +2,6 @@ package com.lvbby.bridge.gateway;
 
 import com.lvbby.bridge.api.ApiMethod;
 import com.lvbby.bridge.api.ApiService;
-import com.lvbby.bridge.api.Parameters;
 
 /**
  * Created by lipeng on 16/10/19.
@@ -11,7 +10,7 @@ public class Context {
     private Request request;
     private ApiService apiService;
     private ApiMethod apiMethod;
-    private Parameters parameters;
+    private Object[] parameters;
 
     public static Context of(Request request, ApiService apiService) {
         Context context = new Context();
@@ -20,11 +19,21 @@ public class Context {
         return context;
     }
 
-    public Parameters getParameters() {
+    /**
+     * Getter method for property   parameters.
+     *
+     * @return property value of parameters
+     */
+    public Object[] getParameters() {
         return parameters;
     }
 
-    public void setParameters(Parameters parameters) {
+    /**
+     * Setter method for property   parameters .
+     *
+     * @param parameters  value to be assigned to property parameters
+     */
+    public void setParameters(Object[] parameters) {
         this.parameters = parameters;
     }
 

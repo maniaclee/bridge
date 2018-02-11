@@ -73,10 +73,10 @@ public class HttpApiRequestPathParser extends HttpApiRequestAttributeParser {
         return null;
     }
 
-    public static void main(String[] args) throws Exception {
-        URIBuilder build = new URIBuilder("http://localhost:799/api/root/servicea/methodxx?param=3");
-        System.out.println(build.getPath());
-        System.out.println(of("api/root/**/").parsePath(build.toString()));
-        System.out.println(of("/api/root**/").parsePath(build.toString()));
-    }
+//    public static void main(String[] args) throws Exception {
+//        URIBuilder build = new URIBuilder("http://localhost:799/api/root/servicea/methodxx?param=3");
+//        System.out.println(build.getPath());
+//        System.out.println(of("api/root/**/").parsePath(build.toString()));
+//        System.out.println(of("/api/root**/").parsePath(build.toString()));
+//    }
 }

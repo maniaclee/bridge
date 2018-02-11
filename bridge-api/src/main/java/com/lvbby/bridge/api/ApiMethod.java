@@ -9,7 +9,7 @@ public interface ApiMethod {
 
     String getName();
 
-    Object invoke(ApiService apiService, Parameters parameters) throws BridgeInvokeException;
+    Object invoke(ApiService apiService, Object[] parameters) throws BridgeInvokeException;
 
     MethodParameter[] getParamTypes();
 }

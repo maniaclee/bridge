@@ -115,9 +115,6 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             for (ApiGateWayInitHandler apiGateWayInitHandler : getInitHandlers()) {
                 apiGateWayInitHandler.handle(paramParsingContext);
             }
-//            if (apiMethods.size() == 1) {
-//                return buildContext(request, service, paramsParser, paramParsingContext);
-//            }
             //重载时，需要先找出匹配的方法
             if (paramsParser.matchMethod(paramParsingContext))
                 return buildContext(request, service, paramsParser, paramParsingContext);
@@ -127,7 +124,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
 
     private Context buildContext(Request request, ApiService service, ParamsParser paramsParser, ParamParsingContext paramParsingContext) throws BridgeRoutingException {
         /** check method name && param types|length */
-        Parameters parameters = paramsParser.parse(paramParsingContext);
+        Object[] parameters = paramsParser.parse(paramParsingContext);
         if (parameters != null) {
             Context context = Context.of(request, service);
             context.setApiMethod(paramParsingContext.getApiMethod());
