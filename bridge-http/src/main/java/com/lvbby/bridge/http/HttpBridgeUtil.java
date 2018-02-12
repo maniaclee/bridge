@@ -18,6 +18,8 @@ import java.util.Optional;
 public class HttpBridgeUtil {
 
     public static HttpServletRequest getHttpServletRequest(Context context) {
+        if (context == null)
+            return null;
         return getHttpServletRequest(context.getRequest());
     }
 
@@ -37,7 +39,7 @@ public class HttpBridgeUtil {
         return (HttpBridge) request.getAttribute(HttpBridge.EXT_HTTP_BRIDGE);
     }
 
-    public static void validateSessionAttribute(String sessionKey, String requestKey,String errorMsg) {
+    public static void validateSessionAttribute(String sessionKey, String requestKey, String errorMsg) {
         Context context = BridgeContextHolder.get();
         HttpServletRequest httpServletRequest = getHttpServletRequest();
         if (httpServletRequest != null) {
@@ -45,9 +47,9 @@ public class HttpBridgeUtil {
                 sessionKey = BridgeUtil.getDefaultServiceMethodName(context.getRequest());
             if (StringUtils.isEmpty(requestKey))
                 requestKey = BridgeUtil.getDefaultServiceMethodName(context.getRequest());
-            Validate.isTrue(httpServletRequest.getSession() != null
-                    && httpServletRequest.getSession().getAttribute(sessionKey) != null
-                    && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getParameter(requestKey)),errorMsg);
+            Validate.isTrue(httpServletRequest.getSession() != null && httpServletRequest.getSession().getAttribute(sessionKey) != null
+                            && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getParameter(requestKey)),
+                errorMsg);
         }
     }
 
