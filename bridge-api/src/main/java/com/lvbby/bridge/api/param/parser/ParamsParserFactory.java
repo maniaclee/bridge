@@ -23,7 +23,6 @@ public class ParamsParserFactory {
         addParamsParser(MapParamsParser.class, ParamFormat.Map.getValue());
         addParamsParser(ArrayParamsParser.class,ParamFormat.Array.getValue());
         addParamsParser(JsonParamsParser.class,ParamFormat.Json.getValue());
-        addParamsParser(JsonMapParamParser.class,ParamFormat.JsonMap.getValue());
     }
 
     private ParamsParserFactory() {

@@ -12,7 +12,6 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,20 +28,14 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
 
     @Override
     public Request parse(HttpServletRequest request) throws BridgeRoutingException {
-        Request re = new Request();
-        //handle paramType
-        if (StringUtils.isNotBlank(request.getParameter(paramTypeAttribute)))
-            re.setParamType(request.getParameter(paramTypeAttribute));
-        else
-            re.setParamType(ParamFormat.JsonMap.getValue());
-
-        //handle parameters
         try {
-            re.setParam(extractHttpParameters(request, s -> !isSystemParameter(s)));
+            if ("get".equalsIgnoreCase(request.getMethod())) {
+                return extractHttpParameters_url(request, s -> !isSystemParameter(s));
+            }
+            return extractHttpParameters_post(request, s -> !isSystemParameter(s));
         } catch (URISyntaxException e) {
             throw new BridgeRoutingException("bad url format", e);
         }
-        return re;
     }
 
     /***
@@ -54,57 +47,55 @@ public class BaseHttpApiRequestParser implements HttpApiRequestParser {
      */
 
     //from url
-    private Map<String, Object> extractHttpParameters(HttpServletRequest request, Predicate<String> keyFilter) throws URISyntaxException {
+    private Request extractHttpParameters_url(HttpServletRequest request, Predicate<String> keyFilter) throws URISyntaxException {
+        Request req = new Request();
         Map<String, Object> re = Maps.newHashMap();
-        if ("get".equalsIgnoreCase(request.getMethod())) {
-            String queryString = request.getQueryString();
-            if (!StringUtils.isBlank(queryString)) {
-                List<NameValuePair> params = URLEncodedUtils.parse(queryString, Charset.forName("UTF-8"));
-                if (params != null) {
-                    params.stream().filter(nameValuePair -> keyFilter == null || keyFilter.test(nameValuePair.getName()))
-                        .forEach(nameValuePair -> re.putIfAbsent(nameValuePair.getName(), nameValuePair.getValue()));
-                }
+        String queryString = request.getQueryString();
+        if (!StringUtils.isBlank(queryString)) {
+            List<NameValuePair> params = URLEncodedUtils.parse(queryString, Charset.forName("UTF-8"));
+            if (params != null) {
+                params.stream().filter(nameValuePair -> keyFilter == null || keyFilter.test(nameValuePair.getName()))
+                    .forEach(nameValuePair -> re.putIfAbsent(nameValuePair.getName(), nameValuePair.getValue()));
             }
-            return re;
         }
-        //from parameters
-        for (Enumeration ps = request.getParameterNames(); ps != null && ps.hasMoreElements();) {
-            String key = ps.nextElement().toString().trim();
-            if (keyFilter == null || keyFilter.test(key))
-                re.put(key, request.getParameter(key));
-        }
-        return re;
+        return req.buildParam(re).buildType(ParamFormat.Json);
+    }
+
+    private Request extractHttpParameters_post(HttpServletRequest request, Predicate<String> keyFilter) throws URISyntaxException {
+
+        String parameter = request.getParameter(paramAttribute);
+        Map map = JSON.parseObject(parameter, Map.class);
+        return new Request().buildParam(map).buildType(ParamFormat.Json);
     }
 
     //a.b.c=value 形式的参数转为json形式的map
-    private static Map<String, Object> parseBridgeParameters(Map<String, Object> src){
+    private static Map<String, Object> parseBridgeParameters(Map<String, Object> src) {
         Map re = Maps.newHashMap();
         for (Map.Entry<String, Object> entry : src.entrySet()) {
             String[] split = entry.getKey().split("\\.");
             Map target = re;
-            for (int i = 0; i < split.length-1; i++) {
+            for (int i = 0; i < split.length - 1; i++) {
                 String key = split[i];
-                if(target.get(key) == null){
+                if (target.get(key) == null) {
                     Map<String, Object> value = Maps.newHashMap();
                     target.put(key, value);
-                    target=value;
-                }else {
+                    target = value;
+                } else {
                     target = (Map) target.get(key);
                 }
             }
-            target.put(split[split.length-1],entry.getValue());
+            target.put(split[split.length - 1], entry.getValue());
         }
         return re;
     }
 
     public static void main(String[] args) {
         HashMap<String, Object> map = Maps.newHashMap();
-        map.put("a.b.c","cvalue");
-        map.put("a.d","d");
-        map.put("F","f");
-        System.out.println(JSON.toJSONString(parseBridgeParameters(map),true));
+        map.put("a.b.c", "cvalue");
+        map.put("a.d", "d");
+        map.put("F", "f");
+        System.out.println(JSON.toJSONString(parseBridgeParameters(map), true));
     }
-
 
     private boolean isSystemParameter(String key) {
         return key.startsWith("_");

@@ -63,4 +63,5 @@ public class HttpBridgeUtil {
     public static boolean hasSessionValueString(HttpServletRequest httpServletRequest, String key, String value) {
         return Objects.equals(getSessionValueString(httpServletRequest, key), value);
     }
+
 }

@@ -6,6 +6,7 @@ import com.lvbby.bridge.api.*;
 import java.util.ArrayList;
 
 /**
+ * 不做类型转化
  * Created by lipeng on 16/10/21.
  * simply use ParamParsingContext.getRequest().getParam() as the parameters
  */
