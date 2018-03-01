@@ -1,6 +1,7 @@
 package com.lvbby.bridge.api.param.parser;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.MethodParameter;
 import com.lvbby.bridge.api.ParamParsingContext;
 import com.lvbby.bridge.api.ParamsParser;
@@ -21,7 +22,7 @@ public class JsonParamsParser implements ParamsParser {
 
     @Override
     public boolean matchMethod(ParamParsingContext context) {
-        Map params = (Map) context.getRequest().getParam();
+        Map params = ensureParam(context);
         Map<String, MethodParameter> parameterMap = Arrays.stream(context.getApiMethod().getParamTypes())
                 .collect(Collectors.toMap(o -> o.getName(), Function.identity()));
         if (params == null) {
@@ -31,9 +32,10 @@ public class JsonParamsParser implements ParamsParser {
     }
 
     public void addParameter(ParamParsingContext context, MethodParameter methodParameter, Object arg) {
-        Map params = (Map) context.getRequest().getParam();
-        params.put(methodParameter.getName(), arg);
+        ensureParam(context).put(methodParameter.getName(), arg);
     }
+
+
 
     @Override
     public Object[] parse(ParamParsingContext context) {
@@ -43,7 +45,7 @@ public class JsonParamsParser implements ParamsParser {
         Request request = context.getRequest();
         Object param = request.getParam();
         Validate.isTrue(param instanceof Map, "%s need Map parameters", getClass().getSimpleName());
-        Map map = (Map) param;
+        Map map = ensureParam(context);
         Object[] re = new Object[context.getApiMethod().getParamTypes().length];
         for (int i = 0; i < context.getApiMethod().getParamTypes().length; i++) {
             MethodParameter parameterType = context.getApiMethod().getParamTypes()[i];
@@ -54,6 +56,13 @@ public class JsonParamsParser implements ParamsParser {
             }
         }
         return re;
+    }
+
+    private Map ensureParam(ParamParsingContext context) {
+        if (context.getRequest().getParam() == null) {
+            context.getRequest().setParam(Maps.newHashMap());
+        }
+        return (Map) context.getRequest().getParam();
     }
 
     protected Object parse(Class clz, Object object) {
