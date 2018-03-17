@@ -23,7 +23,7 @@ public class ApiMethodReflectionBuilder implements ApiMethodBuilder {
     @Override
     public List<ApiMethod> getMethods(ApiService service) {
         List<ApiMethod> re = Lists.newLinkedList();
-        for (Method m : extractMethods(service.getService().getClass())) re.add(buildMethod(service, m));
+        for (Method m : extractMethods(service.getServiceClass())) re.add(buildMethod(service, m));
         return re;
     }
 

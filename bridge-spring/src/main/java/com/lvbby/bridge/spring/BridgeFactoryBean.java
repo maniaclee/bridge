@@ -33,6 +33,10 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
     //实例注入
     List beanObjects = Lists.newLinkedList();
     private ApplicationContext applicationContext;
+    {
+        //spring被代理的bean获取interface需要特殊处理
+        setServiceNameExtractor(new SpringClassNameServiceNameExtractor());
+    }
 
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
@@ -56,7 +60,7 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
             Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(annotation);
             for (Object bean : beansWithAnnotation.values()) {
                 // register service
-                addService(bean);
+                _addSpringApiService(bean);
             }
         }
         for (Class beanClass : beanClasses) {
@@ -64,10 +68,15 @@ public class BridgeFactoryBean extends Bridge implements FactoryBean<ApiGateWay>
             addApiService(ApiService.of(applicationContext.getBean(beanClass), getServiceNameExtractor().getServiceName(beanClass)));
         }
         for (Object beanObject : beanObjects) {
-            addService(beanObject);
+            _addSpringApiService(beanObject);
         }
         //处理代理
         getAllApiServices().forEach(apiService -> processApiService(apiService));
+    }
+
+    private void _addSpringApiService(Object obj) {
+        Class clz = SpringUtils.getBeanClass(obj);
+        addApiService(ApiService.of(obj, getServiceNameExtractor().getServiceName(clz), clz, null));
     }
 
     public void processApiService(ApiService apiService) {

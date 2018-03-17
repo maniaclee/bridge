@@ -19,16 +19,18 @@ public class ApiService implements Serializable {
     private static ApiMethodBuilder defaultApiMethodBuilder = new ApiMethodReflectionBuilder();
     private Object service;
     private String serviceName;
+    private Class  serviceClass;
     private Multimap<String, ApiMethod> methods = LinkedListMultimap.create();
 
     public static ApiService of(Object service, String serviceName) {
-        return of(service, serviceName, null);
+        return of(service, serviceName,service.getClass(), null);
     }
 
-    public static ApiService of(Object service, String serviceName, ApiMethodBuilder apiMethodBuilder) {
+    public static ApiService of(Object service, String serviceName, Class serviceClass,ApiMethodBuilder apiMethodBuilder) {
         ApiService apiService = new ApiService();
         apiService.setService(service);
         apiService.setServiceName(serviceName);
+        apiService.setServiceClass(serviceClass);
         if (apiMethodBuilder == null)
             apiMethodBuilder = defaultApiMethodBuilder;
         for (ApiMethod apiMethod : apiMethodBuilder.getMethods(apiService))
@@ -65,5 +67,13 @@ public class ApiService implements Serializable {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public Class getServiceClass() {
+        return serviceClass;
+    }
+
+    public void setServiceClass(Class serviceClass) {
+        this.serviceClass = serviceClass;
     }
 }
