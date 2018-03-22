@@ -28,15 +28,7 @@ public abstract class AbstractBridge extends AbstractApiGateWay implements ApiGa
             BridgeContextHolder.put(context);
             /** filter */
             for (ApiGateWayFilter apiGateWayFilter : filters) {
-                boolean canVisit = false;
-                try {
-                    canVisit = apiGateWayFilter.canVisit(context);
-                } catch (Exception e) {
-                    throw new BridgeProcessException(String.format("%s.%s [exception] can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()), e)
-                            .setBridgeComponent(apiGateWayFilter)
-                            .setErrorType(BridgeProcessException.Filter);
-                }
-                if (!canVisit)
+                if (!apiGateWayFilter.canVisit(context))
                     throw new BridgeProcessException(String.format("%s.%s can't be visit! Blocked by %s ", request.getService(), request.getMethod(), apiGateWayFilter.getClass().getSimpleName()))
                             .setBridgeComponent(apiGateWayFilter)
                             .setErrorType(BridgeProcessException.Filter);
