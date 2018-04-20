@@ -93,12 +93,10 @@ public class JsonParamsParser implements ParamsParser {
                 return ((Number) object).floatValue();
             }
         }
+        if (!clz.equals(String.class) && object instanceof String) {
+            return JSON.parseObject(object.toString(), clz);
+        }
         throw new IllegalArgumentException("can't parse object");
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Number.class.isAssignableFrom(Long.class));
-        System.out.println(new JsonParamsParser().parse(Long.class, 3));
     }
 
 }
