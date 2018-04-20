@@ -73,7 +73,32 @@ public class JsonParamsParser implements ParamsParser {
         if (object instanceof Map) {
             return new JSONObject((Map) object).toJavaObject(clz);
         }
+
+        if (ClassUtils.isAssignable(clz,Number.class)) {
+            Validate.isTrue(object instanceof Number, "invalid type for long class");
+
+            if (Integer.class.isAssignableFrom(clz)) {
+                return ((Number) object).intValue();
+            }
+            if (Long.class.isAssignableFrom(clz)) {
+                return ((Number) object).longValue();
+            }
+            if (Short.class.isAssignableFrom(clz)) {
+                return ((Number) object).shortValue();
+            }
+            if (Double.class.isAssignableFrom(clz)) {
+                return ((Number) object).doubleValue();
+            }
+            if (Float.class.isAssignableFrom(clz)) {
+                return ((Number) object).floatValue();
+            }
+        }
         throw new IllegalArgumentException("can't parse object");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Number.class.isAssignableFrom(Long.class));
+        System.out.println(new JsonParamsParser().parse(Long.class, 3));
     }
 
 }
