@@ -1,5 +1,6 @@
 package com.lvbby.bridge.http.filter.anno;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lvbby.bridge.gateway.Context;
 import com.lvbby.bridge.http.annotation.HttpAttribute;
 import com.lvbby.bridge.util.BridgeUtil;
@@ -25,6 +26,15 @@ public class HttpAttributeAnnotationValidateFilter extends HttpAnnotationFilter<
             requestKey = BridgeUtil.getDefaultServiceMethodName(context.getRequest());
         return httpServletRequest.getSession() != null
                 && httpServletRequest.getSession().getAttribute(sessionKey) != null
-                && httpServletRequest.getSession().getAttribute(sessionKey).equals(httpServletRequest.getParameter(requestKey));
+                && httpServletRequest.getSession().getAttribute(sessionKey).equals(param(context, httpServletRequest, requestKey));
+    }
+
+    private String param(Context context, HttpServletRequest httpServletRequest, String key) {
+        //payload 模式
+        Object param = context.getRequest().getParam();
+        if (param instanceof JSONObject) {
+            return ((JSONObject) param).getString(key);
+        }
+        return httpServletRequest.getParameter(key);
     }
 }

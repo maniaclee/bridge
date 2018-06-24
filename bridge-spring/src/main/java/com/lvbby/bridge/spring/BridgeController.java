@@ -40,7 +40,7 @@ public class BridgeController implements ApplicationListener<ContextRefreshedEve
             throw new IllegalArgumentException(String.format("controller class[%s] is a proxy class, don't use Configuration etc annotation in controller.", getClass().getName()));
         //兼容多controller存在，httpBridge都是new的
         httpBridge = HttpBridge.of(bridge)
-                .httpUserManager(applicationContext.getBean(HttpUserManager.class))
-                .enableUrlPathParsing(annotation.value()[0]);
+                .httpUserManager(applicationContext.getBean(HttpUserManager.class));
+//                .enableUrlPathParsing(annotation.value()[0]);
     }
 }

@@ -6,10 +6,7 @@ import com.lvbby.bridge.api.ParamsParser;
 import com.lvbby.bridge.gateway.Request;
 import com.lvbby.bridge.util.Validate;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 不做类型转化，直接将map转为参数
@@ -20,11 +17,7 @@ public class MapParamsParser implements ParamsParser {
     @Override
     public boolean matchMethod(ParamParsingContext context) {
         Map params = (Map) context.getRequest().getParam();
-        Map<String, MethodParameter> parameterMap = Arrays.stream(context.getApiMethod().getParamTypes())
-                .collect(Collectors.toMap(o -> o.getName(), Function.identity()));
-        if(params==null||params.isEmpty()){
-            return parameterMap.isEmpty();
-        }
+        Map<String, MethodParameter> parameterMap = context.getApiMethod().getParamAsMap();
         return params.keySet().stream().map(Object::toString).allMatch(key->parameterMap.containsKey(key) && parameterMap.get(key).match(params.get(key)));
     }
 

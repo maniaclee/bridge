@@ -14,9 +14,9 @@ import com.lvbby.bridge.http.handler.HttpParameterParsingInitHandler;
 import com.lvbby.bridge.http.handler.HttpSessionClearPostHandler;
 import com.lvbby.bridge.http.handler.HttpSessionSavePostHandler;
 import com.lvbby.bridge.http.handler.HttpUserIdInjectInitHandler;
-import com.lvbby.bridge.http.parser.HttpApiRequestAttributeParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestParser;
 import com.lvbby.bridge.http.parser.HttpApiRequestPathParser;
+import com.lvbby.bridge.http.parser.HttpPayloadRequestParser;
 import com.lvbby.bridge.http.tool.HttpLoginHandler;
 import org.apache.commons.lang3.Validate;
 
@@ -30,7 +30,8 @@ import java.io.IOException;
  */
 public class HttpBridge {
     private ApiGateWay apiGateWay;
-    private HttpApiRequestParser httpApiRequestParser = new HttpApiRequestAttributeParser();
+    private HttpApiRequestParser httpApiRequestParser = new HttpPayloadRequestParser();
+//    private HttpApiRequestParser httpApiRequestParser = new HttpApiRequestAttributeParser();
     public static final String EXT_HTTP_REQUEST = "EXT_HTTP_REQUEST";
     public static final String EXT_HTTP_RESPONSE = "EXT_HTTP_RESPONSE";
     public static final String EXT_HTTP_BRIDGE = "EXT_HTTP_BRIDGE";
