@@ -1,5 +1,7 @@
 Bridge文档
-
+Bridge是个小巧的api网管，可以统一将http请求转发到相应的service中。
+最常见的场景是将http请求自动转发到Spring的bean里，省去每次写SpringMvc的麻烦
+。
 ## quick start
 maven依赖
 ```xml
