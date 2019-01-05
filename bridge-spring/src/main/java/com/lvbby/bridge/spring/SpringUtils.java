@@ -1,5 +1,6 @@
 package com.lvbby.bridge.spring;
 
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 
 /**
@@ -15,6 +16,7 @@ public class SpringUtils {
         }
         if(!AopUtils.isAopProxy(bean))
             return bean.getClass();
-        return AopUtils.getTargetClass(bean);
+        //return AopUtils.getTargetClass(bean);
+        return AopProxyUtils.ultimateTargetClass(bean);
     }
 }

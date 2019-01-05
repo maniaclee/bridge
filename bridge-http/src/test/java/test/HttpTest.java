@@ -30,7 +30,7 @@ public class HttpTest {
 
     @Test
     public void sdf() {
-        HttpServiceProxy<TestService> proxy = new HttpServiceProxy(TestService.class);
+        HttpServiceProxy<TestService> proxy = new HttpServiceProxy();
         proxy.setHost("localhost");
         proxy.setPath("api");
         proxy.setPort(port);

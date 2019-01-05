@@ -1,16 +1,25 @@
 package com.lvbby.bridge.http.gateway;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.lvbby.bridge.api.ParamFormat;
 import com.lvbby.bridge.api.param.extracotr.DefaultParameterNameExtractor;
-import com.squareup.okhttp.*;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +44,14 @@ public class HttpServiceProxy<T> {
     }
 
 
-    public static <R> HttpServiceProxy<R> of(Class<R> clz) {
-        return new HttpServiceProxy<R>(clz);
+    public static <R> R of(Class<R> clz,String url) throws Exception {
+        HttpServiceProxy<R> proxy = new HttpServiceProxy<>(clz);
+        proxy.url(url);
+        return proxy.proxy();
+    }
+
+    public void url(String url) {
+        this.url = url;
     }
 
     public HttpServiceProxy(Class<T> clz) {
@@ -89,16 +104,16 @@ public class HttpServiceProxy<T> {
         return m.toString();
     }
 
-    public <T> T proxy() {
+    public  T proxy() {
         init();
-        return (T) Proxy.newProxyInstance(HttpServiceProxy.class.getClassLoader(), new Class[]{clz}, new HttpInvocationHandler());
+        return (T) Proxy.newProxyInstance(HttpServiceProxy.class.getClassLoader(), new Class[]{clz}, (proxy, method, args) -> invoke(method,args));
     }
 
 
-    public Request buildHttpRequest(Method method, Object[] args) {
-        String methodType = httpMethodTypes.get(getMethodName(method));
-        if (StringUtils.equalsIgnoreCase(methodType, "GET"))
-            return get(method, args);
+    public Request buildHttpRequest(Method method, Object args) {
+//        String methodType = httpMethodTypes.get(getMethodName(method));
+//        if (StringUtils.equalsIgnoreCase(methodType, "GET"))
+//            return get(method, args);
         return post(method, args);
     }
 
@@ -106,16 +121,27 @@ public class HttpServiceProxy<T> {
         return JSON.toJSONString(args);
     }
 
-    public Request post(Method method, Object[] args) {
-        FormEncodingBuilder builder = new FormEncodingBuilder()
-                .add("_service", clz.getSimpleName())
-                .add("_method", method.getName())
-                .add("_paramType", ParamFormat.Map.getValue());
-        serialize(method, args).entrySet().forEach(stringObjectEntry -> builder.add(stringObjectEntry.getKey(), stringObjectEntry.getValue()));
-        return new Request.Builder()
-                .url(url)
-                .post(builder.build())
-                .build();
+    public Request post(Method method, Object args) {
+            return new Request.Builder()
+                    .url(url)
+                    .post(RequestBody.create(MediaType.parse("application/json; charset=UTF-8"),
+                            JSON.toJSONString(new JSONObject()
+                                    .fluentPut("request",args)
+                                    .fluentPut("service",clz.getSimpleName())
+                                    .fluentPut("method",method.getName())
+                            )))
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+//        FormEncodingBuilder builder = new FormEncodingBuilder()
+//                .add("_service", clz.getSimpleName())
+//                .add("_method", method.getName())
+//                .add("_paramType", ParamFormat.Map.getValue());
+//        serialize(method, args).entrySet().forEach(stringObjectEntry -> builder.add(stringObjectEntry.getKey(), stringObjectEntry.getValue()));
+//        return new Request.Builder()
+//                .url(url)
+//                .post(builder.build())
+//                .build();
     }
 
     public Request get(Method method, Object[] args) {
@@ -142,21 +168,22 @@ public class HttpServiceProxy<T> {
         return map;
     }
 
-    private class HttpInvocationHandler implements InvocationHandler {
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (excludeMethods.contains(method.getName()))
-                throw new IllegalAccessException("Object method are not supported");
-            Response response = client.newCall(buildHttpRequest(method, args)).execute();
-            if (response.isSuccessful()) {
-                String re = response.body().string();
-                if (StringUtils.isEmpty(re))
-                    return null;
-                return JSON.parseObject(re, method.getReturnType());
-            } else {
-                throw new IOException("Unexpected code " + response);
-            }
+    public Object invoke(Method method, Object[] args) throws Throwable {
+        String[] parameterName = new DefaultParameterNameExtractor().getParameterName(method);
+        if (excludeMethods.contains(method.getName()))
+            throw new IllegalAccessException("Object method are not supported");
+        JSONObject req = new JSONObject();
+        for (int i = 0; i < parameterName.length; i++) {
+            req.put(parameterName[i],args[i]);
+        }
+        Response response = client.newCall(buildHttpRequest(method, req)).execute();
+        if (response.isSuccessful()) {
+            String re = response.body().string();
+            if (StringUtils.isEmpty(re))
+                return null;
+            return JSON.parseObject(re, method.getReturnType());
+        } else {
+            throw new IOException("Unexpected code " + response);
         }
     }
 
